@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::battle::BattleContext;
 // use crate::kreide::native_types::*;
 use crate::kreide::types::rpg::gamecore::*;
@@ -22,6 +23,7 @@ use anyhow::{anyhow, Error};
 use function_name::named;
 use retour::static_detour;
 use std::ffi::c_void;
+use dict::Dict;
 
 static_detour! {
     static ON_DAMAGE_Detour: fn(
@@ -74,6 +76,19 @@ fn on_damage(
 ) -> bool {
     unsafe {
         log::debug!(function_name!());
+
+        let args: HashMap<String, serde_json::value::Value> =
+            vec![("occasion".to_string(), serde_json::to_value("on_damage arguments").unwrap()),
+                ("attacker".to_string(), serde_json::to_value(&*attacker).unwrap()),
+                ("attacker_ability".to_string(), serde_json::to_value(&*attacker_ability).unwrap()),
+                ("attacker_task_single_target".to_string(), serde_json::to_value(&*attacker_task_single_target).unwrap()),
+                ("defender_ability".to_string(), serde_json::to_value(&*defender_ability).unwrap()),
+                ("defender".to_string(), serde_json::to_value(&*defender).unwrap()),
+                ("flag".to_string(), serde_json::to_value(&flag).unwrap()),
+                ("obkbghmgbne".to_string(), serde_json::to_value(obkbghmgbne as u64).unwrap()), ].into_iter().collect();
+
+        BattleContext::log_battle_event_context(args);
+
         let mut event: Option<Result<Event>> = None;
         match (*attacker)._Team {
             TeamType::TeamLight => {
@@ -168,7 +183,17 @@ fn on_use_skill(
     skill_extra_use_param: i32,
 ) {
     log::debug!(function_name!());
+
     unsafe {
+        let args: HashMap<String, serde_json::value::Value> =
+            vec![("occasion".to_string(), serde_json::to_value("on_use_skill arguments").unwrap()),
+                 ("instance".to_string(), serde_json::to_value(&*instance).unwrap()),
+                 ("a3".to_string(), serde_json::to_value(a3 as u64).unwrap()),
+                 ("a4".to_string(), serde_json::to_value(&a4).unwrap()),
+                 ("skill_extra_use_param".to_string(), serde_json::to_value(&skill_extra_use_param).unwrap()), ].into_iter().collect();
+
+        BattleContext::log_battle_event_context(args);
+
         let entity = ((*instance)._parent_object)._OwnerRef;
         let skill_owner = {
             let skill_owner = AbilityStatic_GetActualOwner(entity);
@@ -301,6 +326,12 @@ fn on_combo(instance: *const MMNDIEBMDNL) {
 
     ON_COMBO_Detour.call(instance);
     unsafe {
+        let args: HashMap<String, serde_json::value::Value> =
+            vec![("occasion".to_string(), serde_json::to_value("on_combo arguments").unwrap()),
+                 ("instance".to_string(), serde_json::to_value(&*instance).unwrap()), ].into_iter().collect();
+
+        BattleContext::log_battle_event_context(args);
+
         let turn_based_ability_component = (*instance).FIMNOPAAFEP;
         let skill_character_component = (*instance).HECCDOHIAFD;
         let entity = (*skill_character_component)._parent_object._OwnerRef;
@@ -440,6 +471,13 @@ fn on_combo(instance: *const MMNDIEBMDNL) {
 fn on_set_lineup(instance: *const c_void, battle_lineup_data: *const BattleLineupData) {
     log::debug!(function_name!());
     unsafe {
+        let args: HashMap<String, serde_json::value::Value> =
+            vec![("occasion".to_string(), serde_json::to_value("on_set_lineup arguments").unwrap()),
+                 ("instance".to_string(), serde_json::to_value(instance as u64).unwrap()),
+                 ("a3".to_string(), serde_json::to_value(&*battle_lineup_data).unwrap()),].into_iter().collect();
+
+        BattleContext::log_battle_event_context(args);
+
         let light_team = (*battle_lineup_data).LightTeam;
         let mut avatars = Vec::<Avatar>::new();
         let mut errors = Vec::<Error>::new();
@@ -473,6 +511,12 @@ fn on_set_lineup(instance: *const c_void, battle_lineup_data: *const BattleLineu
 fn on_battle_begin(instance: *const TurnBasedGameMode) {
     log::debug!(function_name!());
     unsafe {
+        let args: HashMap<String, serde_json::value::Value> =
+            vec![("occasion".to_string(), serde_json::to_value("on_battle_begin arguments").unwrap()),
+                 ("instance".to_string(), serde_json::to_value(&*instance).unwrap()),].into_iter().collect();
+
+        BattleContext::log_battle_event_context(args);
+
         ON_BATTLE_BEGIN_Detour.call(instance);
         TURN_BASED_GAME_MODE_REF = Some(instance);
         BattleContext::handle_event(Ok(Event::OnBattleBegin));
@@ -483,6 +527,12 @@ fn on_battle_begin(instance: *const TurnBasedGameMode) {
 fn on_battle_end(instance: *const TurnBasedGameMode) {
     log::debug!(function_name!());
     unsafe {
+        let args: HashMap<String, serde_json::value::Value> =
+            vec![("occasion".to_string(), serde_json::to_value("on_battle_end arguments").unwrap()),
+                 ("instance".to_string(), serde_json::to_value(&*instance).unwrap()),].into_iter().collect();
+
+        BattleContext::log_battle_event_context(args);
+
         ON_BATTLE_END_Detour.call(instance);
         BattleContext::handle_event(Ok(Event::OnBattleEnd(OnBattleEndEvent {
             action_value: get_elapsed_av(),
@@ -494,6 +544,15 @@ fn on_battle_end(instance: *const TurnBasedGameMode) {
 #[named]
 fn on_turn_begin(instance: *const TurnBasedGameMode) {
     log::debug!(function_name!());
+    unsafe{
+        let args: HashMap<String, serde_json::value::Value> =
+            vec![("occasion".to_string(), serde_json::to_value("on_turn_begin arguments").unwrap()),
+                 ("instance".to_string(), serde_json::to_value(&*instance).unwrap()),
+                 ("av".to_string(), serde_json::to_value(get_elapsed_av()).unwrap()),
+            ].into_iter().collect();
+
+        BattleContext::log_battle_event_context(args);
+    }
     // Update AV first
     ON_TURN_BEGIN_Detour.call(instance);
     BattleContext::handle_event(Ok(Event::OnTurnBegin(OnTurnBeginEvent {
@@ -504,6 +563,14 @@ fn on_turn_begin(instance: *const TurnBasedGameMode) {
 #[named]
 fn on_turn_end(instance: *const c_void, a1: i32) -> *const c_void {
     log::debug!(function_name!());
+
+    let args: HashMap<String, serde_json::value::Value> =
+        vec![("occasion".to_string(), serde_json::to_value("on_set_lineup arguments").unwrap()),
+             ("instance".to_string(), serde_json::to_value(instance as u64).unwrap()),
+             ("a3".to_string(), serde_json::to_value(&a1).unwrap()),].into_iter().collect();
+
+    BattleContext::log_battle_event_context(args);
+
     // Can match player v enemy turn w/
     // RPG.GameCore.TurnBasedGameMode.GetCurrentTurnTeam
     let res = ON_TURN_END_Detour.call(instance, a1);

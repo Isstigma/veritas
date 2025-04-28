@@ -1,6 +1,12 @@
 use std::sync::{LazyLock, Mutex, MutexGuard};
-
+use directories::ProjectDirs;
+use std::io::{LineWriter, Write};
+use fs::File;
+use std::collections::HashMap;
 use anyhow::{Context, Result};
+use std::fs::OpenOptions;
+use std::io::prelude::*;
+use dict::{ Dict, DictIface };
 
 use crate::{
     models::{
@@ -13,6 +19,11 @@ use crate::{
     },
     server,
 };
+use chrono;
+use serde_json;
+use std::fs;
+use std::path::PathBuf;
+use egui::TextBuffer;
 
 #[derive(Default)]
 pub enum BattleState {
@@ -34,7 +45,10 @@ pub struct BattleContext {
     // Index w/ lineup index
     // Used to update UI damage when dmg occurs
     pub real_time_damages: Vec<f64>,
+    pub battle_start_time: chrono::DateTime<chrono::Utc>,
+    pub battle_log_file: Option<File>,
 }
+
 
 static BATTLE_CONTEXT: LazyLock<Mutex<BattleContext>> =
     LazyLock::new(|| Mutex::new(BattleContext::default()));
@@ -68,6 +82,54 @@ impl BattleContext {
         battle_context.lineup = lineup.clone();
         battle_context.total_damage = 0.;
         battle_context.real_time_damages = vec![0f64; lineup.len()];
+        battle_context.battle_start_time = chrono::Utc::now();
+
+        log::info!("logging has started");
+        if let Some(config_path) = Self::get_battle_log_path(battle_context) {
+            log::info!("{}", config_path.display());
+            let battle_start_log_entry = format!("battle started at {time}", time = battle_context.battle_start_time);
+
+            log::info!("{}", battle_start_log_entry.as_str());
+
+            let mut file = OpenOptions::new()
+                .create(true)
+                .write(true)
+                .append(true)
+                .open(config_path)
+                .unwrap();
+
+            battle_context.battle_log_file = Some(file);
+
+            if let Err(e) = writeln!(battle_context.battle_log_file.as_ref().unwrap(), "{}", "{}".replace("{}", battle_start_log_entry.as_str()).as_str()) {
+                log::info!("Couldn't write to file: {}", e);
+            }
+        }
+    }
+
+    pub fn log_battle_event_context(event: HashMap<String,serde_json::value::Value>){
+        let battle_context = Self::get_instance();
+
+        if battle_context.battle_log_file.is_some()
+        {
+            if let Err(e) = writeln!(battle_context.battle_log_file.as_ref().unwrap(), "{}",
+                                     "{}".replace("{}", serde_json::to_string(&event).unwrap().as_str())) {
+                log::info!("Couldn't write to file: {}", e);
+            }
+        }
+    }
+
+    fn get_battle_log_path(
+        battle_context: &mut MutexGuard<'static, Self>,
+    ) -> Option<PathBuf> {
+        let file_name = "battle-{time}.txt"
+            .replace("{time}", battle_context.battle_start_time.to_string().as_str())
+            .replace(" ", "_")
+            .replace(":", "_");
+
+        log::info!("{}", file_name.as_str());
+
+        ProjectDirs::from("com", "veritas", "veritas")
+            .map(|proj_dirs| proj_dirs.data_dir().join(file_name.as_str()))
     }
 
     fn handle_on_battle_begin_event(
