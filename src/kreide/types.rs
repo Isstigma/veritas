@@ -1310,9 +1310,9 @@ pub mod rpg {
             //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub SkillTreePointList: *const NativeArray<NativeObject>, // 0x10
             //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
-            pub BattleEquipmentList: *const NativeArray<NativeObject>, // 0x18
+            pub BattleEquipmentList: *const NativeArray<BattleEquipmentData>, // 0x18
             //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
-            pub BattleRelicItemModule: *const c_void,                 // 0x20
+            pub BattleRelicItemModule: *const BattleRelicModule,                 // 0x20
             //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleGridAvatarData: *const c_void,                  // 0x28
             //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
@@ -1338,6 +1338,60 @@ pub mod rpg {
             pub SpiritLineupType: i32,                                // 0x80
             pub CharacterRowIndex: u32,                               // 0x84
         }
+
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy)]
+        pub struct BattleRelicModule {
+            pub native_object: NativeObject,
+            pub AAEONBIGBBP: *const c_void, // 0x10, Dictionary<string,KENFHNBOEPP> TODO
+            pub BKCGOLIBNHC: *const c_void, // 0x18 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
+            pub BattleRelicInfos: *const NativeArray<BattleRelicInfo>, // 0x20
+            pub PMMGFOHHKPM: *const c_void, // 0x28 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
+            pub BIJMJNIMPOM: *const c_void, //0x30 Dictionary<uint,uint>
+            pub SpecialRelicData: *const SpecialRelicData
+        }
+
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy)]
+        pub struct BattleRelicInfo //MLNCAMMKBAB
+        {
+            pub native_object: NativeObject,
+            pub IGIDDGDHAGI: u32, // 0x10
+            pub LightConeId: u32, // 0x14 BDJECMNLHON
+            pub FFPKKKEBDHL: u32, // 0x18
+            pub BNDGBHLOJHN: *const NativeArray<NCGNFPLFBOJ>, // 0x20
+        }
+
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy)]
+        pub struct SpecialRelicData //HBOCDMDPGGH
+        {
+            pub native_object: NativeObject,
+            pub LGBJKGGCELB: *const NativeArray<u32>, // 0x10 is uint[] serialized differently from List<uint>?
+            pub POFMKDABEHD: u32, // 0x18
+            pub JGJCDMJIMNN: u32 //0x1c
+        }
+
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy)]
+        pub struct NCGNFPLFBOJ
+        {
+            pub native_object: NativeObject,
+            pub NIKFINDKDKO: u32, // 0x10
+            pub KBMCHLGDKEF: u32, //0x14
+            pub KHADHNNCFLH: u32, //0x18
+        }
+
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy)]
+        pub struct BattleEquipmentData { //IEDCICHOKGP
+            pub native_object: NativeObject,
+            pub CNIHAOIEFPI: u32, // 0x10 mb LcSuperImposition
+            pub FIAKPENJJMN: u32, //0x14 mb CharLvl
+            pub LightConeId: u32, //0x18 BDJECMNLHON
+            pub ILBPLOKBBEJ: u32, //0x1c mb CharEidolon
+        }
+
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
         pub struct BattleEventSkillRowData {
@@ -1430,7 +1484,7 @@ pub mod rpg {
             //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AutoUseUltraParams: *const c_void,                // 0xd8
             //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
-                ///todo: should there be some other serializer for value types? This array likely contains not refs to ints but values themselves
+            //todo: should there be some other serializer for value types? This array likely contains not refs to ints but values themselves
             pub _SkillTypeDisableCountArr: *const NativeArray<i32>, // 0xe0
             pub CurrentSkillKilledCount: i32,                     // 0xe8
             pub CharmAction: bool,                                // 0xec

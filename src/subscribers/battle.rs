@@ -476,7 +476,7 @@ fn on_set_lineup(instance: *const c_void, battle_lineup_data: *const BattleLineu
                  ("battle_lineup_data".to_string(), serde_json::to_value(&*battle_lineup_data).unwrap()),].into_iter().collect();
 
         BattleContext::log_battle_event_context(args);
-        log::info!("on_set_lineup logged");
+        //log::info!("on_set_lineup logged");
 
         let light_team = (*battle_lineup_data).LightTeam;
         let mut avatars = Vec::<Avatar>::new();
@@ -484,7 +484,7 @@ fn on_set_lineup(instance: *const c_void, battle_lineup_data: *const BattleLineu
         for character_ptr in (*light_team).to_slice() {
             let character = *character_ptr;
             let avatar_id = (*character).CharacterID;
-            log::debug!("{}", format!("AVATAR ID: {}", avatar_id));
+            //log::info!("{}", format!("AVATAR ID: {}", avatar_id));
             match helpers::get_avatar_from_id(avatar_id) {
                 Ok(avatar) => avatars.push(avatar),
                 Err(e) => {

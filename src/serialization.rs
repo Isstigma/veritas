@@ -7,6 +7,7 @@ use serde::ser::SerializeStruct;
 use serde::{Serialize, Serializer};
 use std::backtrace::Backtrace;
 use std::{ffi, slice};
+use std::ffi::c_void;
 
 /// Function to serialize a raw pointer (`*const GameEntity`) as its memory address.
 // pub fn serialize_game_entity_pointer<S>(ptr: &*const GameEntity, serializer: S) -> Result<S::Ok, S::Error>
@@ -836,19 +837,28 @@ impl Serialize for SkillCharacterComponent{
 
             // Serialize custom fields with helpers for pointers and arrays
             if self._SkillDataList.is_null() { state.serialize_field("_SkillDataList", "null")?; }
-            else { state.serialize_field("_SkillDataList", &*self._SkillDataList)?; }
+            else {
+                //log::info!("_SkillDataList");
+                state.serialize_field("_SkillDataList", &*self._SkillDataList)?;
+            }
 
             if self._CharacterDataRef.is_null() { state.serialize_field("_CharacterDataRef", "null")?; }
             else { state.serialize_field("_CharacterDataRef", &*self._CharacterDataRef)?; }
 
             if self._SkillTargetRedirectEntries.is_null() { state.serialize_field("_SkillTargetRedirectEntries", "null")?; }
-            else { state.serialize_field("_SkillTargetRedirectEntries", &*self._SkillTargetRedirectEntries)?; }
+            else {
+                //log::info!("_SkillTargetRedirectEntries");
+                state.serialize_field("_SkillTargetRedirectEntries", &*self._SkillTargetRedirectEntries)?;
+            }
 
             if self._TBAbilityRef.is_null() { state.serialize_field("_TBAbilityRef", "null")?; }
             else { state.serialize_field("_TBAbilityRef", &*self._TBAbilityRef)?; }
 
             if self._SkillSlots.is_null() { state.serialize_field("_SkillSlots", "null")?; }
-            else { state.serialize_field("_SkillSlots", &*self._SkillSlots)?; }
+            else {
+                //log::info!("_SkillSlots");
+                state.serialize_field("_SkillSlots", &*self._SkillSlots)?;
+            }
 
             if self._JsonConfigRef.is_null() { state.serialize_field("_JsonConfigRef", "null")?; }
             else { state.serialize_field("_JsonConfigRef", &*self._JsonConfigRef)?; }
@@ -875,7 +885,10 @@ impl Serialize for SkillCharacterComponent{
             else { state.serialize_field("CurrentAimAtMainTargetList", &*self.CurrentAimAtMainTargetList)?; }
 
             if self.OnSkillSetup.is_null() { state.serialize_field("OnSkillSetup", "null")?; }
-            else { state.serialize_field("OnSkillSetup", &*self.OnSkillSetup)?; }
+            else {
+                //log::info!("OnSkillSetup");
+                state.serialize_field("OnSkillSetup", &*self.OnSkillSetup)?;
+            }
 
             state.serialize_field("_SkillTypeDisableSlots", &serialize_pointer(&self._SkillTypeDisableSlots))?;
             state.serialize_field("CurrentSkillTargetDamageHP", &serialize_pointer(&self.CurrentSkillTargetDamageHP))?;
@@ -1053,91 +1066,214 @@ impl Serialize for FixPoint{
     }
 }
 
+//
+// impl Serialize for NativeArray<u32>
+// where
+// {
+//     ///Naming is actually incorrect - vector at the moment of writing is supposed to contain only the first item
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         Ok(())
+//     }
+// }
+
 impl<T> Serialize for NativeArray<T>
 where
     T: Serialize + Clone
 {
-    ///Implementation is actually incorrect - vector at the moment of writing is supposed to contain only the first item
+    ///Naming is actually incorrect - vector at the moment of writing is supposed to contain only the first item
+    /// and 'bounds' contain something very questionable
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where S: Serializer,
     {
-        //log::info!("serialize::NativeArray");
-
-        // Start serializing the struct with 4 fields (adjust the number for your fields)
-        let mut state = serializer.serialize_struct("NativeArray", 25)?;
-
-        // Serialize the `obj` field (NativeObject is Serializable)
-        state.serialize_field("obj", &self.obj)?;
-        // Serialize the `max_length` field
-        state.serialize_field("max_length", &&self.length)?;
-
-        // Serialize the `bounds` raw pointer as its numeric value (cast to `usize`)
-        state.serialize_field("bounds", &(self.bounds as usize))?;
-        //log::info!("{}", serde_json::to_value(Backtrace::capture().to_string()).unwrap());
-
-        if (*&self.bounds) as u64 != 0 && self.length != 0
-        {
-            // let t_size = size_of::<T>();
-            // let mem_size = t_size as u32 * &self.length;
-            /*
-            // state.serialize_field("t_size", &t_size)?;
-            // state.serialize_field("mem_size", &mem_size)?;
-            // let x = [5, 6, 7];
-            // let raw_pointer = x.as_ptr();
-            // log::info!("dumping of a NativeArray started");
-            // log::info!("entity.max_length: {}", entity.max_length);
-            // log::info!("entity.bounds: {}", (*&entity.bounds) as u64);
-            // log::info!("t_size: {}", t_size);
-            // log::info!("mem_size: {}", mem_size);
-            //log::info!("type name: {}", std::any::type_name::<T>());
-            // log::info!("bounds size: {}", size_of_val(&(entity.bounds)));
-
-            //log::info!("bounds size as T: {}", size_of_val(&(entity.bounds as *const T)));
-            */
-            let memory_slice = unsafe{ slice::from_raw_parts(self.bounds as *const u64, (&self.length+4) as usize)};
-            // log::info!("ln877");
-            let vec = &memory_slice.to_vec()
-                //.into_iter()
-                //.skip(4)
-                //.collect::<Vec<u64>>()
-            ;
-
-            // log::info!("ln879");
-            // match serde_json::to_string(vec) {
-            //     Ok(serialized) => log::info!("vec serialized: {}", serialized),
-            //     Err(err) => log::error!("Failed to serialize vec: {}", err),
-            // }
-
-            let mut index = 0;
-            // for value in vec {
-            //     println!("Value: {}", value); // Borrowed reference to each element
-            // }
-            for i in vec {
-                let field_name = format!("data_{}", &index);
-
-                if i > &(5497690084096)
-                && Backtrace::capture().frames().len() < 50
-                && std::any::type_name::<T>() != "i32" {
-                    //log::info!("super-serializing {}", i);
-                    let item = (*i) as usize as *const T;
-                    unsafe {state.serialize_field(Box::leak(field_name.into_boxed_str()), &*item)?;}
-                }
-                else {
-                    state.serialize_field(Box::leak(field_name.into_boxed_str()), i)?;
-                }
-                index += 1;
+        if let "i32" | "u32" = std::any::type_name::<T>() {
+            log::info!("serialize::NativeArray {} obj {} {}, bounds: {}, length {}, vector: {}, ptr {}",
+                std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+                &(self.bounds as u64), &self.length, &(self.vector as u32), (self as *const NativeArray<T>) as u64);
+            if self.bounds as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
+                (self.bounds as u64) < 8700100315968u64 {
+                unsafe { log::info!("value at the ref u32 {} ", &*(self.bounds as *const u32 )); }
+                unsafe { log::info!("value at the ref u64 {} ", &*(self.bounds as *const u64 )); }
             }
+            if self.vector as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
+                (self.vector as u64) < 8700100315968u64 {
+                unsafe { log::info!("value at the ref u32 {} ", &*(self.vector as *const u32 )); }
+                unsafe { log::info!("value at the ref u64 {} ", &*(self.vector as *const u64 )); }
+            }
+            if self.bounds as u64 == 0 && (self.vector as u64) == 0 {
+                unsafe { log::info!("value at the ref u32 {} ", &*((((self as *const NativeArray<T>) as u64)+0x8)as *const u64)); }
+            }
+        }
+        let mut state = serializer.serialize_struct("NativeArray", (&self.length + 10) as usize)?;
 
-            //state.serialize_field("data", &vec)?;
+        state.serialize_field("obj", &self.obj)?;
+        state.serialize_field("length", &&self.length)?;
+
+        state.serialize_field("bounds", &(self.bounds as usize))?;
+        state.serialize_field("vector", &serialize_pointer(&(self.vector as *const c_void)))?;
+
+        if(self.vector as u64) > 0 && (self.bounds as u64) > 0 {
+            //from my understanding such thins shouldn't happen but if it does then I'd like to know where
+            log::info!("serialize::NativeArray {} obj {} {}, bounds: {}, length {}, vector: {}, ptr {}",
+                std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+                &(self.bounds as u64), &self.length, &(self.vector as u32), (self as *const NativeArray<T>) as u64);
         }
 
-        //log::info!("successfully serialized a NativeArray item {}", std::any::type_name::<T>());
+        if self.length > 0 {
+            if (self.vector as u64) > 0 {
+                unsafe {
+                    let items = self.to_slice();
+                    let mut index = 0;
+                    //log::info!("retrieved items");
+                    for item in items {
+                        let field_name = format!("data_{}", &index);
+                        //log::info!("item {}", *item as u64);
+                        if (*item as u64) > 0x70000000000 && std::any::type_name::<T>() != "i32" //0x70000000000 = 7696581394432u64
+                            && (*item as u64) < 8700100315968u64 //for some reason some NativeObjects have retarded addresses like 3175009970383523287 (mb collapsed 32bit values?) or 1900545 (latter was found in SkillCharacterComponent)
+                        {
+                            state.serialize_field(Box::leak(field_name.into_boxed_str()), &**item)?;
+                        } else {
+                            state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u64))?;
+                        }
+                        index += 1;
+                    }
+                }
+            }
+            else if (self.bounds as u64) > 0 {
+                let memory_slice = unsafe{ slice::from_raw_parts(self.bounds as *const u64, (&self.length+4) as usize)};
+                let vec = &memory_slice.to_vec()
+                    //.into_iter().skip(4).collect::<Vec<u64>>()
+                    ;
 
-        // Finalize serialization
+                let mut index = 0;
+                // for value in vec {
+                //     println!("Value: {}", value); // Borrowed reference to each element
+                // }
+                for i in vec {
+                    let field_name = format!("data_{}", &index);
+
+                    if i > &(5497690084096)
+                        && Backtrace::capture().frames().len() < 50 //this workaround is needed for now
+                        && std::any::type_name::<T>() != "i32" {
+                        //log::info!("super-serializing {}", i);
+                        let item = (*i) as usize as *const T;
+                        unsafe {state.serialize_field(Box::leak(field_name.into_boxed_str()), &*item)?;}
+                    }
+                    else {
+                        state.serialize_field(Box::leak(field_name.into_boxed_str()), i)?;
+                    }
+                    index += 1;
+                }
+            }
+        }
+
         state.end()
     }
 }
 
+/* initial implementation of serialization (quite incorrect)
+// impl<T> Serialize for NativeArray<T>
+// where
+//     T: Serialize + Clone
+// {
+//     ///Naming is actually incorrect - vector at the moment of writing is supposed to contain only the first item
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where S: Serializer,
+//     {
+//         //log::info!("serialize::NativeArray");
+//
+//         // Start serializing the struct with 4 fields (adjust the number for your fields)
+//         let mut state = serializer.serialize_struct("NativeArray", 35)?;
+//
+//         // Serialize the `obj` field (NativeObject is Serializable)
+//         state.serialize_field("obj", &self.obj)?;
+//         // Serialize the `max_length` field
+//         state.serialize_field("length", &&self.length)?;
+//
+//         // Serialize the `bounds` raw pointer as its numeric value (cast to `usize`)
+//         state.serialize_field("bounds", &(self.bounds as usize))?;
+//         //log::info!("{}", serde_json::to_value(Backtrace::capture().to_string()).unwrap());
+//
+//         if (*&self.bounds) as u64 != 0 && self.length != 0
+//         {
+//             /*// let t_size = size_of::<T>();
+//             // let mem_size = t_size as u32 * &self.length;
+//
+//             // state.serialize_field("t_size", &t_size)?;
+//             // state.serialize_field("mem_size", &mem_size)?;
+//             // let x = [5, 6, 7];
+//             // let raw_pointer = x.as_ptr();
+//             // log::info!("dumping of a NativeArray started");
+//             // log::info!("entity.max_length: {}", entity.max_length);
+//             // log::info!("entity.bounds: {}", (*&entity.bounds) as u64);
+//             // log::info!("t_size: {}", t_size);
+//             // log::info!("mem_size: {}", mem_size);
+//             //log::info!("type name: {}", std::any::type_name::<T>());
+//             // log::info!("bounds size: {}", size_of_val(&(entity.bounds)));
+//
+//             //log::info!("bounds size as T: {}", size_of_val(&(entity.bounds as *const T)));
+//             */
+//             let memory_slice = unsafe{ slice::from_raw_parts(self.bounds as *const u64, (&self.length+4) as usize)};
+//             // log::info!("ln877");
+//             let vec = &memory_slice.to_vec()
+//                 //.into_iter()
+//                 //.skip(4)
+//                 //.collect::<Vec<u64>>()
+//                 ;
+//
+//             // log::info!("ln879");
+//             // match serde_json::to_string(vec) {
+//             //     Ok(serialized) => log::info!("vec serialized: {}", serialized),
+//             //     Err(err) => log::error!("Failed to serialize vec: {}", err),
+//             // }
+//
+//             let mut index = 0;
+//             // for value in vec {
+//             //     println!("Value: {}", value); // Borrowed reference to each element
+//             // }
+//             for i in vec {
+//                 let field_name = format!("data_{}", &index);
+//
+//                 if i > &(5497690084096)
+//                     && Backtrace::capture().frames().len() < 50
+//                     && std::any::type_name::<T>() != "i32" {
+//                     //log::info!("super-serializing {}", i);
+//                     let item = (*i) as usize as *const T;
+//                     unsafe {state.serialize_field(Box::leak(field_name.into_boxed_str()), &*item)?;}
+//                 }
+//                 else {
+//                     state.serialize_field(Box::leak(field_name.into_boxed_str()), i)?;
+//                 }
+//                 index += 1;
+//             }
+//
+//             //state.serialize_field("data", &vec)?;
+//         }
+//
+//         //log::info!("successfully serialized a NativeArray item {}", std::any::type_name::<T>());
+//
+//         // Finalize serialization
+//         state.end()
+//     }
+// }
+*/
+
+impl Serialize for BattleEquipmentData {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("BattleEquipmentData", 5)?;
+        state.serialize_field("native_object", &self.native_object)?;
+        state.serialize_field("CNIHAOIEFPI", &self.CNIHAOIEFPI)?;
+        state.serialize_field("FIAKPENJJMN", &self.FIAKPENJJMN)?;
+        state.serialize_field("LightConeId", &self.LightConeId)?;
+        state.serialize_field("ILBPLOKBBEJ", &self.ILBPLOKBBEJ)?;
+        state.end()
+    }
+}
 
 impl Serialize for LineUpCharacter {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -1169,36 +1305,39 @@ impl Serialize for LineUpCharacter {
 
         // 3. Serialize fields with custom logic.
 
-        // SkillTreePointList: Serialize `NativeArray<NativeObject>` pointer.
-        state.serialize_field(
-            "SkillTreePointList", &(*&self.SkillTreePointList as i64)
-)?;
+        unsafe {
+            // SkillTreePointList: Serialize `NativeArray<NativeObject>` pointer.
+            if self.SkillTreePointList.is_null() { state.serialize_field("SkillTreePointList", "null")?; }
+            else {
+                state.serialize_field("SkillTreePointList", &*self.SkillTreePointList)?;
+            }
 
-        // BattleEquipmentList: Serialize `NativeArray<NativeObject>` pointer.
-        state.serialize_field(
-            "BattleEquipmentList", &(*&self.BattleEquipmentList as i64),
-)?;
+            // BattleEquipmentList: Serialize `NativeArray<NativeObject>` pointer.
+            if self.BattleEquipmentList.is_null() { state.serialize_field("BattleEquipmentList", "null")?; }
+            else {
+                state.serialize_field("BattleEquipmentList", &*self.BattleEquipmentList)?;
+            }
 
-        // BattleRelicItemModule: Serialize `*const c_void` as a pointer address or None if null.
-        state.serialize_field(
-            "BattleRelicItemModule", &(*&self.BattleRelicItemModule as i64),
-)?;
+            // BattleRelicItemModule: Serialize `*const c_void` as a pointer address or None if null.
+            if self.BattleRelicItemModule.is_null() { state.serialize_field("BattleRelicItemModule", "null")?; }
+            else {
+                state.serialize_field("BattleRelicItemModule", &*self.BattleRelicItemModule)?;
+            }
+            // BattleGridAvatarData: Serialize `*const c_void` as a pointer address or None if null.
+            state.serialize_field("BattleGridAvatarData", &serialize_pointer(&self.BattleGridAvatarData))?;
 
-        // BattleGridAvatarData: Serialize `*const c_void` as a pointer address or None if null.
-        state.serialize_field(
-            "BattleGridAvatarData", &(*&self.BattleGridAvatarData as i64),
-)?;
+            // SpiritPassiveList: Serialize `NativeArray<u32>` pointer.
+            if self.SpiritPassiveList.is_null() { state.serialize_field("SpiritPassiveList", "null")?; }
+            else {
+                state.serialize_field("SpiritPassiveList", &*self.SpiritPassiveList)?;
+            }
 
-        // SpiritPassiveList: Serialize `NativeArray<u32>` pointer.
-        state.serialize_field(
-            "SpiritPassiveList", &(*&self.SpiritPassiveList as i64),
-)?;
-
-        // ChangedSkillTreePointList: Serialize `NativeArray<NativeObject>` pointer.
-        state.serialize_field(
-            "ChangedSkillTreePointList", &(*&self.ChangedSkillTreePointList as i64),
-)?;
-
+            // ChangedSkillTreePointList: Serialize `NativeArray<NativeObject>` pointer.
+            if self.ChangedSkillTreePointList.is_null() { state.serialize_field("ChangedSkillTreePointList", "null")?; }
+            else {
+                state.serialize_field("ChangedSkillTreePointList", &*self.ChangedSkillTreePointList)?;
+            }
+        }
         // 4. Finish serialization.
         state.end()
     }
@@ -1221,7 +1360,7 @@ impl Serialize for NativeObject {
     where
         S: Serializer,
     {
-        //log::info!("serialize::NativeObject");
+        //log::info!("serialize::NativeObject {} {}", self.klass as u64, self.monitor as u64);
 
         // Serialize as a struct with two fields
         let mut state = serializer.serialize_struct("NativeObject", 2)?;
@@ -1551,62 +1690,203 @@ impl Serialize for BattleLineupData {
     {
         //log::info!("serialize::BattleLineupData");
 
-        let mut state = serializer.serialize_struct("BattleLineupData", 11)?;
+        let mut state = serializer.serialize_struct("BattleLineupData", 13)?;
 
-        //TODO Serialize properly
         unsafe {
             // Serialize fields
             state.serialize_field("native_object", &self.native_object)?;
     
-            // Serialize pointers as their hexadecimal representation
-            state.serialize_field(
-                "ExtraTeam",
-                &format!("{:?}", self.ExtraTeam),
-            )?;
-            state.serialize_field(
-                "TeamBuffIDList",
-                &format!("{:?}", self.TeamBuffIDList),
-            )?;
-            state.serialize_field(
-                "MazeBuffAdded",
-                &format!("{:?}", self.MazeBuffAdded),
-            )?;
-            state.serialize_field(
-                "SpecialAvatarLevelAreaConfigs",
-                &format!("{:?}", self.SpecialAvatarLevelAreaConfigs),
-            )?;
-            state.serialize_field(
-                "_TemplateVariables",
-                &format!("{:?}", self._TemplateVariables),
-            )?;
-            state.serialize_field(
-                "LightTeam",
-                &format!("{:?}", self.LightTeam),
-            )?;
-            state.serialize_field(
-                "Context",
-                &format!("{:?}", self.Context),
-            )?;
-            state.serialize_field(
-                "BattleExtraPropertyAdditionDict__BackingField",
-                &format!("{:?}", self.BattleExtraPropertyAdditionDict__BackingField),
-            )?;
-            state.serialize_field(
-                "AdditionalTemplateVariables",
-                &format!("{:?}", self.AdditionalTemplateVariables),
-            )?;
-            state.serialize_field(
-                "DeferCreateTrialPlayerDic",
-                &format!("{:?}", self.DeferCreateTrialPlayerDic),
-            )?;
-            state.serialize_field(
-                "_LevelPath",
-                &format!("{:?}", self._LevelPath),
-            )?;
-    
+            if self.ExtraTeam.is_null(){ state.serialize_field("ExtraTeam", "null") ?;}
+            else { state.serialize_field("ExtraTeam", &*self.ExtraTeam)?; }
+
+            if self.TeamBuffIDList.is_null(){ state.serialize_field("TeamBuffIDList", "null") ?;}
+            else {
+                state.serialize_field(
+                    "TeamBuffIDList", &*self.TeamBuffIDList
+                )?;
+            }
+            if self.MazeBuffAdded.is_null(){ state.serialize_field("MazeBuffAdded", "null") ?;}
+            else {
+                state.serialize_field(
+                    "MazeBuffAdded",
+                    &*self.MazeBuffAdded
+                )?;
+            }
+
+            if self.SpecialAvatarLevelAreaConfigs.is_null(){ state.serialize_field("SpecialAvatarLevelAreaConfigs", "null") ?;}
+            else {
+                state.serialize_field(
+                    "SpecialAvatarLevelAreaConfigs",
+                    &serialize_pointer(&self.SpecialAvatarLevelAreaConfigs)
+                )?;
+            }
+
+            if self._TemplateVariables.is_null(){ state.serialize_field("_TemplateVariables", "null") ?;}
+            else {
+                state.serialize_field(
+                    "_TemplateVariables",
+                    &serialize_pointer(&self._TemplateVariables)
+                )?;
+            }
+
+            if self.LightTeam.is_null(){ state.serialize_field("LightTeam", "null") ?;}
+            else {
+                state.serialize_field(
+                    "LightTeam",
+                    &*self.LightTeam
+                )?;
+            }
+
+            if self.Context.is_null(){ state.serialize_field("Context", "null") ?;}
+            else {
+                state.serialize_field(
+                    "Context",
+                    &serialize_pointer(&self.Context),
+                )?;
+            }
+
+            if self.BattleExtraPropertyAdditionDict__BackingField.is_null(){ state.serialize_field("BattleExtraPropertyAdditionDict__BackingField", "null") ?;}
+            else {
+                state.serialize_field(
+                    "BattleExtraPropertyAdditionDict__BackingField",
+                    &serialize_pointer(&self.BattleExtraPropertyAdditionDict__BackingField),
+                )?;
+            }
+
+            if self.AdditionalTemplateVariables.is_null(){ state.serialize_field("AdditionalTemplateVariables", "null") ?;}
+            else {
+                state.serialize_field(
+                    "AdditionalTemplateVariables",
+                    &serialize_pointer(&self.AdditionalTemplateVariables)
+                )?;
+            }
+
+            if self.DeferCreateTrialPlayerDic.is_null(){ state.serialize_field("DeferCreateTrialPlayerDic", "null") ?;}
+            else {
+                state.serialize_field(
+                    "DeferCreateTrialPlayerDic",
+                    &serialize_pointer(&self.DeferCreateTrialPlayerDic)
+                )?;
+            }
+
+            if self._LevelPath.is_null(){ state.serialize_field("_LevelPath", "null") ?;}
+            else {
+                state.serialize_field(
+                    "_LevelPath",
+                    &*self._LevelPath
+                )?;
+            }
             // Serialize simple u32 field directly
             state.serialize_field("WorldLevel", &self.WorldLevel)?;
         }
+        state.end()
+    }
+}
+
+impl Serialize for SpecialRelicData {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        // Handle struct serialization with 4 fields
+        let mut state = serializer.serialize_struct("SpecialRelicData", 4)?;
+        log::info!("serialize::SpecialRelicData");
+        state.serialize_field("native_object", &self.native_object)?;
+
+        unsafe{
+            if self.LGBJKGGCELB.is_null(){ state.serialize_field("LGBJKGGCELB", "null") ?;}
+            else {
+                state.serialize_field("LGBJKGGCELB", &*self.LGBJKGGCELB)?;
+            }
+        }
+        state.serialize_field("POFMKDABEHD", &self.POFMKDABEHD)?;
+        state.serialize_field("JGJCDMJIMNN", &self.JGJCDMJIMNN)?;
+
+        state.end()
+    }
+}
+
+impl Serialize for BattleRelicModule {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        // Serialize 7 fields in the struct
+        let mut state = serializer.serialize_struct("BattleRelicModule", 7)?;
+        log::info!("serialize::BattleRelicModule");
+
+        // Serialize native_object
+        state.serialize_field("native_object", &self.native_object)?;
+
+        unsafe {
+        // Safely serialize each pointer field
+            state.serialize_field("AAEONBIGBBP", &serialize_pointer(&self.AAEONBIGBBP))?;
+            state.serialize_field("BKCGOLIBNHC", &serialize_pointer(&self.BKCGOLIBNHC))?;
+
+            if self.BattleRelicInfos.is_null() { state.serialize_field("BattleRelicInfos", "null")?; }
+            else {
+                state.serialize_field("BattleRelicInfos", &*self.BattleRelicInfos)?;
+            }
+
+            state.serialize_field("PMMGFOHHKPM", &serialize_pointer(&self.PMMGFOHHKPM))?;
+            state.serialize_field("BIJMJNIMPOM", &serialize_pointer(&self.BIJMJNIMPOM))?;
+        }
+        // Serialize SpecialRelicData if not null
+        let special_relic_data = unsafe {
+            if !self.SpecialRelicData.is_null() {
+                Some(*self.SpecialRelicData)
+            } else {
+                None
+            }
+        };
+        state.serialize_field("SpecialRelicData", &special_relic_data)?;
+
+        state.end()
+    }
+}
+
+impl Serialize for BattleRelicInfo {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        // Define struct serialization with 5 fields
+        let mut state = serializer.serialize_struct("BattleRelicInfo", 5)?;
+        log::info!("serialize::BattleRelicInfo");
+
+        // Serialize the native object
+        state.serialize_field("native_object", &self.native_object)?;
+        state.serialize_field("IGIDDGDHAGI", &self.IGIDDGDHAGI)?;
+        state.serialize_field("LightConeId", &self.LightConeId)?;
+        state.serialize_field("FFPKKKEBDHL", &self.FFPKKKEBDHL)?;
+
+        // Serialize the pointer to NativeArray<NCGNFPLFBOJ>
+
+        if self.BNDGBHLOJHN.is_null() { state.serialize_field("BNDGBHLOJHN", "null")?; }
+        else {
+            unsafe { state.serialize_field("BNDGBHLOJHN", &*self.BNDGBHLOJHN)?; }
+        }
+
+        state.end()
+    }
+}
+
+impl Serialize for NCGNFPLFBOJ {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        // Start serializing the struct with 4 fields
+        let mut state = serializer.serialize_struct("NCGNFPLFBOJ", 4)?;
+        log::info!("serialize::NCGNFPLFBOJ");
+
+        // Serialize each field individually
+        state.serialize_field("native_object", &self.native_object)?;
+        state.serialize_field("NIKFINDKDKO", &self.NIKFINDKDKO)?;
+        state.serialize_field("KBMCHLGDKEF", &self.KBMCHLGDKEF)?;
+        state.serialize_field("KHADHNNCFLH", &self.KHADHNNCFLH)?;
+
+        // End the serialization
         state.end()
     }
 }

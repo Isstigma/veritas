@@ -36,16 +36,22 @@ impl Display for NativeString {
     }
 }
 
+///Bounds is a pointer to the collection if the initial type is in System.Collections.Generic (only List?)
+/// While Vector is a first item of the collection if the initial type is object[]
+/// How it looks like in case of smth like int[] is a question for now
+/// NativeArray should be split into NativeArray<> and NativeCollection<> to check this cases properly
+/// mb the third type will be needed for uint[] alikes?
 #[repr(C, align(8))]
 #[derive(Debug, Clone, Copy)]
 pub struct NativeArray<T> {
     pub obj: NativeObject,
-    pub bounds: *const std::ffi::c_void,
-    pub length: u32,
-    // This is the first item of some pointer
     //there are 4 more pointers at the address below, resembling members of the initial C# Collection<>
     //type-object pointer (presumably the type of list items), 2 zeros (who knows what they stand for)
     // and an actual max_length of the collection
+    //so should bounds be used in one kind of collection and vector is for the other stuff?
+    pub bounds: *const std::ffi::c_void,
+    pub length: u32,
+    // This is the first item of some pointer
     pub(crate) vector: *const T,
 }
 
