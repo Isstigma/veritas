@@ -1,3 +1,5 @@
+#![feature(backtrace_frames)]
+
 macro_rules! lazy_initialize_address {
     ($addr:expr) => {
         LazyLock::new(|| unsafe { std::mem::transmute($addr + *$crate::GAMEASSEMBLY_HANDLE) })
@@ -12,6 +14,8 @@ mod kreide;
 mod ui;
 mod logging;
 mod overlay;
+mod serialization;
+mod deserialization;
 
 use std::sync::LazyLock;
 use windows::{

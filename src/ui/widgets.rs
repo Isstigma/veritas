@@ -1,4 +1,4 @@
-use egui::{ahash::HashMap, Stroke, Ui, TextStyle};
+use egui::{Stroke, Ui, TextStyle};
 use egui_plot::{Legend, Plot, PlotPoints, Polygon, BarChart, Bar, Line};
 use crate::ui::app::Unit;
 

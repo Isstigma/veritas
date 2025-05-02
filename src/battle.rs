@@ -1,13 +1,11 @@
 use std::sync::{LazyLock, Mutex, MutexGuard};
 use directories::ProjectDirs;
-use std::io::{LineWriter, Write};
+use std::io::{Write};
 use fs::File;
 use std::collections::HashMap;
 use anyhow::{Context, Result};
 use std::fs::OpenOptions;
-use std::io::prelude::*;
-use dict::{ Dict, DictIface };
-
+use std::env::set_var;
 use crate::{
     models::{
         events::{
@@ -23,7 +21,6 @@ use chrono;
 use serde_json;
 use std::fs;
 use std::path::PathBuf;
-use egui::TextBuffer;
 
 #[derive(Default)]
 pub enum BattleState {
@@ -45,7 +42,6 @@ pub struct BattleContext {
     // Index w/ lineup index
     // Used to update UI damage when dmg occurs
     pub real_time_damages: Vec<f64>,
-    pub battle_start_time: chrono::DateTime<chrono::Utc>,
     pub battle_log_file: Option<File>,
 }
 
@@ -82,51 +78,65 @@ impl BattleContext {
         battle_context.lineup = lineup.clone();
         battle_context.total_damage = 0.;
         battle_context.real_time_damages = vec![0f64; lineup.len()];
-        battle_context.battle_start_time = chrono::Utc::now();
 
+        if !battle_context.battle_log_file.is_some(){
+            log::info!("battle log file is not initialized");
+            Self::initialize_battle_log_file(battle_context)
+        }
+    }
+
+    fn initialize_battle_log_file(battle_context: &mut MutexGuard<BattleContext>) {
+        unsafe{
+            set_var("RUST_BACKTRACE", "1");
+        }
         log::info!("logging has started");
-        if let Some(config_path) = Self::get_battle_log_path(battle_context) {
+        if let Some(config_path) = Self::get_battle_log_path() {
             log::info!("{}", config_path.display());
-            let battle_start_log_entry = format!("battle started at {time}", time = battle_context.battle_start_time);
+            //let battle_start_log_entry = format!("battle started at {time}", time = chrono::Utc::now());
 
-            log::info!("{}", battle_start_log_entry.as_str());
+            //log::info!("{}", battle_start_log_entry.as_str());
 
-            let mut file = OpenOptions::new()
+            let file = OpenOptions::new()
                 .create(true)
                 .write(true)
                 .append(true)
                 .open(config_path)
                 .unwrap();
 
+//            let mut battle_context = Self::get_instance();
             battle_context.battle_log_file = Some(file);
-
-            if let Err(e) = writeln!(battle_context.battle_log_file.as_ref().unwrap(), "{}", "{}".replace("{}", battle_start_log_entry.as_str()).as_str()) {
-                log::info!("Couldn't write to file: {}", e);
-            }
+            log::info!("battle log file initialized");
+            // if let Err(e) = writeln!(battle_context.battle_log_file.as_ref().unwrap(), "{}", "{}".replace("{}", battle_start_log_entry.as_str()).as_str()) {
+            //     log::info!("Couldn't write to file: {}", e);
+            // }
         }
     }
 
     pub fn log_battle_event_context(event: HashMap<String,serde_json::value::Value>){
-        let battle_context = Self::get_instance();
+        let mut battle_context = Self::get_instance();
 
-        if battle_context.battle_log_file.is_some()
+        if !battle_context.battle_log_file.is_some()
         {
-            if let Err(e) = writeln!(battle_context.battle_log_file.as_ref().unwrap(), "{}",
-                                     "{}".replace("{}", serde_json::to_string(&event).unwrap().as_str())) {
-                log::info!("Couldn't write to file: {}", e);
-            }
+            log::info!("tried to log battle event context but the file is not initialized");
+            Self::initialize_battle_log_file(&mut battle_context);
+        }
+
+        //log::info!("logging the battle event context");
+
+        //event.insert("backtrace".to_string(), serde_json::to_value(Backtrace::capture().to_string()).unwrap());
+
+        if let Err(e) = writeln!(battle_context.battle_log_file.as_ref().unwrap(), "{}", serde_json::to_string(&event).unwrap().as_str()) {
+            log::info!("Couldn't write to file: {}", e);
         }
     }
 
-    fn get_battle_log_path(
-        battle_context: &mut MutexGuard<'static, Self>,
-    ) -> Option<PathBuf> {
+    fn get_battle_log_path() -> Option<PathBuf> {
         let file_name = "battle-{time}.txt"
-            .replace("{time}", battle_context.battle_start_time.to_string().as_str())
+            .replace("{time}", chrono::Utc::now().to_string().as_str())
             .replace(" ", "_")
             .replace(":", "_");
 
-        log::info!("{}", file_name.as_str());
+        //log::info!("{}", file_name.as_str());
 
         ProjectDirs::from("com", "veritas", "veritas")
             .map(|proj_dirs| proj_dirs.data_dir().join(file_name.as_str()))
@@ -300,7 +310,9 @@ impl BattleContext {
 
     // Should wrap in option
     pub fn handle_event(event: Result<Event>) {
+        //log::info!("handle_event");
         let battle_context = Self::get_instance();
+        //log::info!("handle_event received mutex guard");
         let packet = match event {
             Result::Ok(event) => {
                 match event {

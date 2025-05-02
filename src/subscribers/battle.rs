@@ -6,7 +6,6 @@ use crate::kreide::types::*;
 use crate::kreide::*;
 // use crate::kreide::types::rpg::client::*;
 use crate::kreide::functions::rpg::gamecore::*;
-use crate::kreide::functions::rpg::client::*;
 use crate::kreide::helpers::*;
 
 use crate::models::events::OnBattleEndEvent;
@@ -23,7 +22,6 @@ use anyhow::{anyhow, Error};
 use function_name::named;
 use retour::static_detour;
 use std::ffi::c_void;
-use dict::Dict;
 
 static_detour! {
     static ON_DAMAGE_Detour: fn(
@@ -471,12 +469,14 @@ fn on_combo(instance: *const MMNDIEBMDNL) {
 fn on_set_lineup(instance: *const c_void, battle_lineup_data: *const BattleLineupData) {
     log::debug!(function_name!());
     unsafe {
+        log::info!("on_set_lineup");
         let args: HashMap<String, serde_json::value::Value> =
             vec![("occasion".to_string(), serde_json::to_value("on_set_lineup arguments").unwrap()),
-                 ("instance".to_string(), serde_json::to_value(instance as u64).unwrap()),
-                 ("a3".to_string(), serde_json::to_value(&*battle_lineup_data).unwrap()),].into_iter().collect();
+                 ("instance".to_string(), serde_json::to_value(instance as u64).unwrap()), 
+                 ("battle_lineup_data".to_string(), serde_json::to_value(&*battle_lineup_data).unwrap()),].into_iter().collect();
 
         BattleContext::log_battle_event_context(args);
+        log::info!("on_set_lineup logged");
 
         let light_team = (*battle_lineup_data).LightTeam;
         let mut avatars = Vec::<Avatar>::new();
@@ -565,7 +565,7 @@ fn on_turn_end(instance: *const c_void, a1: i32) -> *const c_void {
     log::debug!(function_name!());
 
     let args: HashMap<String, serde_json::value::Value> =
-        vec![("occasion".to_string(), serde_json::to_value("on_set_lineup arguments").unwrap()),
+        vec![("occasion".to_string(), serde_json::to_value("on_turn_end arguments").unwrap()),
              ("instance".to_string(), serde_json::to_value(instance as u64).unwrap()),
              ("a3".to_string(), serde_json::to_value(&a1).unwrap()),].into_iter().collect();
 

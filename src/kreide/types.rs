@@ -1,179 +1,270 @@
 use crate::kreide::gamecore::*;
 use crate::kreide::native_types::*;
+use serde::{Deserialize, Serialize};
 use std::ffi::c_void;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use crate::kreide::types::rpg::client::{AvatarData, AvatarServantData};
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Serialize)]
+#[derive(Debug, Clone, Copy)]
 pub struct NOPBAAAGGLA {
     pub native_object: NativeObject,
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+    //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub HKFGOHGKOGK: *const c_void,                    // 0x10
-    #[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
     pub JKCOIOLCMEP: *const TurnBasedAbilityComponent, // 0x18
-    #[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
     pub FKKDFMPMJHG: *const NativeArray<NativeObject>, // 0x20
-    #[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
     pub JODAJBNCCNP: *const NativeArray<NativeObject>, // 0x28
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+    //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub PBHCGDFPEED: *const c_void,                    // 0x30
-    #[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
     pub MDEHKOOKJCK: *const NativeArray<NativeObject>, // 0x38
-    #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
     pub LGGEDDMACDF: *const NativeString,              // 0x40
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub AAHMMHBHMFN: [u8; 0x90],                       // 0x48
-    #[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
     pub KNDJNKNHFFG: *const TurnBasedAbilityComponent, // 0xd8
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+    //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub BEAJGANIDLJ: *const c_void,                    // 0xe0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub NAGMKEABGEE: FixPoint,                         // 0xe8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub KLMAGCLFBAO: FixPoint,                         // 0xf0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PDCMJAMPJNL: FixPoint,                         // 0xf8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub FFCGIMAMDPP: FixPoint,                         // 0x100
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub EFAAJEAENFF: FixPoint,                         // 0x108
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub JCPEINMPKAM: FixPoint,                         // 0x110
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GAALBDHLFOG: FixPoint,                         // 0x118
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PJNEJPNBNMP: FixPoint,                         // 0x120
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GLPLDJKMOBE: FixPoint,                         // 0x128
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub FFFOLNDHIEH: [u8; 0x48],                       // 0x130
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub CMNBOEIDAOD: FixPoint,                         // 0x178
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MGFECPHDPHB: FixPoint,                         // 0x180
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub JFKEEOMKMLI: FixPoint,                         // 0x188
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub HHEIPBOKCOH: [u8; 0x40],                       // 0x190
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PNGJIDMHIOE: FixPoint,                         // 0x1d0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PJPKDAKBEJI: FixPoint,                         // 0x1d8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PAIGBKBOKDI: FixPoint,                         // 0x1e0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub COIDNPMCCFG: FixPoint,                         // 0x1e8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub OHBMMFAFMDP: FixPoint,                         // 0x1f0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub JFMADBFKBDK: FixPoint,                         // 0x1f8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MHEBPGAHFCB: FixPoint,                         // 0x200
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub EPJEDLOBFPG: FixPoint,                         // 0x208
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DGFBMAPFPNH: FixPoint,                         // 0x210
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub KOEGLFLGADD: FixPoint,                         // 0x218
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub JNFPCNAKNOP: FixPoint,                         // 0x220
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PGOHAIPOCNK: FixPoint,                         // 0x228
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MLKFKKACBCE: FixPoint,                         // 0x230
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub CGMHNNNOKAI: FixPoint,                         // 0x238
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub NEPGNKOMAAA: FixPoint,                         // 0x240
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub EFFODBPOOCN: FixPoint,                         // 0x248
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub ABIPIIBIIBE: FixPoint,                         // 0x250
     pub BBDANLEJCIA: bool,                             // 0x258
     pub HEMFDDDJOGK: bool,                             // 0x259
     pub DPEJKHJPLAC: bool,                             // 0x25a
     pub JICCOEHBPJJ: bool,                             // 0x25b
     pub APDDLHNGGIM: AttackType,                       // 0x25c
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub KODEDHBLGGH: FixPoint,                         // 0x260
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GLGFEKEMMJJ: FixPoint,                         // 0x268
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub CAILJEGIDKL: FixPoint,                         // 0x270
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub NHHNLMOBEGH: FixPoint,                         // 0x278
     pub COKMLMJPKLH: u32,                              // 0x280
     pub CAANBNCPACE: bool,                             // 0x284
     pub FNBALMGFGDM: bool,                             // 0x285
     pub HKNLHAMMIIM: bool,                             // 0x286
     pub GFFCEBJGABG: bool,                             // 0x287
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GCNOMMHFPOG: FixPoint,                         // 0x288
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub EBDJIHNKAOC: FixPoint,                         // 0x290
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub AHOCGHANMCE: FixPoint,                         // 0x298
     pub EGINKGPDNPK: bool,                             // 0x2a0
     pub AHPFPMEGEKG: bool,                             // 0x2a1
     pub EKBHFCODKFO: bool,                             // 0x2a2
     pub MNAPDDFFHJF: bool,                             // 0x2a3
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub KDJBABPDHEG: FixPoint,                         // 0x2a8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub HCGBHCPHDKJ: FixPoint,                         // 0x2b0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DKOIGIHEBCD: FixPoint,                         // 0x2b8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub FNDCNMHMCIC: FixPoint,                         // 0x2c0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub CCLFKIPGJOG: FixPoint,                         // 0x2c8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub OEPAPFDLMML: FixPoint,                         // 0x2d0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub JHOHCEFOJNB: FixPoint,                         // 0x2d8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MKNDMBOCCBO: FixPoint,                         // 0x2e0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DJHDAOOEJOF: FixPoint,                         // 0x2e8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MNGPDEOEHPE: FixPoint,                         // 0x2f0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GJNAGCJONAO: FixPoint,                         // 0x2f8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GCFCCDPIACO: FixPoint,                         // 0x300
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DBNKBGKCMKH: FixPoint,                         // 0x308
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DINCHAHPEAC: FixPoint,                         // 0x310
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub FOLCDHNIMMI: FixPoint,                         // 0x318
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub JEHMOKDJDDE: FixPoint,                         // 0x320
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GIHPOCDLJOA: FixPoint,                         // 0x328
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub FLMEBELNIKK: FixPoint,                         // 0x330
     pub CFBOJBAJCEA: i32,                              // 0x338
     pub IICNDPJGCFA: i32,                              // 0x33c
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub EBDJHPNOALL: FixPoint,                         // 0x340
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub HJAEPANAFLN: FixPoint,                         // 0x348
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub CINNHMENLIJ: FixPoint,                         // 0x350
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub NCOHIAPKAED: FixPoint,                         // 0x358
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PGGOANFBJON: FixPoint,                         // 0x360
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GNMAKKBFOCH: FixPoint,                         // 0x368
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub BDLFBDLDEND: [u8; 0x48],                       // 0x370
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DBBDIMCJIKE: FixPoint,                         // 0x3b8
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub ANHNDBECCJD: [u8; 0x40],                       // 0x3c0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub BKIFAEKCIHN: FixPoint,                         // 0x400
     pub KMIKODLPNGL: i32,                              // 0x408
     pub JGHJIGOCPNP: i32,                              // 0x40c
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub BGBOFNMKDNJ: FixPoint,                         // 0x410
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DPPDEDGCLJJ: FixPoint,                         // 0x418
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GOHOJAIMDNM: FixPoint,                         // 0x420
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DJCAFPFKOGP: FixPoint,                         // 0x428
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GMBACFCLEGD: FixPoint,                         // 0x430
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub LJGPDLDGCEO: FixPoint,                         // 0x438
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DCEBGGFOFAO: FixPoint,                         // 0x440
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GHBPOPKEGLE: FixPoint,                         // 0x448
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub DEOICHHPAIF: FixPoint,                         // 0x450
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub BLFCEOMPDKK: FixPoint,                         // 0x458
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub HNJBAFCNNDD: FixPoint,                         // 0x460
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub BBNMJNPDOCP: FixPoint,                         // 0x468
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub JIINJMJGCOH: FixPoint,                         // 0x470
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub ILNAKPIOOAK: FixPoint,                         // 0x478
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub POLANGDKOKH: FixPoint,                         // 0x480
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub AMAJNHHAJIM: FixPoint,                         // 0x488
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub FMMBMJKNAHI: FixPoint,                         // 0x490
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MJMDGNPPILN: FixPoint,                         // 0x498
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub ODBPMMGBKGA: FixPoint,                         // 0x4a0
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub KOCOLHHLFLD: [u8; 0x40],                       // 0x4a8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub ELGMFJLGCPH: FixPoint,                         // 0x4e8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MAKENPDPHDN: FixPoint,                         // 0x4f0
     pub OJGNIBKADHK: u32,                              // 0x4f8
     pub AHHEDGLMDMG: i32,                              // 0x4fc
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub MKIMEBNOEGI: FixPoint,                         // 0x500
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub IAAJMHADJDG: FixPoint,                         // 0x508
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub GBENLNNEIJM: FixPoint,                         // 0x510
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub PJLPGAGKIDE: FixPoint,                         // 0x518
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub ACDFHOGEMCC: [u8; 0x40],                       // 0x520
-    #[serde(with = "serde_arrays")]
+    //#[serde(with = "serde_arrays")]
     pub MKMILJKLJON: [u8; 0x58],                       // 0x560
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub ENFFBMJBEDP: FixPoint,                         // 0x5b8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub FGIPOLJPICM: FixPoint,                         // 0x5c0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub KPELFJICFDH: FixPoint,                         // 0x5c8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub BDGDFKGOLPJ: FixPoint,                         // 0x5d0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub BEGDMOGLLGM: FixPoint,                         // 0x5d8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub BJAEJMLMJCL: FixPoint,                         // 0x5e0
     pub IJJHMGEHMHB: bool,                             // 0x5e8
     pub KDCHAHHPPGD: bool,                             // 0x5e9
     pub EJJMIFKCFHP: bool,                             // 0x5ea
     pub KBKGNDFAKGD: bool,                             // 0x5eb
     pub GCGEEFLGCIG: i32,                              // 0x5ec
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub APDLLHIMMEM: FixPoint,                         // 0x5f0
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub HMMMDOHLFEP: FixPoint,                         // 0x5f8
+    //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
     pub ALOGNJIBIPG: FixPoint,                         // 0x600
 }
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Serialize)]
+#[derive(Debug, Clone, Copy)]
 pub struct OLHMAHMMBNN {
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub JBHFMCDFPPL: *const c_void,                    // 0x0
-    #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
     pub FKHHOBBFMEH: *const NativeString,              // 0x8
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub BAICECGKLBG: *const c_void,                    // 0x10
-    #[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
     pub OAAMONICNLE: *const NativeArray<NativeObject>, // 0x18
     pub MOIPJLBAODO: i32,                              // 0x20
     pub NMJEMHAMIHD: i32,                              // 0x24
@@ -181,30 +272,27 @@ pub struct OLHMAHMMBNN {
     pub OBNPIDPHFDE: bool,                             // 0x29
     pub EKFIDPFOILC: bool,                             // 0x2a
     pub NMKBJGEONOJ: bool,                             // 0x2b
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub EDIDAHIELAG: *const c_void,                    // 0x30
     pub OKHBBILFBND: [u8; 0x2],                        // 0x38
     pub LDJAAEOOOLC: [u8; 0x2],                        // 0x3a
     pub MHFEBJINMBP: bool,                             // 0x3c
     pub AJENNABILJC: bool,                             // 0x3d
     pub GJIMBAPCJLF: bool,                             // 0x3e
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub ODNBNHFLMCD: *const c_void,                    // 0x40
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub FGJEHAKCLNL: *const c_void,                    // 0x48
     pub KGKBLOJMDPH: bool,                             // 0x50
 }
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Serialize)]
+#[derive(Debug, Clone, Copy)]
 pub struct MMNDIEBMDNL {
     pub native_object: NativeObject,
-    #[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
     pub FIMNOPAAFEP: *const TurnBasedAbilityComponent, // 0x10
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+    //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub MKMMNLODHDD: *const c_void,                    // 0x18
-    #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+    //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
     pub GNBEIGMFGIP: *const c_void,                    // 0x20
-    #[serde(skip_deserializing, serialize_with = "serialize_skill_character_component_pointer")]
+    //#[serde(skip_deserializing, serialize_with = "serialize_skill_character_component_pointer")]
     pub HECCDOHIAFD: *const SkillCharacterComponent,   // 0x28
     pub HMCDHMFHABF: OLHMAHMMBNN,                      // 0x30
     pub OOIFIGDBNBO: i32,                              // 0x88
@@ -212,50 +300,48 @@ pub struct MMNDIEBMDNL {
     pub NMJEMHAMIHD: i32,                              // 0x90
 }
 pub mod rpg {
-    use crate::kreide::types::*;
-    use std::ffi::c_void;
     pub mod client {
         use crate::kreide::types::*;
         use std::ffi::c_void;
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct AvatarData {
             pub native_object: NativeObject,
-            #[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_array_pointer")]
             pub HasTakenPromotionRewardList__BackingField: *const NativeArray<u32>, // 0x10
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub Row__BackingField: *const c_void,                                   // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ExtraPropertyAddition: *const c_void,                              // 0x20
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub _AvatarName: *const NativeString,                                   // 0x28
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub PromotedBeforeData__BackingField: *const c_void,                    // 0x30
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _TrialEquipment: *const c_void,                                     // 0x38
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub GrowUpBeforeData__BackingField: *const c_void,                      // 0x40
-            #[serde(skip_deserializing, serialize_with = "serialize_avatar_servant_data_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_avatar_servant_data_pointer")]
             pub ServantData__BackingField: *const AvatarServantData,                // 0x48
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub CombatPowerData__BackingField: *const c_void,                       // 0x50
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AvatarPropertyData__BackingField: *const c_void,                    // 0x58
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub UltraSkillConfig__BackingField: *const c_void,                      // 0x60
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub LevelUpedBeforeData__BackingField: *const c_void,                   // 0x68
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _SkillDataMap: *const c_void,                                       // 0x70
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub RelicsData__BackingField: *const c_void,                            // 0x78
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SkinIDList: *const NativeArray<u32>,                               // 0x80
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub SkillTreeData: *const c_void,                                       // 0x88
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub SpecialRow__BackingField: *const c_void,                            // 0x90
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _AvatarRowData: *const c_void,                                      // 0x98
             pub FirstMetTimeStamp: u64,                                             // 0xa0
             pub Promotion__BackingField: u32,                                       // 0xa8
@@ -429,24 +515,24 @@ pub mod rpg {
             pub isInited: bool,                       // 0x4b8
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct TextID {
             pub hash: i32,   // 0x0
             pub hash64: u64, // 0x8
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct AvatarServantData {
             pub native_object: NativeObject,
-            #[serde(skip_deserializing, serialize_with = "serialize_avatar_data_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_avatar_data_pointer")]
             pub _AvatarData: *const AvatarData, // 0x10
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Row: *const c_void,            // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _SkillDataMap: *const c_void,   // 0x20
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Json: *const c_void,           // 0x28
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ServantRowData: *const c_void, // 0x30
         }
     }
@@ -454,127 +540,128 @@ pub mod rpg {
         use crate::kreide::types::*;
         use std::ffi::c_void;
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct TurnBasedAbilityComponent {
             pub _parent_object: GameComponentBase,                // 0x0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub CharmDamageAttackProperty: *const c_void,         // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AbilityComponentRef__BackingField: *const c_void, // 0x20
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DisableActionStateByTask__BackingField: *const c_void, // 0x28
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub OnAbilityPropertyChanged: *const NativeArray<NativeObject>, // 0x30
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _BuffLockStepSources: *const NativeArray<NativeObject>, // 0x38
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _ExtraMaxLayerConfig: *const NativeArray<NativeObject>, // 0x40
-            #[serde(skip_deserializing, serialize_with = "serialize_character_data_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_character_data_pointer")]
             pub _CharacterDataRef: *const CharacterDataComponent, // 0x48
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub AdditionalAbilityParamList: *const NativeArray<NativeObject>, // 0x50
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SelfExtrAbilityList: *const NativeArray<NativeString>, // 0x58
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub Weakness: *const c_void,                          // 0x60
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _AbilityPropertiesInitSnapshot: *const NativeArray<FixPoint>, // 0x68
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub RegardAsAttackTypeMap: *const NativeArray<NativeObject>, // 0x70
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _KillerEntity: *const GameEntity,                 // 0x78
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DebuffLockStepSources: *const NativeArray<NativeObject>, // 0x80
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub RegardAsSkillTypeMap: *const NativeArray<NativeObject>, // 0x88
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub ProjectileTargetAttachPoint: *const NativeString, // 0x90
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DotModifierEventProcessors: *const NativeArray<NativeObject>, // 0x98
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _DmgChunk: *const c_void,                         // 0xa0
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub CharmDamageTarget: *const GameEntity,             // 0xa8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _AbilityToSkillMapping: *const c_void,            // 0xb0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub ModifierOverrideMapping: *const c_void,           // 0xb8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _EnergyPointEntries: *const NativeArray<NativeObject>, // 0xc0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AddModifierBindValueMapping: *const c_void,       // 0xc8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub CustomDataRef__BackingField: *const c_void,       // 0xd0
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub LastStanceBreakEntity__BackingField: *const GameEntity, // 0xd8
-            #[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
             pub _SyncPropertySource: *const TurnBasedAbilityComponent, // 0xe0
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _OnHitEffectMultipleOverride: *const NativeArray<NativeObject>, // 0xe8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DamageStoreList: *const NativeArray<NativeObject>, // 0xf0
-            #[serde(skip_deserializing, serialize_with = "serialize_character_config_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_character_config_pointer")]
             pub _JsonConfigRef: *const CharacterConfig,           // 0xf8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub DamageSplitData: *const NativeArray<NativeObject>, // 0x100
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _StancePreshowConfigs: *const NativeArray<NativeObject>, // 0x108
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _EnableNegativeHPSourceList: *const NativeArray<NativeObject>, // 0x110
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ModifierEventSourceMuteCounter: *const c_void,   // 0x118
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _LockHPList: *const NativeArray<NativeObject>,    // 0x120
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _RedStanceInfoList: *const NativeArray<NativeObject>, // 0x128
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub CharmSkillName: *const NativeString,              // 0x130
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub KillerSkill__BackingField: *const c_void,         // 0x138
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DamagedEntityListInAttack: *const NativeArray<GameEntity>, // 0x140
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _OnHitEffectOverride: *const NativeArray<NativeObject>, // 0x148
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub DamageDefender: *const GameEntity,                // 0x150
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _AbilityProperties: *const NativeArray<NativeObject>, // 0x158
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _RedStanceInfo: *const c_void,                    // 0x160
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _DefaultStanceInfo: *const c_void,                // 0x168
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _SyncPropertyMask: *const c_void,                 // 0x170
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ModifierRecordList: *const c_void,               // 0x178
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _StatusChanceResistanceDict: *const c_void,       // 0x180
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _DamagedAllEntityIDListInAttack: *const c_void,   // 0x188
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ExtraStanceInfo: *const c_void,                  // 0x190
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _DamageAttacker: *const GameEntity,               // 0x198
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub LockActionDelayChange: *const c_void,             // 0x1a0
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _ModifierEventProcessors: *const NativeArray<NativeObject>, // 0x1a8
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub OverflowStanceDamageAttacker__BackingField: *const GameEntity, // 0x1b0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _TransformRef: *const c_void,                     // 0x1b8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _StatusProbabilityDict: *const c_void,            // 0x1c0
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub ResistModifierBehaviorFlags__BackingField: *const NativeArray<NativeObject>, // 0x1c8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DepartedParams: *const NativeArray<NativeObject>, // 0x1d0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _DelayModifyActionDelayQueue: *const c_void,       // 0x1d8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _LockShieldCounter: *const c_void,                 // 0x1e0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ModifierDelayParamList: *const c_void,            // 0x1e8
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub TotalDamageCurrentAttack: FixPoint,                // 0x1f0
             pub BattleTag__BackingField: i32,                      // 0x1f8
             pub ForceKillFlag__BackingField: bool,                 // 0x1fc
@@ -583,6 +670,7 @@ pub mod rpg {
             pub bIsInCharmAction: bool,                            // 0x200
             pub VisualFlagValue__BackingField: i32,                // 0x204
             pub _DeathVersion: u32,                                // 0x208
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub TotalHitNum: FixPoint,                             // 0x210
             pub DeathSource__BackingField: i32,                    // 0x218
             pub IsTriggeringStanceCountDown__BackingField: bool,   // 0x21c
@@ -600,6 +688,7 @@ pub mod rpg {
             pub _ModifierDelayAddCount: i32,                       // 0x23c
             pub _DebuffLockStep: i32,                              // 0x240
             pub StanceType: i32,                                   // 0x244
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub InheritSPRatio: FixPoint,                          // 0x248
             pub InsertAbilityCount: i32,                           // 0x250
             pub SpeedVisualFlagValue__BackingField: i32,           // 0x254
@@ -616,81 +705,83 @@ pub mod rpg {
             pub _IsProcessingModifierDelayParam: bool,             // 0x26e
             pub LastBreakStanceDamageType__BackingField: i32,      // 0x270
             pub _ResetStanceVersion: u32,                          // 0x274
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub ActionDelayDistance__BackingField: FixPoint,       // 0x278
             pub IsTriggeredBlockDamage: bool,                      // 0x280
             pub BlockModifySp__BackingField: bool,                 // 0x281
             pub IsSnapshot__BackingField: bool,                    // 0x282
             pub _IsBehaviorFlagVisualDirty: bool,                  // 0x283
             pub _BuffLockStep: i32,                                // 0x284
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub OverflowStanceDamage__BackingField: FixPoint,      // 0x288
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct EntityManager {
             pub native_object: NativeObject,
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _EntityUniqueNameDict: *const NativeArray<NativeObject>, // 0x10
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ProcessEntityTeamChangeDelg: *const c_void,             // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub PerformanceGORoot__BackingField: *const c_void,          // 0x20
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub DataViewUISelectFadeOutEntity__BackingField: *const GameEntity, // 0x28
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub LevelEntity__BackingField: *const GameEntity,            // 0x30
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DataViewUISelectFadeInFollowEntities__BackingField: *const c_void, // 0x38
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _OwnerWorldRef: *const c_void,                           // 0x40
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub PlayerGORoot__BackingField: *const c_void,               // 0x48
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _GroupEntityIDToEntityDict: *const c_void,               // 0x50
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _PauseEntityTimeSlowIndexDic: *const NativeArray<NativeObject>, // 0x58
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub EntityGORoot__BackingField: *const c_void,               // 0x60
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub DataViewUISelectFadeInEntity__BackingField: *const GameEntity, // 0x68
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub DataViewUISelectSummonerOfUncreatedServant__BackingField: *const GameEntity, // 0x70
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub GroupGORoot__BackingField: *const c_void,                // 0x78
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub DataViewUISelectFadeOutSummonerEntity__BackingField: *const GameEntity, // 0x80
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ServerEntityIDToEntityDict: *const c_void,              // 0x88
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _AllTeamEntityList: *const NativeArray<GameEntity>,      // 0x90
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _SnapshotEntityMap: *const c_void,                       // 0x98
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub DataViewUILeaveSummonerOfUncreatedServant__BackingField: *const GameEntity, // 0xa0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub LittleGameGORoot__BackingField: *const c_void,           // 0xa8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _AllTeamEntity: *const NativeArray<GameEntity>,          // 0xb0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _AllEntityDictionary: *const c_void,                     // 0xb8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _UniqueNamedEntityDictionary: *const c_void,             // 0xc0
             pub _UseUniqueSnapshot: bool,                                // 0xc8
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct BattleEventDataComponent {
             pub _parent_object: CharacterDataComponent,          // 0x0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _EnergyBarState: *const c_void,                  // 0x90
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub CreateParams__BackingField: *const c_void,       // 0x98
-            #[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
             pub _TBAbilityRef: *const TurnBasedAbilityComponent, // 0xa0
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub SourceCaster__BackingField: *const GameEntity,   // 0xa8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleEventConfig__BackingField: *const c_void,  // 0xb0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _BattleEventRowData: *const c_void,              // 0xb8
             pub BattleEventTotalDamageType: TeamType,            // 0xc0
             pub WarningChallengeTurnLeft: u32,                   // 0xc4
@@ -706,153 +797,81 @@ pub mod rpg {
             Count = 5,
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct TurnBasedGameMode {
             pub native_object: NativeObject,
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _SwordTrainingMgr: *const c_void, // 0x10
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub CurrentMVPEntity__BackingField: *const GameEntity, // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleAIPublicKnowledge__BackingField: *const c_void, // 0x20
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CurrentWaveMainMonsterIDPool__BackingField: *const NativeArray<u32>, // 0x28
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ActionDelayLinkMgr: *const c_void, // 0x30
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _PhaseModifierList: *const NativeArray<NativeObject>, // 0x38
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _LinkTeammateList: *const NativeArray<GameEntity>, // 0x40
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _ActionEntityList: *const NativeArray<GameEntity>, // 0x48
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub StageBattleEventMgr__BackingField: *const c_void, // 0x50
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub LastKillTargetList__BackingField: *const NativeArray<GameEntity>, // 0x58
             pub _ActionDelayChangeStamp: [u8; 0x18], // 0x60
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ModifierPerformCamerContext: *const c_void, // 0x78
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub LastSummonMonsterList: *const NativeArray<GameEntity>, // 0x80
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ImmediateActionEntities: *const c_void, // 0x88
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _ActionEntityListSnapshot: *const NativeArray<GameEntity>, // 0x90
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleCounter: *const c_void,     // 0x98
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _LimboEntitiesSkipSettlement: *const NativeArray<NativeObject>, // 0xa0
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub LastZombie__BackingField: *const GameEntity, // 0xa8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _AllOffTeamCharacters: *const NativeArray<GameEntity>, // 0xb0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _CurModifierPerformSeq: *const c_void, // 0xb8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ReplayData: *const c_void,       // 0xc0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _RelationGroupMgr: *const c_void, // 0xc8
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _CurrentTurnTargetEntity: *const GameEntity, // 0xd0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _CommonSkillPoolNames: *const c_void, // 0xd8
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _CachedDynamicSkillTargetSelection: *const GameEntity, // 0xe0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleEventInitedData__BackingField: *const c_void, // 0xe8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _OverrieWaveMonsterPerformDatas: *const NativeArray<NativeObject>, // 0xf0
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub TurnActionDelayCostChangeSource__BackingField: *const GameEntity, // 0xf8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SkillAddBuffPerformList: *const NativeArray<NativeObject>, // 0x100
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _TurnStateFSM: *const c_void,     // 0x108
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub ActionBarMgr__BackingField: *const c_void, // 0x110
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub MonsterWaveTextInfo: *const c_void, // 0x118
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _LimboRevivableEntities: *const c_void, // 0x120
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub LastTurnSnapshot: *const c_void,  // 0x128
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub AssistantAvatarEntity__BackingField: *const GameEntity, // 0x130
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _InsertAbilityList: *const NativeArray<MMNDIEBMDNL>, // 0x138
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _VersusBarMgr: *const c_void,     // 0x140
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _CurrentActionDelayModifyGroup: *const NativeArray<GameEntity>, // 0x148
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _EntityCustomUnselectableDatas: *const NativeArray<NativeObject>, // 0x150
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _UnselectableEntities: *const NativeArray<GameEntity>, // 0x158
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub PrepareAbility__BackingField: *const c_void, // 0x160
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleChangeAvatarManager__BackingField: *const c_void, // 0x168
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DamageQueue__BackingField: *const c_void, // 0x170
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _LastBreakMonster: *const GameEntity, // 0x178
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _performParam: *const c_void,     // 0x180
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _AvatarChangeParam: *const c_void, // 0x188
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub ThisTurnAnimEvents: *const c_void, // 0x190
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _AttackingEntityList: *const c_void, // 0x198
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _AllTeamCharacters: *const NativeArray<GameEntity>, // 0x1a0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _RogueInBattleData: *const c_void, // 0x1a8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _EventProcessor: *const c_void,   // 0x1b0
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub CurrentTurnOwnerEntity__BackingField: *const GameEntity, // 0x1b8
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub LastKillCaster__BackingField: *const GameEntity, // 0x1c0
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _WaitingAbilityList: *const NativeArray<NativeObject>, // 0x1c8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub OwnerBattleInstanceRef__BackingField: *const c_void, // 0x1d0
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _InsertUltraSkillParamsQueue: *const NativeArray<NativeObject>, // 0x1d8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub SkillUsageLog__BackingField: *const c_void, // 0x1e0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _EvolveBuildGearMgr: *const c_void, // 0x1e8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _LimboEntities: *const NativeArray<NativeObject>, // 0x1f0
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _MainMonster: *const GameEntity,  // 0x1f8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub GridFightMananger__BackingField: *const c_void, // 0x200
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub TimeGameStart: *const c_void,     // 0x208
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _allowQuitStates: *const NativeArray<NativeObject>, // 0x210
-            #[serde(skip_deserializing, serialize_with = "serialize_skill_character_component_pointer")]
             pub _CurrentSkillCharacter: *const SkillCharacterComponent, // 0x218
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _LimboEntitiesWaitAbilityFinish: *const NativeArray<NativeObject>, // 0x220
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ActionDelayOrderTrigger: *const c_void, // 0x228
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _EntityModifierPerforms: *const c_void, // 0x230
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _CurrentTurnActionEntity: *const GameEntity, // 0x238
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub PerformDelayExecuteList: *const NativeArray<NativeObject>, // 0x240
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub LastKillSkill__BackingField: *const c_void, // 0x248
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SomatoModifierPerforms: *const NativeArray<NativeObject>, // 0x250
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _LevelLockedFeatureSet: *const c_void, // 0x258
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _AidDetail: *const c_void,        // 0x260
             pub _HoldFrameForCapture: u32,        // 0x268
             pub _DarkTeamTurnCount: u32,          // 0x26c
@@ -860,7 +879,6 @@ pub mod rpg {
             pub _ModifierEndingPerformRemainedTime: f32, // 0x274
             pub StanceCountDownSPChangeValue__BackingField: f32, // 0x278
             pub _PrevTickModeState: i32,          // 0x27c
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleResultState__BackingField: *const c_void, // 0x280
             pub _DamageCounter: u32,              // 0x288
             pub ChallengeTurnLimit__BackingField: u32, // 0x28c
@@ -900,7 +918,6 @@ pub mod rpg {
             pub _SkillExecutionEventState: i32,   // 0x2e4
             pub ShowCutinUIState__BackingField: i32, // 0x2e8
             pub PropagateBeingAttackTeam__BackingField: TeamType, // 0x2ec
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _RecordOperationByLG: *const c_void, // 0x2f0
             pub _NextAbilityIndex: i32,           // 0x2f8
             pub _OperationCounter: u32,           // 0x2fc
@@ -955,26 +972,26 @@ pub mod rpg {
             TrueDamage = 13,
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct CharacterDataComponent {
             pub _parent_object: GameComponentBase,                   // 0x0
-            #[serde(skip_deserializing, serialize_with = "serialize_character_config_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_character_config_pointer")]
             pub JsonConfig__BackingField: *const CharacterConfig,    // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _CharacterUICustomValueDict: *const c_void,          // 0x20
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub Summoner: *const GameEntity,                         // 0x28
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DummpyEntityList: *const NativeArray<NativeObject>, // 0x30
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _RowData: *const c_void,                             // 0x38
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DynamicScaleAdaptConfigs: *const NativeArray<NativeObject>, // 0x40
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _DynamicScaleAdaptEffectPathRule: *const c_void,     // 0x48
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _DynamicScaleAdaptTypes: *const NativeArray<NativeObject>, // 0x50
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub HideDisplayInfoSkillNames: *const c_void,            // 0x58
             pub LastActTurnCount__BackingField: u32,                 // 0x60
             pub GridFightTag__BackingField: i32,                     // 0x64
@@ -992,7 +1009,7 @@ pub mod rpg {
             pub LineupIndex: i32,                                    // 0x8c
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct CharacterConfig {
             pub _parent_object: NativeObject,                          // 0x0
             pub SomatoType: i32,                                       // 0x10
@@ -1001,17 +1018,17 @@ pub mod rpg {
             pub BuffPanelOffset: [u8; 0xc],                            // 0x24
             pub HitBoxOffset: [u8; 0xc],                               // 0x30
             pub TargetSelectGroup: i32,                                // 0x3c
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CameraConfigList: *const NativeArray<NativeObject>,    // 0x40
             pub HitBoxType: i32,                                       // 0x48
             pub HitBoxWidth: f32,                                      // 0x4c
             pub HitBoxLength: f32,                                     // 0x50
             pub HitBoxHeight: f32,                                     // 0x54
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub HitBoxAttachPoint: *const NativeString,                // 0x58
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub Resilience: *const c_void,                             // 0x60
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub Location: *const c_void,                               // 0x68
             pub VisualRadius: f32,                                     // 0x70
             pub LookAtIKEnableRadius: f32,                             // 0x74
@@ -1021,97 +1038,97 @@ pub mod rpg {
             pub PreloadUltraSkill: bool,                               // 0x7b
             pub IsSpecialVisualCharacter: i32,                         // 0x7c
             pub HideInTimeline: bool,                                  // 0x80
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub AnimEventConfigList: *const NativeArray<NativeString>, // 0x88
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub SkillList: *const NativeArray<NativeObject>,           // 0x90
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub AbilityList: *const NativeArray<NativeString>,         // 0x98
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub SkillAbilityList: *const NativeArray<NativeObject>,    // 0xa0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DynamicValues: *const c_void,                          // 0xa8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub CustomValues: *const c_void,                           // 0xb0
             pub WeaponType: i32,                                       // 0xb8
             pub ArmorType: i32,                                        // 0xbc
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub SkillReadyTransits: *const NativeArray<NativeObject>,  // 0xc0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub PhaseAnimConfig: *const c_void,                        // 0xc8
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub AnimZoneConfigPath: *const NativeString,               // 0xd0
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub InitAnimStateName: *const NativeString,                // 0xd8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub WhitelistSkillStateForInterrupt: *const NativeArray<NativeString>, // 0xe0
             pub ModifierPerformTimeFactor: f32,                        // 0xe8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AsAidAttackTask: *const c_void,                        // 0xf0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AsAidDefenderTask: *const c_void,                      // 0xf8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AsAidProtectorTask: *const c_void,                     // 0x100
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub DisableAnimEventLayers: *const NativeArray<NativeString>, // 0x108
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub OnHitEditFootIKModeMap: *const c_void,                 // 0x110
             pub RepeatOccurAnimWhenBeHitNormalizedTime: f32,           // 0x118
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub CameraNamedDynamicOffset: *const NativeString,         // 0x120
             pub IgnoreDynamicOffsetBySelf: bool,                       // 0x128
             pub OverrideHeightForCameraOffset: f32,                    // 0x12c
             pub MonsterIgnoreGlobalDymanicOffset: bool,                // 0x130
             pub MaxMonsterPhase: u32,                                  // 0x134
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub PhaseList: *const NativeArray<NativeObject>,           // 0x138
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub OverrideWaveMonsterPerform: *const NativeString,       // 0x140
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub OverrideColliderCameraByName: *const NativeString,     // 0x148
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub EntityColliderConfig: *const c_void,                   // 0x150
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub EffectAdaptionList: *const NativeArray<NativeObject>,  // 0x158
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub AttachPointEffectAdaptionList: *const NativeArray<NativeObject>, // 0x160
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub FieldEffectAdaptionList: *const NativeArray<NativeObject>, // 0x168
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub EffectAttachPointRedirect: *const c_void,              // 0x170
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub MonsterConfig: *const c_void,                          // 0x178
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub ResidentEffectKey: *const NativeString,                // 0x180
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub ResidentPossessionKey: *const NativeString,            // 0x188
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub EmotionCharacterID: *const NativeString,               // 0x190
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub GraphEmotionAsset: *const NativeString,                // 0x198
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AITagList: *const c_void,                              // 0x1a0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub GlobalAIFactorGroups: *const c_void,                   // 0x1a8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub ReplaceEmoConfig: *const c_void,                       // 0x1b0
             pub WillUnstage: bool,                                     // 0x1b8
             pub ViewModeSortPriority: u32,                             // 0x1bc
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub ReplaceAnimtorControllerPath: *const NativeString,     // 0x1c0
             pub AlwaysCutOnSkillTargetTeamChange: bool,                // 0x1c8
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct AvatarSkillRowData {
             pub native_object: NativeObject,
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Row: *const c_void,              // 0x10
-            #[serde(with = "serde_arrays")]
+            //#[serde(with = "serde_arrays")]
             pub _OverrideData: [u8; 0xe8],        // 0x18
-            #[serde(skip_deserializing, serialize_with = "serialize_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_pointer")]
             pub _Config: *const c_void,           // 0x100
-            #[serde(with = "serde_arrays")]
+            //#[serde(with = "serde_arrays")]
             pub _DefaultOverrideData: [u8; 0xe0], // 0x108
         }
         #[repr(C)]
@@ -1157,54 +1174,54 @@ pub mod rpg {
             DummyEntity = 37,
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct FixPoint {
             pub m_rawValue: i64, // 0x0
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct GameEntity {
             pub native_object: NativeObject,
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub HoyoTagContainer: *const c_void,         // 0x10
             pub _CurTickListRef: [u8; 0x10],             // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _LateUpdateComponentList: *const c_void, // 0x28
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ComponentList: *const c_void,           // 0x30
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _OwnerWorldRef: *const c_void,           // 0x38
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub Name__BackingField: *const NativeString, // 0x40
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _UnityGO: *const c_void,                 // 0x48
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub TagComponentContainer: *const c_void,    // 0x50
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub TickLodTemplate: *const NativeString,    // 0x58
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub _UnstageReasonKey: *const NativeString,  // 0x60
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _DestroyWaitList: *const c_void,         // 0x68
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DisposeCallback: *const c_void,          // 0x70
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub WorldTimeScaleAdpator: *const c_void,    // 0x78
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ComponentArrayRef: *const c_void,       // 0x80
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _TickLodProxy: *const c_void,            // 0x88
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _ComponentArray: *const NativeArray<GameComponentBase>, // 0x90
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _TickComponentList: *const c_void,       // 0x98
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub OnStageStateChange: *const c_void,       // 0xa0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub TimeScaleStack: *const c_void,           // 0xa8
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub NameForGameCore__BackingField: *const NativeString, // 0xb0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub OnTeamChange: *const c_void,             // 0xb8
             pub Visible__BackingField: bool,             // 0xc0
             pub IsStoryMode__BackingField: bool,         // 0xc1
@@ -1229,7 +1246,7 @@ pub mod rpg {
             pub LastTickFrame__BackingField: u64,        // 0xf0
             pub _EntityType: EntityType,                 // 0xf8
             pub RuntimeID__BackingField: u32,            // 0xfc
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _ForceTickLodLowestReason: *const c_void, // 0x100
             pub TickLodBoundSize__BackingField: f32,     // 0x108
             pub ObjectFeature__BackingField: i32,        // 0x10c
@@ -1237,44 +1254,44 @@ pub mod rpg {
             pub _Team: TeamType,                         // 0x114
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct SkillData {
             pub native_object: NativeObject,
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub PreshowConditions: *const NativeArray<NativeObject>, // 0x10
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub OverrideTargetInfo: *const c_void,                   // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub RowData: *const c_void,                              // 0x20
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DefaultTargetInfo: *const c_void,                    // 0x28
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub VisibleCondTask: *const c_void,                      // 0x30
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub AllChildSkillDatas: *const NativeArray<SkillData>,   // 0x38
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub Config: *const c_void,                               // 0x40
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub OverrideAnimState: *const NativeString,              // 0x48
-            #[serde(skip_deserializing, serialize_with = "serialize_skill_character_component_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_skill_character_component_pointer")]
             pub SkillCom: *const SkillCharacterComponent,            // 0x50
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CustomReadyConfigConditions: *const NativeArray<NativeObject>, // 0x58
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Slot: *const c_void,                                // 0x60
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub UsableCondTask: *const c_void,                       // 0x68
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub InsertCondTask: *const c_void,                       // 0x70
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub OverrideCameraConfig: *const c_void,                 // 0x78
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub OverrideCameraConfigAdded: *const c_void,            // 0x80
-            #[serde(skip_deserializing, serialize_with = "serialize_skill_data_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_skill_data_pointer")]
             pub ParentSkillData: *const SkillData,                   // 0x88
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SkillProperties: *const NativeArray<NativeObject>,  // 0x90
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub SkillTriggerKey: *const NativeString,                // 0x98
             pub CommonActiveSkillID: u32,                            // 0xa0
             pub LeftCastTimes: i32,                                  // 0xa4
@@ -1287,24 +1304,26 @@ pub mod rpg {
             pub SkillIndex: i32,                                     // 0xc0
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct LineUpCharacter {
             pub native_object: NativeObject,
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub SkillTreePointList: *const NativeArray<NativeObject>, // 0x10
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub BattleEquipmentList: *const NativeArray<NativeObject>, // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleRelicItemModule: *const c_void,                 // 0x20
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleGridAvatarData: *const c_void,                  // 0x28
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub SpiritPassiveList: *const NativeArray<u32>,           // 0x30
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub ChangedSkillTreePointList: *const NativeArray<NativeObject>, // 0x38
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub CharacterSP_Denominator: FixPoint,                    // 0x40
             pub SpecialAvatarID: u32,                                 // 0x48
             pub Index: u32,                                           // 0x4c
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub CharacterSP_Numerator: FixPoint,                      // 0x50
             pub AssistUid: u32,                                       // 0x58
             pub CharacterAvatarType: i32,                             // 0x5c
@@ -1312,6 +1331,7 @@ pub mod rpg {
             pub WorldLevel: u32,                                      // 0x64
             pub TotalPower: u32,                                      // 0x68
             pub CharacterRank: u32,                                   // 0x6c
+            //#[serde(serialize_with = "serialize_fixpoint_pointer", skip_deserializing)]
             pub CharacterHPRatio: FixPoint,                           // 0x70
             pub CharacterPromotion: u32,                              // 0x78
             pub CharacterID: u32,                                     // 0x7c
@@ -1319,97 +1339,98 @@ pub mod rpg {
             pub CharacterRowIndex: u32,                               // 0x84
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct BattleEventSkillRowData {
             pub native_object: NativeObject,
-            #[serde(with = "serde_arrays")]
+            //#[serde(with = "serde_arrays")]
             pub _DefaultOverrideData: [u8; 0xe8], // 0x10
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Row: *const c_void,              // 0xf8
-            #[serde(with = "serde_arrays")]
+            //#[serde(with = "serde_arrays")]
             pub _OverrideData: [u8; 0xe8],        // 0x100
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Config: *const c_void,           // 0x1e8
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct ServantSkillRowData {
             pub native_object: NativeObject,
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Row: *const c_void,              // 0x10
-            #[serde(with = "serde_arrays")]
+            //#[serde(with = "serde_arrays")]
             pub _OverrideData: [u8; 0xe8],        // 0x18
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _Config: *const c_void,           // 0x100
-            #[serde(with = "serde_arrays")]
+            //#[serde(with = "serde_arrays")]
             pub _DefaultOverrideData: [u8; 0xe0], // 0x108
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct AbilityConfig {
             pub _parent_object: NativeObject,                       // 0x0
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub Name: *const NativeString,                          // 0x10
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub TargetInfo: *const c_void,                          // 0x18
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub OnAdd: *const NativeArray<NativeObject>,            // 0x20
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub OnRemove: *const NativeArray<NativeObject>,         // 0x28
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub OnStart: *const NativeArray<NativeObject>,          // 0x30
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DynamicValues: *const c_void,                       // 0x38
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub TaskListTemplate: *const NativeArray<NativeObject>, // 0x40
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _TaskListTemplatesMap: *const c_void,               // 0x48
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct SkillCharacterComponent {
             pub _parent_object: GameComponentBase,                // 0x0
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SkillDataList: *const NativeArray<SkillData>,    // 0x18
-            #[serde(skip_deserializing, serialize_with = "serialize_character_data_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_character_data_pointer")]
             pub _CharacterDataRef: *const CharacterDataComponent, // 0x20
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SkillTargetRedirectEntries: *const NativeArray<NativeObject>, // 0x28
-            #[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_turnbased_ability_component_pointer")]
             pub _TBAbilityRef: *const TurnBasedAbilityComponent,  // 0x30
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub _SkillSlots: *const NativeArray<NativeObject>,    // 0x38
-            #[serde(skip_deserializing, serialize_with = "serialize_character_config_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_character_config_pointer")]
             pub _JsonConfigRef: *const CharacterConfig,           // 0x40
-            #[serde(with = "serde_arrays")]
+            //#[serde(with = "serde_arrays")]
             pub _recordAbilityInfo: [u8; 0x30],                   // 0x48
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CurrentSkillTargetList__BackingField: *const NativeArray<GameEntity>, // 0x78
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub TaskContext__BackingField: *const c_void,         // 0x80
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CurrentAimAtTargetList: *const NativeArray<GameEntity>, // 0x88
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CurrentSkillSubTargetList__BackingField: *const NativeArray<GameEntity>, // 0x90
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CurrentAimAtMainTargetList: *const NativeArray<GameEntity>, // 0x98
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub OnSkillSetup: *const NativeArray<NativeObject>,   // 0xa0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _SkillTypeDisableSlots: *const c_void,            // 0xa8
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub CurrentSkillTargetDamageHP: *const c_void,        // 0xb0
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub CurrentAimAtSubTargetList: *const NativeArray<GameEntity>, // 0xb8
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub SkillActualAttacker__BackingField: *const GameEntity, // 0xc0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub CurrentSkillTargetCharacterId: *const c_void,     // 0xc8
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub SkillPointEntity__BackingField: *const GameEntity, // 0xd0
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AutoUseUltraParams: *const c_void,                // 0xd8
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+                ///todo: should there be some other serializer for value types? This array likely contains not refs to ints but values themselves
             pub _SkillTypeDisableCountArr: *const NativeArray<i32>, // 0xe0
             pub CurrentSkillKilledCount: i32,                     // 0xe8
             pub CharmAction: bool,                                // 0xec
@@ -1432,185 +1453,39 @@ pub mod rpg {
             pub _actionSkillIndex: i32,                           // 0x118
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct GameComponentBase {
             pub native_object: NativeObject,
-            #[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_game_entity_pointer")]
             pub _OwnerRef: *const GameEntity, // 0x10
         }
         #[repr(C)]
-        #[derive(Debug, Clone, Copy, Serialize)]
+        #[derive(Debug, Clone, Copy)]
         pub struct BattleLineupData {
             pub native_object: NativeObject,
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub ExtraTeam: *const NativeArray<LineUpCharacter>, // 0x10
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub TeamBuffIDList: *const NativeArray<u32>,        // 0x18
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub MazeBuffAdded: *const NativeArray<NativeObject>, // 0x20
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub SpecialAvatarLevelAreaConfigs: *const c_void,   // 0x28
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub _TemplateVariables: *const c_void,              // 0x30
-            #[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
+            //#[serde(skip_deserializing, serialize_with= "serialize_native_array_pointer")]
             pub LightTeam: *const NativeArray<LineUpCharacter>, // 0x38
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub Context: *const c_void,                         // 0x40
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub BattleExtraPropertyAdditionDict__BackingField: *const c_void, // 0x48
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub AdditionalTemplateVariables: *const c_void,     // 0x50
-            #[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
+            //#[serde(serialize_with = "serialize_pointer", deserialize_with = "deserialize_pointer")]
             pub DeferCreateTrialPlayerDic: *const c_void,       // 0x58
-            #[serde(skip_deserializing, serialize_with = "serialize_native_string")]
+            //#[serde(skip_deserializing, serialize_with = "serialize_native_string")]
             pub _LevelPath: *const NativeString,                // 0x60
             pub WorldLevel: u32,                                // 0x68
         }
     }
-}
-
-/// Function to serialize a raw pointer (`*const GameEntity`) as its memory address.
-pub fn serialize_game_entity_pointer<S>(ptr: &*const GameEntity, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    // Convert the raw pointer to a `u64` representing its memory address
-    let address = *ptr as u64;
-    serializer.serialize_u64(address)
-}
-
-/// Function to deserialize a memory address (u64) into a raw pointer (`*const GameEntity`).
-pub fn deserialize_game_entity_pointer<'de, D>(deserializer: D) -> Result<*const GameEntity, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    // Deserialize the memory address and cast it back to a raw pointer
-    let address = u64::deserialize(deserializer)?;
-    Ok(address as *const GameEntity)
-}
-
-/// Serialize a raw pointer to `*const CharacterConfig` as its memory address (`u64`).
-pub fn serialize_character_config_pointer<S>(ptr: &*const CharacterConfig, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let address = *ptr as u64; // Convert the pointer to its memory address
-    serializer.serialize_u64(address) // Serialize the pointer address as `u64`
-}
-
-/// Deserialize a `u64` address back into a raw pointer to `*const CharacterConfig`.
-pub fn deserialize_character_config_pointer<'de, D>(deserializer: D) -> Result<*const CharacterConfig, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let address = u64::deserialize(deserializer)?; // Deserialize the pointer address as `u64`
-    Ok(address as *const CharacterConfig) // Convert the address back into a raw pointer
-}
-
-/// Serialize a raw pointer to `*const CharacterDataComponent` as its memory address (`u64`).
-pub fn serialize_character_data_pointer<S>(ptr: &*const CharacterDataComponent, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let address = *ptr as u64; // Convert the pointer to its memory address
-    serializer.serialize_u64(address) // Serialize the pointer address as `u64`
-}
-
-/// Deserialize a `u64` address back into a raw pointer to `*const CharacterDataComponent`.
-pub fn deserialize_character_data_pointer<'de, D>(deserializer: D) -> Result<*const CharacterDataComponent, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let address = u64::deserialize(deserializer)?; // Deserialize the address as `u64`
-    Ok(address as *const CharacterDataComponent) // Convert the address back into a raw pointer
-}
-
-/// Serialize a raw pointer to `*const TurnBasedAbilityComponent` as its memory address (`u64`).
-pub fn serialize_turnbased_ability_component_pointer<S>(ptr: &*const TurnBasedAbilityComponent, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let address = *ptr as u64; // Convert raw pointer to a memory address
-    serializer.serialize_u64(address) // Serialize the address as `u64`
-}
-
-/// Deserialize a memory address (`u64`) back into a raw pointer of type `*const TurnBasedAbilityComponent`.
-pub fn deserialize_turnbased_ability_component_pointer<'de, D>(deserializer: D) -> Result<*const TurnBasedAbilityComponent, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let address = u64::deserialize(deserializer)?; // Deserialize the address as `u64`
-    Ok(address as *const TurnBasedAbilityComponent) // Convert the address back into a raw pointer
-}
-
-/// Serialize a raw pointer to `*const SkillCharacterComponent` as its memory address (`u64`).
-pub fn serialize_skill_character_component_pointer<S>(ptr: &*const SkillCharacterComponent, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let address = *ptr as u64; // Convert the raw pointer to a numeric memory address.
-    serializer.serialize_u64(address) // Serialize the address as a `u64`.
-}
-
-/// Deserialize a numeric memory address (`u64`) back into a raw pointer of type `*const SkillCharacterComponent`.
-pub fn deserialize_skill_character_component_pointer<'de, D>(deserializer: D) -> Result<*const SkillCharacterComponent, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let address = u64::deserialize(deserializer)?; // Deserialize the address (as `u64`).
-    Ok(address as *const SkillCharacterComponent) // Cast it back into a raw pointer.
-}
-
-/// Serialize a raw pointer to `*const AvatarServantData` as its memory address (`u64`).
-pub fn serialize_avatar_servant_data_pointer<S>(ptr: &*const AvatarServantData, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let address = *ptr as u64; // Convert the raw pointer into a numerical memory address
-    serializer.serialize_u64(address) // Serialize the memory address as `u64`
-}
-
-/// Deserialize a numeric memory address (`u64`) back into a raw pointer `*const AvatarServantData`.
-pub fn deserialize_avatar_servant_data_pointer<'de, D>(deserializer: D) -> Result<*const AvatarServantData, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let address = u64::deserialize(deserializer)?; // Deserialize the memory address from `u64`
-    Ok(address as *const AvatarServantData) // Convert the address back into a raw pointer
-}
-
-/// Serialize a raw pointer to `*const AvatarData` as its memory address (`u64`).
-pub fn serialize_avatar_data_pointer<S>(ptr: &*const AvatarData, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let address = *ptr as u64; // Convert the raw pointer into a numeric address.
-    serializer.serialize_u64(address) // Serialize the address as a `u64`.
-}
-
-/// Deserialize a numeric address (`u64`) back into a raw pointer `*const AvatarData`.
-pub fn deserialize_avatar_data_pointer<'de, D>(deserializer: D) -> Result<*const AvatarData, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let address = u64::deserialize(deserializer)?; // Deserialize the address from `u64`.
-    Ok(address as *const AvatarData) // Convert the address back into a raw pointer.
-}
-
-/// Serialize a raw pointer to `*const SkillData` as its memory address (`u64`).
-pub fn serialize_skill_data_pointer<S>(ptr: &*const SkillData, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let address = *ptr as u64; // Convert the raw pointer to a numeric address.
-    serializer.serialize_u64(address) // Serialize the address as `u64`.
-}
-
-/// Deserialize a numeric address (`u64`) back into a raw pointer `*const SkillData`.
-pub fn deserialize_skill_data_pointer<'de, D>(deserializer: D) -> Result<*const SkillData, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let address = u64::deserialize(deserializer)?; // Deserialize the address (as `u64`).
-    Ok(address as *const SkillData) // Convert the address back into a raw pointer.
 }

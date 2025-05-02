@@ -5,7 +5,7 @@ use serde::{
     Serialize,
 };
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Avatar {
     pub id: u32,
     pub name: String,
@@ -17,7 +17,7 @@ impl fmt::Display for Avatar {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Skill {
     pub name: String,
     #[serde(rename = "type")]
@@ -31,7 +31,7 @@ impl fmt::Display for Skill {
 }
 
 
-#[derive(Clone, Debug, Deserialize, Serialize, Default)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct TurnInfo {
     pub action_value: f64,
     pub avatars_turn_damage: Vec<f64>,
