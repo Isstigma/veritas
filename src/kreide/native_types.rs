@@ -49,10 +49,10 @@ pub struct NativeArray<T> {
     //type-object pointer (presumably the type of list items), 2 zeros (who knows what they stand for)
     // and an actual max_length of the collection
     //so should bounds be used in one kind of collection and vector is for the other stuff?
-    pub bounds: *const std::ffi::c_void,
-    pub length: u32,
+    pub bounds: *const std::ffi::c_void, // 0x10
+    pub length: u32, // 0x14
     // This is the first item of some pointer
-    pub(crate) vector: *const T,
+    pub(crate) vector: *const T, // 0x1c
 }
 
 #[repr(C)]

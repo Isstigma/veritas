@@ -15,7 +15,7 @@ pub fn get_module_manager() -> *const c_void {
 }
 
 #[named]
-fn get_avatar_data_from_id(avatar_id: u32) -> *const AvatarData {
+pub fn get_avatar_data_from_id(avatar_id: u32) -> *const AvatarData {
     log::debug!(function_name!());
     let s_module_manager = get_module_manager() as *const ModuleManager;
     let avatar_module = unsafe { (*s_module_manager).AvatarModule };

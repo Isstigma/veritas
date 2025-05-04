@@ -1,4 +1,4 @@
-use crate::kreide::helpers::fixpoint_to_raw;
+use crate::kreide::helpers::{fixpoint_to_raw, get_avatar_data_from_id};
 use crate::kreide::native_types::{NativeArray, NativeObject, NativeString};
 use crate::kreide::types::rpg::client::*;
 use crate::kreide::types::rpg::gamecore::*;
@@ -8,7 +8,9 @@ use serde::{Serialize, Serializer};
 use std::backtrace::Backtrace;
 use std::{ffi, slice};
 use std::ffi::c_void;
-
+use uuid::Uuid;
+use crate::kreide::functions::rpg::gamecore::SkillCharacterComponent_GetAllAllowSkillIdxList;
+/*
 /// Function to serialize a raw pointer (`*const GameEntity`) as its memory address.
 // pub fn serialize_game_entity_pointer<S>(ptr: &*const GameEntity, serializer: S) -> Result<S::Ok, S::Error>
 // where
@@ -31,7 +33,7 @@ use std::ffi::c_void;
 //     }
 // }
 
-/// Serialize a raw pointer to `*const CharacterConfig` as its memory address (`u64`).
+/// Serialize a raw popub(crate)pub(crate)inter to `*const CharacterConfig` as its memory address (`u64`).
 // pub fn serialize_character_config_pointer<S>(ptr: &*const CharacterConfig, serializer: S) -> Result<S::Ok, S::Error>
 // where
 //     S: Serializer,
@@ -178,6 +180,8 @@ use std::ffi::c_void;
 //     }
 // }
 
+*/
+
 impl Serialize for GameEntity {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -279,9 +283,7 @@ impl Serialize for SkillData{
         // Serialize pointers using provided serialize_* functions
         unsafe {
 
-
-        if self.PreshowConditions.is_null() { state.serialize_field("PreshowConditions", "null")?; }
-        else {state.serialize_field("PreshowConditions", &*self.PreshowConditions)?; }
+            state.serialize_field("PreshowConditions", &serialize_pointer(&self.PreshowConditions))?;
 
             state.serialize_field("OverrideTargetInfo", &serialize_pointer(&self.OverrideTargetInfo))?;
             state.serialize_field("RowData", &serialize_pointer(&self.RowData))?;
@@ -290,10 +292,10 @@ impl Serialize for SkillData{
 
 
 
-        if self.AllChildSkillDatas.is_null() { state.serialize_field("AllChildSkillDatas", "null")?; }
-        else {state.serialize_field("AllChildSkillDatas", &*self.AllChildSkillDatas)?;
+            if self.AllChildSkillDatas.is_null() { state.serialize_field("AllChildSkillDatas", "null")?; }
+            else {state.serialize_field("AllChildSkillDatas", &*self.AllChildSkillDatas)?;
 
-        }
+            }
 
             if self.Config.is_null() { state.serialize_field("Config", "null")?; }
             else {state.serialize_field("Config", &serialize_pointer(&self.Config))?;
@@ -308,8 +310,7 @@ impl Serialize for SkillData{
             else {state.serialize_field("SkillCom", &*self.SkillCom)?;
             }
 
-            if self.CustomReadyConfigConditions.is_null() { state.serialize_field("CustomReadyConfigConditions", "null")?; }
-            else {state.serialize_field("CustomReadyConfigConditions", &*self.CustomReadyConfigConditions)?; }
+            state.serialize_field("CustomReadyConfigConditions", &serialize_pointer(&self.CustomReadyConfigConditions))?;
 
             state.serialize_field("_Slot", &serialize_pointer(&self._Slot))?;
             state.serialize_field("UsableCondTask", &serialize_pointer(&self.UsableCondTask))?;
@@ -317,14 +318,11 @@ impl Serialize for SkillData{
             state.serialize_field("OverrideCameraConfig", &serialize_pointer(&self.OverrideCameraConfig))?;
             state.serialize_field("OverrideCameraConfigAdded", &serialize_pointer(&self.OverrideCameraConfigAdded))?;
 
-
             if self.ParentSkillData.is_null() { state.serialize_field("ParentSkillData", "null")?; }
             else {state.serialize_field("ParentSkillData", &*self.ParentSkillData)?;
             }
 
-            if self._SkillProperties.is_null() { state.serialize_field("_SkillProperties", "null")?; }
-            else {    state.serialize_field("_SkillProperties", &*self._SkillProperties)?;
-            }
+            state.serialize_field("_SkillProperties", &serialize_pointer(&self._SkillProperties))?;
 
             if self.SkillTriggerKey.is_null() { state.serialize_field("SkillTriggerKey", "null")?; }
             else {state.serialize_field("SkillTriggerKey", &*self.SkillTriggerKey)?; }
@@ -340,6 +338,7 @@ impl Serialize for SkillData{
             state.serialize_field("SkillConfigID", &self.SkillConfigID)?;
             state.serialize_field("SkillIndex", &self.SkillIndex)?;
         }
+        //log::info!("serialize::SkillData end");
         state.end()
     }
 }
@@ -355,67 +354,57 @@ impl Serialize for CharacterConfig{
         let mut state = serializer.serialize_struct("CharacterConfig", 63)?;
         unsafe {
         // Serialize fields (native Rust types or custom)
-            state.serialize_field("_parent_object", &self._parent_object)?;
-            state.serialize_field("SomatoType", &self.SomatoType)?;
-            state.serialize_field("CharacterBodySize", &self.CharacterBodySize)?;
-            state.serialize_field("CharacterHUDOffset", &self.CharacterHUDOffset)?;
-            state.serialize_field("BuffPanelOffset", &self.BuffPanelOffset)?;
-            state.serialize_field("HitBoxOffset", &self.HitBoxOffset)?;
-            state.serialize_field("TargetSelectGroup", &self.TargetSelectGroup)?;
+        state.serialize_field("_parent_object", &self._parent_object)?;
+        state.serialize_field("SomatoType", &self.SomatoType)?;
+        state.serialize_field("CharacterBodySize", &self.CharacterBodySize)?;
+        state.serialize_field("CharacterHUDOffset", &self.CharacterHUDOffset)?;
+        state.serialize_field("BuffPanelOffset", &self.BuffPanelOffset)?;
+        state.serialize_field("HitBoxOffset", &self.HitBoxOffset)?;
+        state.serialize_field("TargetSelectGroup", &self.TargetSelectGroup)?;
 
-            // Serialize fields using custom serialization methods
+        // Serialize fields using custom serialization methods
 
+        state.serialize_field("CameraConfigList", &serialize_pointer(&self.CameraConfigList))?;
 
-        if self.CameraConfigList.is_null() { state.serialize_field("CameraConfigList", "null")?; }
-        else {state.serialize_field("CameraConfigList", &*self.CameraConfigList)?; }
-
-            state.serialize_field("HitBoxType", &self.HitBoxType)?;
-            state.serialize_field("HitBoxWidth", &self.HitBoxWidth)?;
-            state.serialize_field("HitBoxLength", &self.HitBoxLength)?;
-            state.serialize_field("HitBoxHeight", &self.HitBoxHeight)?;
-
-
+        state.serialize_field("HitBoxType", &self.HitBoxType)?;
+        state.serialize_field("HitBoxWidth", &self.HitBoxWidth)?;
+        state.serialize_field("HitBoxLength", &self.HitBoxLength)?;
+        state.serialize_field("HitBoxHeight", &self.HitBoxHeight)?;
 
         if self.HitBoxAttachPoint.is_null() { state.serialize_field("HitBoxAttachPoint", "null")?; }
         else {state.serialize_field("HitBoxAttachPoint", &*self.HitBoxAttachPoint)?; }
 
-            state.serialize_field("Resilience", &serialize_pointer(&self.Resilience))?;
-            state.serialize_field("Location", &serialize_pointer(&self.Location))?;
-            state.serialize_field("VisualRadius", &self.VisualRadius)?;
-            state.serialize_field("LookAtIKEnableRadius", &self.LookAtIKEnableRadius)?;
-            state.serialize_field("AutoFlipModel", &self.AutoFlipModel)?;
-            state.serialize_field("SaveModelWhenDead", &self.SaveModelWhenDead)?;
-            state.serialize_field("DeadPerform", &self.DeadPerform)?;
-            state.serialize_field("PreloadUltraSkill", &self.PreloadUltraSkill)?;
-            state.serialize_field("IsSpecialVisualCharacter", &self.IsSpecialVisualCharacter)?;
-            state.serialize_field("HideInTimeline", &self.HideInTimeline)?;
-
+        state.serialize_field("Resilience", &serialize_pointer(&self.Resilience))?;
+        state.serialize_field("Location", &serialize_pointer(&self.Location))?;
+        state.serialize_field("VisualRadius", &self.VisualRadius)?;
+        state.serialize_field("LookAtIKEnableRadius", &self.LookAtIKEnableRadius)?;
+        state.serialize_field("AutoFlipModel", &self.AutoFlipModel)?;
+        state.serialize_field("SaveModelWhenDead", &self.SaveModelWhenDead)?;
+        state.serialize_field("DeadPerform", &self.DeadPerform)?;
+        state.serialize_field("PreloadUltraSkill", &self.PreloadUltraSkill)?;
+        state.serialize_field("IsSpecialVisualCharacter", &self.IsSpecialVisualCharacter)?;
+        state.serialize_field("HideInTimeline", &self.HideInTimeline)?;
 
         if self.AnimEventConfigList.is_null() { state.serialize_field("AnimEventConfigList", "null")?; }
         else {state.serialize_field("AnimEventConfigList", &*self.AnimEventConfigList)?;
         }
 
-            if self.SkillList.is_null() { state.serialize_field("SkillList", "null")?; }
-            else {    state.serialize_field("SkillList", &*self.SkillList)?;
-            }
+        state.serialize_field("SkillList", &serialize_pointer(&self.SkillList))?;
 
-            if self.AbilityList.is_null() { state.serialize_field("AbilityList", "null")?; }
-            else {state.serialize_field("AbilityList", &*self.AbilityList)?;
-            }
+        if self.AbilityList.is_null() { state.serialize_field("AbilityList", "null")?; }
+        else {state.serialize_field("AbilityList", &*self.AbilityList)?;
+        }
 
-            if self.SkillAbilityList.is_null() { state.serialize_field("SkillAbilityList", "null")?; }
-            else {state.serialize_field("SkillAbilityList", &*self.SkillAbilityList)?; }
+        state.serialize_field("SkillAbilityList", &serialize_pointer(&self.SkillAbilityList))?;
 
-            state.serialize_field("DynamicValues", &serialize_pointer(&self.DynamicValues))?;
-            state.serialize_field("CustomValues", &serialize_pointer(&self.CustomValues))?;
-            state.serialize_field("WeaponType", &self.WeaponType)?;
-            state.serialize_field("ArmorType", &self.ArmorType)?;
+        state.serialize_field("DynamicValues", &serialize_pointer(&self.DynamicValues))?;
+        state.serialize_field("CustomValues", &serialize_pointer(&self.CustomValues))?;
+        state.serialize_field("WeaponType", &self.WeaponType)?;
+        state.serialize_field("ArmorType", &self.ArmorType)?;
 
+        state.serialize_field("SkillReadyTransits", &serialize_pointer(&self.SkillReadyTransits))?;
 
-        if self.SkillReadyTransits.is_null() { state.serialize_field("SkillReadyTransits", "null")?; }
-        else {state.serialize_field("SkillReadyTransits", &*self.SkillReadyTransits)?; }
-
-            state.serialize_field("PhaseAnimConfig", &serialize_pointer(&self.PhaseAnimConfig))?;
+        state.serialize_field("PhaseAnimConfig", &serialize_pointer(&self.PhaseAnimConfig))?;
 
         if self.AnimZoneConfigPath.is_null() { state.serialize_field("AnimZoneConfigPath", "null")?; }
         else {state.serialize_field("AnimZoneConfigPath", &*self.AnimZoneConfigPath)?;
@@ -445,62 +434,54 @@ impl Serialize for CharacterConfig{
         if self.CameraNamedDynamicOffset.is_null() { state.serialize_field("CameraNamedDynamicOffset", "null")?; }
         else {state.serialize_field("CameraNamedDynamicOffset", &*self.CameraNamedDynamicOffset)?;  }
 
-            state.serialize_field("IgnoreDynamicOffsetBySelf", &self.IgnoreDynamicOffsetBySelf)?;
-            state.serialize_field("OverrideHeightForCameraOffset", &self.OverrideHeightForCameraOffset)?;
-            state.serialize_field("MonsterIgnoreGlobalDymanicOffset", &self.MonsterIgnoreGlobalDymanicOffset)?;
-            state.serialize_field("MaxMonsterPhase", &self.MaxMonsterPhase)?;
+        state.serialize_field("IgnoreDynamicOffsetBySelf", &self.IgnoreDynamicOffsetBySelf)?;
+        state.serialize_field("OverrideHeightForCameraOffset", &self.OverrideHeightForCameraOffset)?;
+        state.serialize_field("MonsterIgnoreGlobalDymanicOffset", &self.MonsterIgnoreGlobalDymanicOffset)?;
+        state.serialize_field("MaxMonsterPhase", &self.MaxMonsterPhase)?;
 
+        state.serialize_field("PhaseList", &serialize_pointer(&self.PhaseList))?;
 
-        if self.PhaseList.is_null() { state.serialize_field("PhaseList", "null")?; }
-        else {state.serialize_field("PhaseList", &*self.PhaseList)?;
+        if self.OverrideWaveMonsterPerform.is_null() { state.serialize_field("OverrideWaveMonsterPerform", "null")?; }
+        else {state.serialize_field("OverrideWaveMonsterPerform", &*self.OverrideWaveMonsterPerform)?;
         }
 
-            if self.OverrideWaveMonsterPerform.is_null() { state.serialize_field("OverrideWaveMonsterPerform", "null")?; }
-            else {state.serialize_field("OverrideWaveMonsterPerform", &*self.OverrideWaveMonsterPerform)?;
-            }
+        if self.OverrideColliderCameraByName.is_null() { state.serialize_field("OverrideColliderCameraByName", "null")?; }
+        else {state.serialize_field("OverrideColliderCameraByName", &*self.OverrideColliderCameraByName)?;
+        }
 
-            if self.OverrideColliderCameraByName.is_null() { state.serialize_field("OverrideColliderCameraByName", "null")?; }
-            else {state.serialize_field("OverrideColliderCameraByName", &*self.OverrideColliderCameraByName)?;
-            }
+        state.serialize_field("EntityColliderConfig", &serialize_pointer(&self.EntityColliderConfig))?;
 
-            state.serialize_field("EntityColliderConfig", &serialize_pointer(&self.EntityColliderConfig))?;
+        state.serialize_field("EffectAdaptionList", &serialize_pointer(&self.EffectAdaptionList))?;
 
+        if self.AttachPointEffectAdaptionList.is_null() { state.serialize_field("AttachPointEffectAdaptionList", "null")?; }
+        else {state.serialize_field("AttachPointEffectAdaptionList", &serialize_pointer(&self.AttachPointEffectAdaptionList))?;
+        }
 
-            if self.EffectAdaptionList.is_null() { state.serialize_field("EffectAdaptionList", "null")?; }
-            else {state.serialize_field("EffectAdaptionList", &*self.EffectAdaptionList)?;
-            }
-
-            if self.AttachPointEffectAdaptionList.is_null() { state.serialize_field("AttachPointEffectAdaptionList", "null")?; }
-            else {state.serialize_field("AttachPointEffectAdaptionList", &*self.AttachPointEffectAdaptionList)?;
-            }
-
-            if self.FieldEffectAdaptionList.is_null() { state.serialize_field("FieldEffectAdaptionList", "null")?; }
-            else {state.serialize_field("FieldEffectAdaptionList", &*self.FieldEffectAdaptionList)?; }
-            state.serialize_field("EffectAttachPointRedirect", &serialize_pointer(&self.EffectAttachPointRedirect))?;
-            state.serialize_field("MonsterConfig", &serialize_pointer(&self.MonsterConfig))?;
+        state.serialize_field("FieldEffectAdaptionList", &serialize_pointer(&self.FieldEffectAdaptionList))?;
+        state.serialize_field("EffectAttachPointRedirect", &serialize_pointer(&self.EffectAttachPointRedirect))?;
+        state.serialize_field("MonsterConfig", &serialize_pointer(&self.MonsterConfig))?;
 
 
         if self.ResidentEffectKey.is_null() { state.serialize_field("ResidentEffectKey", "null")?; }
         else {state.serialize_field("ResidentEffectKey", &*self.ResidentEffectKey)?;
         }
 
-            if self.ResidentPossessionKey.is_null() { state.serialize_field("ResidentPossessionKey", "null")?; }
-            else {    state.serialize_field("ResidentPossessionKey", &*self.ResidentPossessionKey)?;
-            }
+        if self.ResidentPossessionKey.is_null() { state.serialize_field("ResidentPossessionKey", "null")?; }
+        else {    state.serialize_field("ResidentPossessionKey", &*self.ResidentPossessionKey)?;
+        }
 
-            if self.EmotionCharacterID.is_null() { state.serialize_field("EmotionCharacterID", "null")?; }
-            else {state.serialize_field("EmotionCharacterID", &*self.EmotionCharacterID)?;
-            }
+        if self.EmotionCharacterID.is_null() { state.serialize_field("EmotionCharacterID", "null")?; }
+        else {state.serialize_field("EmotionCharacterID", &*self.EmotionCharacterID)?;
+        }
 
-            if self.GraphEmotionAsset.is_null() { state.serialize_field("GraphEmotionAsset", "null")?; }
-            else {state.serialize_field("GraphEmotionAsset", &*self.GraphEmotionAsset)?; }
+        if self.GraphEmotionAsset.is_null() { state.serialize_field("GraphEmotionAsset", "null")?; }
+        else {state.serialize_field("GraphEmotionAsset", &*self.GraphEmotionAsset)?; }
 
-            state.serialize_field("AITagList", &serialize_pointer(&self.AITagList))?;
-            state.serialize_field("GlobalAIFactorGroups", &serialize_pointer(&self.GlobalAIFactorGroups))?;
-            state.serialize_field("ReplaceEmoConfig", &serialize_pointer(&self.ReplaceEmoConfig))?;
-            state.serialize_field("WillUnstage", &self.WillUnstage)?;
-            state.serialize_field("ViewModeSortPriority", &self.ViewModeSortPriority)?;
-
+        state.serialize_field("AITagList", &serialize_pointer(&self.AITagList))?;
+        state.serialize_field("GlobalAIFactorGroups", &serialize_pointer(&self.GlobalAIFactorGroups))?;
+        state.serialize_field("ReplaceEmoConfig", &serialize_pointer(&self.ReplaceEmoConfig))?;
+        state.serialize_field("WillUnstage", &self.WillUnstage)?;
+        state.serialize_field("ViewModeSortPriority", &self.ViewModeSortPriority)?;
 
         if self.ReplaceAnimtorControllerPath.is_null() { state.serialize_field("ReplaceAnimtorControllerPath", "null")?; }
         else {state.serialize_field("ReplaceAnimtorControllerPath", &*self.ReplaceAnimtorControllerPath)?; }
@@ -536,23 +517,17 @@ impl Serialize for CharacterDataComponent {
 
             if self.Summoner.is_null() { state.serialize_field("Summoner", "null")?; }
             else {state.serialize_field("Summoner", &*self.Summoner)?;
-    
             }
 
-            if self._DummpyEntityList.is_null() { state.serialize_field("_DummpyEntityList", "null")?; }
-            else {state.serialize_field("_DummpyEntityList", &*self._DummpyEntityList)?;}
+            state.serialize_field("_DummpyEntityList", &serialize_pointer(&self._DummpyEntityList))?;
 
             state.serialize_field("_RowData", &serialize_pointer(&self._RowData))?;
         
-
-            if self._DynamicScaleAdaptConfigs.is_null() { state.serialize_field("_DynamicScaleAdaptConfigs", "null")?; }
-            else {state.serialize_field("_DynamicScaleAdaptConfigs", &*self._DynamicScaleAdaptConfigs)?; }
+            state.serialize_field("_DynamicScaleAdaptConfigs", &serialize_pointer(&self._DynamicScaleAdaptConfigs))?;
 
             state.serialize_field("_DynamicScaleAdaptEffectPathRule", &serialize_pointer(&self._DynamicScaleAdaptEffectPathRule))?;
         
-
-            if self._DynamicScaleAdaptTypes.is_null() { state.serialize_field("_DynamicScaleAdaptTypes", "null")?; }
-            else {state.serialize_field("_DynamicScaleAdaptTypes", &*self._DynamicScaleAdaptTypes)?;}
+            state.serialize_field("_DynamicScaleAdaptTypes", &serialize_pointer(&self._DynamicScaleAdaptTypes))?;
 
             state.serialize_field("HideDisplayInfoSkillNames", &serialize_pointer(&self.HideDisplayInfoSkillNames))?;
 
@@ -595,26 +570,19 @@ impl Serialize for TurnBasedAbilityComponent{
             state.serialize_field("AbilityComponentRef__BackingField", &serialize_pointer(&self.AbilityComponentRef__BackingField))?;
             state.serialize_field("DisableActionStateByTask__BackingField", &serialize_pointer(&self.DisableActionStateByTask__BackingField))?;
 
+            state.serialize_field("OnAbilityPropertyChanged", &serialize_pointer(&self.OnAbilityPropertyChanged))?;
 
-            if self.OnAbilityPropertyChanged.is_null() { state.serialize_field("OnAbilityPropertyChanged", "null")?; }
-            else {state.serialize_field("OnAbilityPropertyChanged", &*self.OnAbilityPropertyChanged)?;
-            }
+            state.serialize_field("_BuffLockStepSources", &serialize_pointer(&self._BuffLockStepSources))?;
 
-            if self._BuffLockStepSources.is_null() { state.serialize_field("_BuffLockStepSources", "null")?; }
-            else {state.serialize_field("_BuffLockStepSources", &*self._BuffLockStepSources)?;
-            }
 
-            if self._ExtraMaxLayerConfig.is_null() { state.serialize_field("_ExtraMaxLayerConfig", "null")?; }
-            else {state.serialize_field("_ExtraMaxLayerConfig", &*self._ExtraMaxLayerConfig)?;
-            }
+            state.serialize_field("_ExtraMaxLayerConfig", &serialize_pointer(&self._ExtraMaxLayerConfig))?;
+
 
             if self._CharacterDataRef.is_null() { state.serialize_field("_CharacterDataRef", "null")?; }
             else {state.serialize_field("_CharacterDataRef", &*self._CharacterDataRef)?;
             }
 
-            if self.AdditionalAbilityParamList.is_null() { state.serialize_field("AdditionalAbilityParamList", "null")?; }
-            else {state.serialize_field("AdditionalAbilityParamList", &*self.AdditionalAbilityParamList)?;
-            }
+            state.serialize_field("AdditionalAbilityParamList", &serialize_pointer(&self.AdditionalAbilityParamList))?;
 
             if self._SelfExtrAbilityList.is_null() { state.serialize_field("_SelfExtrAbilityList", "null")?; }
             else {state.serialize_field("_SelfExtrAbilityList", &*self._SelfExtrAbilityList)?;
@@ -627,29 +595,23 @@ impl Serialize for TurnBasedAbilityComponent{
             else {state.serialize_field("_AbilityPropertiesInitSnapshot", &*self._AbilityPropertiesInitSnapshot)?;
             }
 
-            if self.RegardAsAttackTypeMap.is_null() { state.serialize_field("RegardAsAttackTypeMap", "null")?; }
-            else {state.serialize_field("RegardAsAttackTypeMap", &*self.RegardAsAttackTypeMap)?;
-            }
+            state.serialize_field("RegardAsAttackTypeMap", &serialize_pointer(&self.RegardAsAttackTypeMap))?;
 
             if self._KillerEntity.is_null() { state.serialize_field("_KillerEntity", "null")?; }
             else {state.serialize_field("_KillerEntity", &*self._KillerEntity)?;
             }
 
-            if self._DebuffLockStepSources.is_null() { state.serialize_field("_DebuffLockStepSources", "null")?; }
-            else {state.serialize_field("_DebuffLockStepSources", &*self._DebuffLockStepSources)?;
-            }
+            state.serialize_field("_DebuffLockStepSources", &serialize_pointer(&self._DebuffLockStepSources))?;
 
-            if self.RegardAsSkillTypeMap.is_null() { state.serialize_field("RegardAsSkillTypeMap", "null")?; }
-            else {state.serialize_field("RegardAsSkillTypeMap", &*self.RegardAsSkillTypeMap)?;
-            }
+
+            state.serialize_field("RegardAsSkillTypeMap", &serialize_pointer(&self.RegardAsSkillTypeMap))?;
 
             if self.ProjectileTargetAttachPoint.is_null() { state.serialize_field("ProjectileTargetAttachPoint", "null")?; }
             else {state.serialize_field("ProjectileTargetAttachPoint", &*self.ProjectileTargetAttachPoint)?;
             }
 
-            if self._DotModifierEventProcessors.is_null() { state.serialize_field("_DotModifierEventProcessors", "null")?; }
-            else {state.serialize_field("_DotModifierEventProcessors", &*self._DotModifierEventProcessors)?;
-            }
+            state.serialize_field("_DotModifierEventProcessors", &serialize_pointer(&self._DotModifierEventProcessors))?;
+
 
             state.serialize_field("_DmgChunk", &serialize_pointer(&self._DmgChunk))?;
 
@@ -659,9 +621,7 @@ impl Serialize for TurnBasedAbilityComponent{
             state.serialize_field("_AbilityToSkillMapping", &serialize_pointer(&self._AbilityToSkillMapping))?;
             state.serialize_field("ModifierOverrideMapping", &serialize_pointer(&self.ModifierOverrideMapping))?;
 
-
-            if self._EnergyPointEntries.is_null() { state.serialize_field("_EnergyPointEntries", "null")?; }
-            else {state.serialize_field("_EnergyPointEntries", &*self._EnergyPointEntries)?; }
+            state.serialize_field("_EnergyPointEntries", &serialize_pointer(&self._EnergyPointEntries))?;
 
             state.serialize_field("AddModifierBindValueMapping", &serialize_pointer(&self.AddModifierBindValueMapping))?;
             state.serialize_field("CustomDataRef__BackingField", &serialize_pointer(&self.CustomDataRef__BackingField))?;
@@ -677,50 +637,30 @@ impl Serialize for TurnBasedAbilityComponent{
                 state.serialize_field("_SyncPropertySource", &*self._SyncPropertySource)?;
             }
 
-            if self._OnHitEffectMultipleOverride.is_null() { state.serialize_field("_OnHitEffectMultipleOverride", "null")?; }
-            else {
-                state.serialize_field("_OnHitEffectMultipleOverride", &*self._OnHitEffectMultipleOverride)?;
-            }
+            state.serialize_field("_OnHitEffectMultipleOverride", &serialize_pointer(&self._OnHitEffectMultipleOverride))?;
 
-            if self._DamageStoreList.is_null() { state.serialize_field("_DamageStoreList", "null")?; }
-            else {
-                state.serialize_field("_DamageStoreList", &*self._DamageStoreList)?;
-            }
+            state.serialize_field("_DamageStoreList", &serialize_pointer(&self._DamageStoreList))?;
 
             if self._JsonConfigRef.is_null() { state.serialize_field("_JsonConfigRef", "null")?; }
             else {
                 state.serialize_field("_JsonConfigRef", &*self._JsonConfigRef)?;
             }
 
-            if self.DamageSplitData.is_null() { state.serialize_field("DamageSplitData", "null")?; }
-            else {
-                state.serialize_field("DamageSplitData", &*self.DamageSplitData)?;
-            }
+            state.serialize_field("DamageSplitData",  &serialize_pointer(&self.DamageSplitData))?;
 
-            if self._StancePreshowConfigs.is_null() { state.serialize_field("_StancePreshowConfigs", "null")?; }
-            else {
-                state.serialize_field("_StancePreshowConfigs", &*self._StancePreshowConfigs)?;
-            }
 
-            if self._EnableNegativeHPSourceList.is_null() { state.serialize_field("_EnableNegativeHPSourceList", "null")?; }
-            else {
-                state.serialize_field("_EnableNegativeHPSourceList", &*self._EnableNegativeHPSourceList)?;
-            }
+            state.serialize_field("_StancePreshowConfigs",  &serialize_pointer(&self._StancePreshowConfigs))?;
+
+            state.serialize_field("_EnableNegativeHPSourceList",  &serialize_pointer(&self._EnableNegativeHPSourceList))?;
 
             if self._ModifierEventSourceMuteCounter.is_null() { state.serialize_field("_ModifierEventSourceMuteCounter", "null")?; }
             else {
                 state.serialize_field("_ModifierEventSourceMuteCounter", &serialize_pointer(&self._ModifierEventSourceMuteCounter))?;
             }
 
-            if self._LockHPList.is_null() { state.serialize_field("_LockHPList", "null")?; }
-            else {
-                state.serialize_field("_LockHPList", &*self._LockHPList)?;
-            }
+            state.serialize_field("_LockHPList",  &serialize_pointer(&self._LockHPList))?;
 
-            if self._RedStanceInfoList.is_null() { state.serialize_field("_RedStanceInfoList", "null")?; }
-            else {
-                state.serialize_field("_RedStanceInfoList", &*self._RedStanceInfoList)?;
-            }
+            state.serialize_field("_RedStanceInfoList",  &serialize_pointer(&self._RedStanceInfoList))?;
 
             if self.CharmSkillName.is_null() { state.serialize_field("CharmSkillName", "null")?; }
             else {
@@ -737,17 +677,13 @@ impl Serialize for TurnBasedAbilityComponent{
                 state.serialize_field("_DamagedEntityListInAttack", &*self._DamagedEntityListInAttack)?;
             }
 
-            if self._OnHitEffectOverride.is_null() { state.serialize_field("_OnHitEffectOverride", "null")?; }
-            else {
-                state.serialize_field("_OnHitEffectOverride", &*self._OnHitEffectOverride)?;
-            }
+            state.serialize_field("_OnHitEffectOverride",  &serialize_pointer(&self._OnHitEffectOverride))?;
 
             if self.DamageDefender.is_null() { state.serialize_field("DamageDefender", "null")?; }
             else {
             state.serialize_field("DamageDefender", &*self.DamageDefender)?;}
 
-            if self._AbilityProperties.is_null() { state.serialize_field("_AbilityProperties", "null")?; }
-            else { state.serialize_field("_AbilityProperties", &*self._AbilityProperties)?; }
+            state.serialize_field("_AbilityProperties",  &serialize_pointer(&self._AbilityProperties))?;
 
             state.serialize_field("_RedStanceInfo", &serialize_pointer(&self._RedStanceInfo))?;
             state.serialize_field("_DefaultStanceInfo", &serialize_pointer(&self._DefaultStanceInfo))?;
@@ -762,8 +698,7 @@ impl Serialize for TurnBasedAbilityComponent{
 
             state.serialize_field("LockActionDelayChange", &serialize_pointer(&self.LockActionDelayChange))?;
 
-            if self._ModifierEventProcessors.is_null() { state.serialize_field("_ModifierEventProcessors", "null")?; }
-            else { state.serialize_field("_ModifierEventProcessors", &*self._ModifierEventProcessors)?; }
+            state.serialize_field("_ModifierEventProcessors",  &serialize_pointer(&self._ModifierEventProcessors))?;
 
             if self.OverflowStanceDamageAttacker__BackingField.is_null() { state.serialize_field("OverflowStanceDamageAttacker__BackingField", "null")?; }
             else { state.serialize_field("OverflowStanceDamageAttacker__BackingField", &*self.OverflowStanceDamageAttacker__BackingField)?; }
@@ -771,16 +706,14 @@ impl Serialize for TurnBasedAbilityComponent{
             state.serialize_field("_TransformRef", &serialize_pointer(&self._TransformRef))?;
             state.serialize_field("_StatusProbabilityDict", &serialize_pointer(&self._StatusProbabilityDict))?;
 
-            if self.ResistModifierBehaviorFlags__BackingField.is_null() { state.serialize_field("ResistModifierBehaviorFlags__BackingField", "null")?; }
-            else { state.serialize_field("ResistModifierBehaviorFlags__BackingField", &*self.ResistModifierBehaviorFlags__BackingField)?; }
+            state.serialize_field("ResistModifierBehaviorFlags__BackingField",  &serialize_pointer(&self.ResistModifierBehaviorFlags__BackingField))?;
 
-            if self._DepartedParams.is_null() { state.serialize_field("_DepartedParams", "null")?; }
-            else { state.serialize_field("_DepartedParams", &*self._DepartedParams)?; }
+            state.serialize_field("_DepartedParams",  &serialize_pointer(&self._DepartedParams))?;
 
             state.serialize_field("_DelayModifyActionDelayQueue", &serialize_pointer(&self._DelayModifyActionDelayQueue))?;
             state.serialize_field("_LockShieldCounter", &serialize_pointer(&self._LockShieldCounter))?;
             state.serialize_field("_ModifierDelayParamList", &serialize_pointer(&self._ModifierDelayParamList))?;
-            state.serialize_field("TotalDamageCurrentAttack", &fixpoint_to_raw(&self.TotalDamageCurrentAttack))?;
+            state.serialize_field("TotalDamageCurrentAttack", &self.TotalDamageCurrentAttack)?;
             state.serialize_field("BattleTag__BackingField", &self.BattleTag__BackingField)?;
             state.serialize_field("ForceKillFlag__BackingField", &self.ForceKillFlag__BackingField)?;
             state.serialize_field("ActionDelayChanged__BackingField", &self.ActionDelayChanged__BackingField)?;
@@ -788,7 +721,7 @@ impl Serialize for TurnBasedAbilityComponent{
             state.serialize_field("bIsInCharmAction", &self.bIsInCharmAction)?;
             state.serialize_field("VisualFlagValue__BackingField", &self.VisualFlagValue__BackingField)?;
             state.serialize_field("_DeathVersion", &self._DeathVersion)?;
-            state.serialize_field("TotalHitNum", &fixpoint_to_raw(&self.TotalHitNum))?;
+            state.serialize_field("TotalHitNum", &self.TotalHitNum)?;
             state.serialize_field("DeathSource__BackingField", &self.DeathSource__BackingField)?;
             state.serialize_field("IsTriggeringStanceCountDown__BackingField", &self.IsTriggeringStanceCountDown__BackingField)?;
             state.serialize_field("HasRevived", &self.HasRevived)?;
@@ -805,7 +738,7 @@ impl Serialize for TurnBasedAbilityComponent{
             state.serialize_field("_ModifierDelayAddCount", &self._ModifierDelayAddCount)?;
             state.serialize_field("_DebuffLockStep", &self._DebuffLockStep)?;
             state.serialize_field("StanceType", &self.StanceType)?;
-            state.serialize_field("InheritSPRatio", &fixpoint_to_raw(&self.InheritSPRatio))?;
+            state.serialize_field("InheritSPRatio", &self.InheritSPRatio)?;
             state.serialize_field("InsertAbilityCount", &self.InsertAbilityCount)?;
             state.serialize_field("SpeedVisualFlagValue__BackingField", &self.SpeedVisualFlagValue__BackingField)?;
             state.serialize_field("_CurrentAttackPhase", &self._CurrentAttackPhase)?;
@@ -830,10 +763,15 @@ impl Serialize for SkillCharacterComponent{
         //log::info!("serialize::SkillCharacterComponent");
 
         // Initialize serializer for this struct
-        let mut state = serializer.serialize_struct("SkillCharacterComponent", 40)?;
+        let mut state = serializer.serialize_struct("SkillCharacterComponent", 41)?;
         unsafe {
             // Directly serialize `_parent_object`
             state.serialize_field("_parent_object", &self._parent_object)?;
+
+
+            let get_all_allow_skill_idx_list = SkillCharacterComponent_GetAllAllowSkillIdxList(self);
+            if get_all_allow_skill_idx_list.is_null() { state.serialize_field("GetAllAllowSkillIdxList", "null")?; }
+            else { state.serialize_field("GetAllAllowSkillIdxList", &*get_all_allow_skill_idx_list)?; }
 
             // Serialize custom fields with helpers for pointers and arrays
             if self._SkillDataList.is_null() { state.serialize_field("_SkillDataList", "null")?; }
@@ -845,20 +783,14 @@ impl Serialize for SkillCharacterComponent{
             if self._CharacterDataRef.is_null() { state.serialize_field("_CharacterDataRef", "null")?; }
             else { state.serialize_field("_CharacterDataRef", &*self._CharacterDataRef)?; }
 
-            if self._SkillTargetRedirectEntries.is_null() { state.serialize_field("_SkillTargetRedirectEntries", "null")?; }
-            else {
-                //log::info!("_SkillTargetRedirectEntries");
-                state.serialize_field("_SkillTargetRedirectEntries", &*self._SkillTargetRedirectEntries)?;
-            }
+            //log::info!("_SkillTargetRedirectEntries");
+            state.serialize_field("_SkillTargetRedirectEntries",  &serialize_pointer(&self._SkillTargetRedirectEntries))?;
 
             if self._TBAbilityRef.is_null() { state.serialize_field("_TBAbilityRef", "null")?; }
             else { state.serialize_field("_TBAbilityRef", &*self._TBAbilityRef)?; }
 
-            if self._SkillSlots.is_null() { state.serialize_field("_SkillSlots", "null")?; }
-            else {
-                //log::info!("_SkillSlots");
-                state.serialize_field("_SkillSlots", &*self._SkillSlots)?;
-            }
+            //log::info!("_SkillSlots");
+            state.serialize_field("_SkillSlots",  &serialize_pointer(&self._SkillSlots))?;
 
             if self._JsonConfigRef.is_null() { state.serialize_field("_JsonConfigRef", "null")?; }
             else { state.serialize_field("_JsonConfigRef", &*self._JsonConfigRef)?; }
@@ -884,11 +816,9 @@ impl Serialize for SkillCharacterComponent{
             if self.CurrentAimAtMainTargetList.is_null() { state.serialize_field("CurrentAimAtMainTargetList", "null")?; }
             else { state.serialize_field("CurrentAimAtMainTargetList", &*self.CurrentAimAtMainTargetList)?; }
 
-            if self.OnSkillSetup.is_null() { state.serialize_field("OnSkillSetup", "null")?; }
-            else {
-                //log::info!("OnSkillSetup");
-                state.serialize_field("OnSkillSetup", &*self.OnSkillSetup)?;
-            }
+
+            //log::info!("OnSkillSetup");
+            state.serialize_field("OnSkillSetup",  &serialize_pointer(&self.OnSkillSetup))?;
 
             state.serialize_field("_SkillTypeDisableSlots", &serialize_pointer(&self._SkillTypeDisableSlots))?;
             state.serialize_field("CurrentSkillTargetDamageHP", &serialize_pointer(&self.CurrentSkillTargetDamageHP))?;
@@ -907,7 +837,10 @@ impl Serialize for SkillCharacterComponent{
             state.serialize_field("AutoUseUltraParams", &serialize_pointer(&self.AutoUseUltraParams))?;
 
             if self._SkillTypeDisableCountArr.is_null() { state.serialize_field("_SkillTypeDisableCountArr", "null")?; }
-            else { state.serialize_field("_SkillTypeDisableCountArr", &*self._SkillTypeDisableCountArr)?; }
+            else {
+                //log::info!("SkillCharacterComponent::_SkillTypeDisableCountArr");
+                state.serialize_field("_SkillTypeDisableCountArr", &*self._SkillTypeDisableCountArr)?;
+            }
 
             // Serialize standard simple fields normally
             state.serialize_field("CurrentSkillKilledCount", &self.CurrentSkillKilledCount)?;
@@ -974,7 +907,10 @@ impl Serialize for AvatarData{
         state.serialize_field("native_object", &self.native_object)?;
 
         if self.HasTakenPromotionRewardList__BackingField.is_null() { state.serialize_field("HasTakenPromotionRewardList__BackingField", "null")?; }
-        else { unsafe { state.serialize_field("HasTakenPromotionRewardList__BackingField",
+        else { unsafe {
+            //log::info!("serialize::AvatarData::HasTakenPromotionRewardList__BackingField");
+
+            state.serialize_field("HasTakenPromotionRewardList__BackingField",
                                               &*self.HasTakenPromotionRewardList__BackingField)?; } }
 
         state.serialize_field("Row__BackingField", &serialize_pointer(&self.Row__BackingField))?;
@@ -1004,13 +940,13 @@ impl Serialize for AvatarData{
                               &serialize_pointer(&self.RelicsData__BackingField))?;
 
         if self._SkinIDList.is_null() { state.serialize_field("_SkinIDList", "null")?; }
-        else { unsafe { state.serialize_field("_SkinIDList", &*self._SkinIDList)?; } }
+        else { unsafe {
+            //log::info!("serialize::AvatarData::_SkinIDList");
+            state.serialize_field("_SkinIDList", &*self._SkinIDList)?; } }
 
         state.serialize_field("SkillTreeData", &serialize_pointer(&self.SkillTreeData))?;
-        state.serialize_field("SpecialRow__BackingField",
-                              &serialize_pointer(&self.SpecialRow__BackingField))?;
-        state.serialize_field("_AvatarRowData",
-                              &serialize_pointer(&self._AvatarRowData))?;
+        state.serialize_field("SpecialRow__BackingField", &serialize_pointer(&self.SpecialRow__BackingField))?;
+        state.serialize_field("_AvatarRowData", &serialize_pointer(&self._AvatarRowData))?;
         state.serialize_field("FirstMetTimeStamp", &self.FirstMetTimeStamp)?;
         state.serialize_field("Promotion__BackingField", &self.Promotion__BackingField)?;
         state.serialize_field("Level__BackingField", &self.Level__BackingField)?;
@@ -1061,7 +997,10 @@ impl Serialize for FixPoint{
         S: Serializer,
     {
         //log::info!("serialize::FixPoint");
-
+        // fn round_to_places(num: f64, places: u32) -> f64 {
+        //     let factor = 10_f64.powi(places as i32);
+        //     (num * factor).round() / factor
+        // }
         serializer.serialize_f64(fixpoint_to_raw(&self))
     }
 }
@@ -1081,29 +1020,68 @@ impl Serialize for FixPoint{
 
 impl<T> Serialize for NativeArray<T>
 where
-    T: Serialize + Clone
+    T: Serialize + Clone + std::fmt::Debug
 {
     ///Naming is actually incorrect - vector at the moment of writing is supposed to contain only the first item
     /// and 'bounds' contain something very questionable
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where S: Serializer,
     {
-        if let "i32" | "u32" = std::any::type_name::<T>() {
-            log::info!("serialize::NativeArray {} obj {} {}, bounds: {}, length {}, vector: {}, ptr {}",
-                std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
-                &(self.bounds as u64), &self.length, &(self.vector as u32), (self as *const NativeArray<T>) as u64);
-            if self.bounds as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
-                (self.bounds as u64) < 8700100315968u64 {
-                unsafe { log::info!("value at the ref u32 {} ", &*(self.bounds as *const u32 )); }
-                unsafe { log::info!("value at the ref u64 {} ", &*(self.bounds as *const u64 )); }
+        if self.length == 0{
+            return serializer.serialize_str("[]");
+        }
+
+        let ser_id = Uuid::new_v4();
+        //veritas::kreide::native_types::NativeObject
+        //log::info!("{}", std::any::type_name::<T>());
+        if "i32" == std::any::type_name::<T>() || "u32" == std::any::type_name::<T>() {
+            if self.length > 0 &&
+            (self.bounds as u64) > 0  /*|| (self.vector as u32) > 0*/ {
+                // log::info!("{} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}",
+                //     ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+                //     &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64);
             }
-            if self.vector as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
-                (self.vector as u64) < 8700100315968u64 {
-                unsafe { log::info!("value at the ref u32 {} ", &*(self.vector as *const u32 )); }
-                unsafe { log::info!("value at the ref u64 {} ", &*(self.vector as *const u64 )); }
-            }
-            if self.bounds as u64 == 0 && (self.vector as u64) == 0 {
-                unsafe { log::info!("value at the ref u32 {} ", &*((((self as *const NativeArray<T>) as u64)+0x8)as *const u64)); }
+            unsafe {
+                if self.bounds as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
+                (self.bounds as u64) < 8700100315968u64 &&
+                    self.length > 0 &&
+                "u32" == std::any::type_name::<T>() {
+                    // log::info!("{} bounds value u64 {} ", ser_id, self.bounds as u64);
+                    // log::info!("{} bounds value u32 {} ", ser_id, self.bounds as u32);
+                    // log::info!("{} bounds value at the ref u32 +0 {} ", ser_id, *((self.bounds as *const u32).add(0)));
+                    // log::info!("{} bounds value at the ref u32 +4 {} ", ser_id, *((self.bounds as *const u64).add(1)));
+                    // log::info!("{} bounds value at the ref u32 +8 {} ", ser_id, *((self.bounds as *const u64).add(2)));
+                    // log::info!("{} bounds value at the ref u32 +12 {} ", ser_id, *((self.bounds as *const u64).add(3)));
+                    // log::info!("{} bounds value at the ref u32 +16 {} ", ser_id, *((self.bounds as *const u64).add(4)));
+                    // log::info!("{} bounds value at the ref u32 +20 {} ", ser_id, *((self.bounds as *const u64).add(5)));
+                    //log::info!("{} bounds value at the ref u64 {} ", ser_id, &*(self.bounds as *const u64 ));
+                }
+                if self.bounds as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
+                    (self.bounds as u64) < 8700100315968u64 &&
+                    self.length > 0 &&
+                    "i32" == std::any::type_name::<T>() {
+                    // log::info!("{} bounds value u64 {} ", ser_id, self.bounds as u64);
+                    //log::info!("{} bounds value u32 {} ", ser_id, self.bounds as u32);
+                    // log::info!("{} bounds value at the ref i32 +0 {} ", ser_id, *((self.bounds as *const i64).add(0)));
+                    // log::info!("{} bounds value at the ref i32 +4 {} ", ser_id, *((self.bounds as *const i64).add(1)));
+                    // log::info!("{} bounds value at the ref i32 +8 {} ", ser_id, *((self.bounds as *const i64).add(2)));
+                    // log::info!("{} bounds value at the ref i32 +12 {} ", ser_id, *((self.bounds as *const i64).add(3)));
+                    // log::info!("{} bounds value at the ref i32 +16 {} ", ser_id, *((self.bounds as *const i64).add(4)));
+                    // log::info!("{} bounds value at the ref i32 +20 {} ", ser_id, *((self.bounds as *const i64).add(5)));
+                    //log::info!("{} bounds value at the ref u64 {} ", ser_id, &*(self.bounds as *const u64 ));
+                }
+                if self.vector as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
+                    (self.vector as u64) < 8700100315968u64 {
+                    // log::info!("{} vector value at the ref u32 {} ", ser_id, &*(self.vector as *const u32 ));
+                    // log::info!("{} vector value at the ref u64 {} ", ser_id, &*(self.vector as *const u64 ));
+                }
+                // if self.bounds as u64 == 0 && (self.vector as u64) == 0
+                // && ( *((((self as *const NativeArray<T>) as u64)+0x1c)as *const u64) != 0
+                // || *((((self as *const NativeArray<T>) as u64)+0x8)as *const u64) != 0 ) {
+                //     //unsafe { log::info!("value at the ref u32 {} ", &*((((self as *const NativeArray<T>) as u64)+0x8)as *const u64)); }
+                //     log::info!("{} value at the ref u32 0x1c {} ", ser_id, &*((((self as *const NativeArray<T>) as u64)+0x1c)as *const u64));
+                //     log::info!("{} value at the ref u32 0x8 {} ", ser_id, &*((((self as *const NativeArray<T>) as u64)+0x8)as *const u64));
+                // }
             }
         }
         let mut state = serializer.serialize_struct("NativeArray", (&self.length + 10) as usize)?;
@@ -1116,26 +1094,60 @@ where
 
         if(self.vector as u64) > 0 && (self.bounds as u64) > 0 {
             //from my understanding such thins shouldn't happen but if it does then I'd like to know where
-            log::info!("serialize::NativeArray {} obj {} {}, bounds: {}, length {}, vector: {}, ptr {}",
-                std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+            log::warn!("{} serialize::NativeArray weird {} obj {} {}, bounds: {}, length {}, vector: {}, ptr {}",
+                ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
                 &(self.bounds as u64), &self.length, &(self.vector as u32), (self as *const NativeArray<T>) as u64);
         }
 
         if self.length > 0 {
             if (self.vector as u64) > 0 {
                 unsafe {
-                    let items = self.to_slice();
+                    let _self2xcv: NativeArray<T> = NativeArray {
+                        length: self.length + 1,
+                        ..*self
+                    };
+
+                    let items = match std::any::type_name::<T>(){
+                        "i32"  => _self2xcv.to_slice(),
+                        "u32" => _self2xcv.to_slice(),
+                        _ => self.to_slice()
+                    };
+                    //
+                    // if "i32" == std::any::type_name::<T>() {
+                    //     log::info!("{} {} v retrieved items {:?}", ser_id, std::any::type_name::<T>(),
+                    //         items.iter().map(|x| *x as i32).collect::<Vec<i32>>());
+                    // }
+                    // else if "u32" == std::any::type_name::<T>() {
+                    //     log::info!("{} {} v retrieved items {:?}", ser_id, std::any::type_name::<T>(),
+                    //         items.iter().map(|x| *x as u32).collect::<Vec<u32>>());
+                    // }
+
                     let mut index = 0;
-                    //log::info!("retrieved items");
+
                     for item in items {
-                        let field_name = format!("data_{}", &index);
+                        let field_name = format!("i_{}", &index);
                         //log::info!("item {}", *item as u64);
-                        if (*item as u64) > 0x70000000000 && std::any::type_name::<T>() != "i32" //0x70000000000 = 7696581394432u64
-                            && (*item as u64) < 8700100315968u64 //for some reason some NativeObjects have retarded addresses like 3175009970383523287 (mb collapsed 32bit values?) or 1900545 (latter was found in SkillCharacterComponent)
-                        {
+                        if (*item as u64) > 0x70000000000 //0x70000000000 = 7696581394432u64
+                            && std::any::type_name::<T>() != "i32" //at the moment of writing it is the only 2 value types used in collections
+                            && std::any::type_name::<T>() != "u32"
+                            && (*item as u64) < 8700100315968u64 { //for some reason some NativeObjects have retarded addresses
+                                                                //like 3175009970383523287 (mb 2 collapsed 32bit values?) or 1900545 (latter was found in SkillCharacterComponent, looks like a real id btw)
                             state.serialize_field(Box::leak(field_name.into_boxed_str()), &**item)?;
-                        } else {
-                            state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u64))?;
+                        }
+                        else {
+                            if std::any::type_name::<T>() == "u32" {
+                                //log::info!("{} unusual value from val vector u32 {}", ser_id, *item as u32);
+                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u32))?;
+                            }
+                            else if std::any::type_name::<T>() == "i32" {
+                                let i32item = *item as i32;
+                                //log::info!("{} writing value from val vector i32 {}", ser_id, &i32item);
+                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &i32item)?;
+                            }
+                            else if (*item as u64) > 0 {
+                                log::info!("{} unusual value from vector {}", ser_id, *item as u64); //we expect ref here and got smth weird
+                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u64))?;
+                            }
                         }
                         index += 1;
                     }
@@ -1146,13 +1158,21 @@ where
                 let vec = &memory_slice.to_vec()
                     //.into_iter().skip(4).collect::<Vec<u64>>()
                     ;
+                if "i32" == std::any::type_name::<T>() {
+                    // log::info!("{} {} b retrieved items i32 {:?}", ser_id, std::any::type_name::<T>(),
+                    //         vec.iter().map(|x| *x as i32).collect::<Vec<i32>>());
+                }
+                if "u32" == std::any::type_name::<T>() {
+                    // log::info!("{} {} b retrieved items u32 {:?}", ser_id, std::any::type_name::<T>(),
+                    //         vec.iter().map(|x| *x as u32).collect::<Vec<u32>>());
+                }
 
                 let mut index = 0;
                 // for value in vec {
                 //     println!("Value: {}", value); // Borrowed reference to each element
                 // }
                 for i in vec {
-                    let field_name = format!("data_{}", &index);
+                    let field_name = format!("i_{}", &index);
 
                     if i > &(5497690084096)
                         && Backtrace::capture().frames().len() < 50 //this workaround is needed for now
@@ -1162,6 +1182,19 @@ where
                         unsafe {state.serialize_field(Box::leak(field_name.into_boxed_str()), &*item)?;}
                     }
                     else {
+                        //if "i32" == std::any::type_name::<T>() || "u32" == std::any::type_name::<T>()
+                        // {
+                        //     if std::any::type_name::<T>() == "u32" && *i != 0 && index > 3 {
+                        //         log::info!("{} value from val bounds u32 {}", ser_id, *i as u32);
+                        //     }
+                        //     if std::any::type_name::<T>() == "i32" && *i != 0 && index > 3 {
+                        //         log::info!("{} value from val bounds i32 {}", ser_id, *i as i32);
+                        //     }
+                        // }
+                        // if Backtrace::capture().frames().len() < 50 && index > 3 {
+                            //log::info!("{} unusual value from bounds {} {}", ser_id, *i, std::any::type_name::<T>());
+                            // we expect ref here and got smth weird
+                        // }
                         state.serialize_field(Box::leak(field_name.into_boxed_str()), i)?;
                     }
                     index += 1;
@@ -1283,34 +1316,32 @@ impl Serialize for LineUpCharacter {
         //log::info!("serialize::LineUpCharacter");
 
         // 1. Initialize the struct serializer.
-        let mut state = serializer.serialize_struct("LineUpCharacter", 22)?;
+        let mut state = serializer.serialize_struct("LineUpCharacter", 23)?;
 
         // 2. Serialize simple fields directly.
         state.serialize_field("native_object", &self.native_object)?;
-        state.serialize_field("CharacterSP_Denominator", &fixpoint_to_raw(&self.CharacterSP_Denominator))?;
+        state.serialize_field("CharacterSP_Denominator", &self.CharacterSP_Denominator)?;
         state.serialize_field("SpecialAvatarID", &self.SpecialAvatarID)?;
         state.serialize_field("Index", &self.Index)?;
-        state.serialize_field("CharacterSP_Numerator", &fixpoint_to_raw(&self.CharacterSP_Numerator))?;
+        state.serialize_field("CharacterSP_Numerator", &self.CharacterSP_Numerator)?;
         state.serialize_field("AssistUid", &self.AssistUid)?;
         state.serialize_field("CharacterAvatarType", &self.CharacterAvatarType)?;
         state.serialize_field("CharacterLevel", &self.CharacterLevel)?;
         state.serialize_field("WorldLevel", &self.WorldLevel)?;
         state.serialize_field("TotalPower", &self.TotalPower)?;
         state.serialize_field("CharacterRank", &self.CharacterRank)?;
-        state.serialize_field("CharacterHPRatio", &fixpoint_to_raw(&self.CharacterHPRatio))?;
+        state.serialize_field("CharacterHPRatio", &self.CharacterHPRatio)?;
         state.serialize_field("CharacterPromotion", &self.CharacterPromotion)?;
         state.serialize_field("CharacterID", &self.CharacterID)?;
         state.serialize_field("SpiritLineupType", &self.SpiritLineupType)?;
         state.serialize_field("CharacterRowIndex", &self.CharacterRowIndex)?;
+        unsafe { state.serialize_field("AvatarData", &*get_avatar_data_from_id(self.CharacterID))?; }
 
         // 3. Serialize fields with custom logic.
 
         unsafe {
             // SkillTreePointList: Serialize `NativeArray<NativeObject>` pointer.
-            if self.SkillTreePointList.is_null() { state.serialize_field("SkillTreePointList", "null")?; }
-            else {
-                state.serialize_field("SkillTreePointList", &*self.SkillTreePointList)?;
-            }
+            state.serialize_field("SkillTreePointList",  &serialize_pointer(&self.SkillTreePointList))?;
 
             // BattleEquipmentList: Serialize `NativeArray<NativeObject>` pointer.
             if self.BattleEquipmentList.is_null() { state.serialize_field("BattleEquipmentList", "null")?; }
@@ -1333,10 +1364,7 @@ impl Serialize for LineUpCharacter {
             }
 
             // ChangedSkillTreePointList: Serialize `NativeArray<NativeObject>` pointer.
-            if self.ChangedSkillTreePointList.is_null() { state.serialize_field("ChangedSkillTreePointList", "null")?; }
-            else {
-                state.serialize_field("ChangedSkillTreePointList", &*self.ChangedSkillTreePointList)?;
-            }
+                state.serialize_field("ChangedSkillTreePointList",  &serialize_pointer(&self.ChangedSkillTreePointList))?;
         }
         // 4. Finish serialization.
         state.end()
@@ -1361,17 +1389,17 @@ impl Serialize for NativeObject {
         S: Serializer,
     {
         //log::info!("serialize::NativeObject {} {}", self.klass as u64, self.monitor as u64);
-
+        serializer.serialize_str(&format!("{}", (self as *const Self) as u64))
         // Serialize as a struct with two fields
-        let mut state = serializer.serialize_struct("NativeObject", 2)?;
-
-        // Serialize `klass` pointer as a hexadecimal string
-        state.serialize_field("klass", &serialize_pointer(&self.klass))?;
-
-        // Serialize `monitor` pointer as a hexadecimal string
-        state.serialize_field("monitor", &serialize_pointer(&self.monitor))?;
-
-        state.end()
+        // let mut state = serializer.serialize_struct("NativeObject", 2)?;
+        //
+        // // Serialize `klass` pointer as a hexadecimal string
+        // state.serialize_field("klass", &serialize_pointer(&self.klass))?;
+        //
+        // // Serialize `monitor` pointer as a hexadecimal string
+        // state.serialize_field("monitor", &serialize_pointer(&self.monitor))?;
+        //
+        // state.end()
     }
 }
 
@@ -1436,8 +1464,7 @@ impl Serialize for OLHMAHMMBNN {
 
         state.serialize_field("BAICECGKLBG", &serialize_pointer(&self.BAICECGKLBG))?;
 
-        if self.OAAMONICNLE.is_null(){ state.serialize_field("OAAMONICNLE", "null") ?;}
-        else{unsafe { state.serialize_field("OAAMONICNLE", &*self.OAAMONICNLE) ?;}}
+        state.serialize_field("OAAMONICNLE",  &serialize_pointer(&self.OAAMONICNLE))?;
 
         // Serialize primitive types
         state.serialize_field("MOIPJLBAODO", &self.MOIPJLBAODO)?;
@@ -1701,6 +1728,7 @@ impl Serialize for BattleLineupData {
 
             if self.TeamBuffIDList.is_null(){ state.serialize_field("TeamBuffIDList", "null") ?;}
             else {
+                //log::info!("BattleLineupData::TeamBuffIDList");
                 state.serialize_field(
                     "TeamBuffIDList", &*self.TeamBuffIDList
                 )?;
@@ -1709,7 +1737,7 @@ impl Serialize for BattleLineupData {
             else {
                 state.serialize_field(
                     "MazeBuffAdded",
-                    &*self.MazeBuffAdded
+                    &serialize_pointer(&self.MazeBuffAdded)
                 )?;
             }
 
@@ -1790,12 +1818,13 @@ impl Serialize for SpecialRelicData {
     {
         // Handle struct serialization with 4 fields
         let mut state = serializer.serialize_struct("SpecialRelicData", 4)?;
-        log::info!("serialize::SpecialRelicData");
+        //log::info!("serialize::SpecialRelicData");
         state.serialize_field("native_object", &self.native_object)?;
 
         unsafe{
-            if self.LGBJKGGCELB.is_null(){ state.serialize_field("LGBJKGGCELB", "null") ?;}
+            if self.LGBJKGGCELB.is_null(){ state.serialize_field("LGBJKGGCELB", "null")?;}
             else {
+                //log::info!("SpecialRelicData::LGBJKGGCELB");
                 state.serialize_field("LGBJKGGCELB", &*self.LGBJKGGCELB)?;
             }
         }
@@ -1813,7 +1842,7 @@ impl Serialize for BattleRelicModule {
     {
         // Serialize 7 fields in the struct
         let mut state = serializer.serialize_struct("BattleRelicModule", 7)?;
-        log::info!("serialize::BattleRelicModule");
+        //log::info!("serialize::BattleRelicModule");
 
         // Serialize native_object
         state.serialize_field("native_object", &self.native_object)?;
@@ -1852,7 +1881,7 @@ impl Serialize for BattleRelicInfo {
     {
         // Define struct serialization with 5 fields
         let mut state = serializer.serialize_struct("BattleRelicInfo", 5)?;
-        log::info!("serialize::BattleRelicInfo");
+        //log::info!("serialize::BattleRelicInfo");
 
         // Serialize the native object
         state.serialize_field("native_object", &self.native_object)?;
@@ -1878,7 +1907,7 @@ impl Serialize for NCGNFPLFBOJ {
     {
         // Start serializing the struct with 4 fields
         let mut state = serializer.serialize_struct("NCGNFPLFBOJ", 4)?;
-        log::info!("serialize::NCGNFPLFBOJ");
+        //log::info!("serialize::NCGNFPLFBOJ");
 
         // Serialize each field individually
         state.serialize_field("native_object", &self.native_object)?;

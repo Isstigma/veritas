@@ -53,6 +53,9 @@ pub mod rpg {
         pub static SkillCharacterComponent_GetSkillData: LazyLock<
             fn(*const SkillCharacterComponent, i32, i32) -> *const SkillData,
         > = lazy_initialize_address!(0x5928910);
+        pub static SkillCharacterComponent_GetAllAllowSkillIdxList: LazyLock<
+            fn(*const SkillCharacterComponent) -> *const NativeArray<i32> //List<int>
+        > = lazy_initialize_address!(0x592ee40);
         pub static TurnBasedAbilityComponent_GetAbilityMappedSkill: LazyLock<
             fn(*const TurnBasedAbilityComponent, *const NativeString) -> *const NativeString,
         > = lazy_initialize_address!(0x593c340);
