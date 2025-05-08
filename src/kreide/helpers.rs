@@ -194,3 +194,9 @@ pub fn get_skill_type_str(attack_type: AttackType) -> &'static str {
         AttackType::TrueDamage => "True Damage"
     }
 }
+
+//#[named]
+pub fn round_to_places(num: f64, places: u32) -> f64 {
+    let factor = 10_f64.powi(places as i32);
+    (num * factor).round() / factor
+}

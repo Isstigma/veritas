@@ -720,6 +720,206 @@ pub mod rpg {
             pub AddOpCountOnInsertUltraWaitOrder: bool, // 0x33c
             pub PendingMonsterToWave__BackingField: bool, // 0x33d
         }
+
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        pub enum AbilityProperty {
+            Unknow = 0,
+            MaxHP = 1,
+            BaseHP = 2,
+            HPAddedRatio = 3,
+            HPDelta = 4,
+            HPConvert = 5,
+            DirtyHPDelta = 6,
+            DirtyHPRatio = 7,
+            RallyHP = 8,
+            NegativeHP = 9,
+            CurrentHP = 10,
+            MaxSP = 11,
+            CurrentSP = 12,
+            MaxSpecialSP = 13,
+            CurrentSpecialSP = 14,
+            AdditionalBP = 15,
+            Attack = 16,
+            BaseAttack = 17,
+            AttackAddedRatio = 18,
+            AttackDelta = 19,
+            AttackConvert = 20,
+            Defence = 21,
+            BaseDefence = 22,
+            DefenceAddedRatio = 23,
+            DefenceDelta = 24,
+            DefenceConvert = 25,
+            DefenceOverride = 26,
+            Level = 27,
+            Promotion = 28,
+            Rank = 29,
+            Speed = 30,
+            BaseSpeed = 31,
+            SpeedAddedRatio = 32,
+            SpeedDelta = 33,
+            SpeedConvert = 34,
+            SpeedOverride = 35,
+            ActionDelay = 36,
+            ActionDelayAddedRatio = 37,
+            ActionDelayAddAttenuation = 38,
+            MaxStance = 39,
+            CurrentStance = 40,
+            Level_AllDamageAddedRatio = 41,
+            AllDamageTypeAddedRatio = 42,
+            AllDamageReduce = 43,
+            DotDamageAddedRatio = 44,
+            FatigueRatio = 45,
+            CriticalChance = 46,
+            CriticalChanceBase = 47,
+            CriticalChanceConvert = 48,
+            CriticalDamage = 49,
+            CriticalDamageBase = 50,
+            CriticalDamageConvert = 51,
+            CriticalResistance = 52,
+            PhysicalAddedRatio = 53,
+            FireAddedRatio = 54,
+            IceAddedRatio = 55,
+            ThunderAddedRatio = 56,
+            QuantumAddedRatio = 57,
+            ImaginaryAddedRatio = 58,
+            WindAddedRatio = 59,
+            PhysicalResistance = 60,
+            FireResistance = 61,
+            IceResistance = 62,
+            ThunderResistance = 63,
+            QuantumResistance = 64,
+            ImaginaryResistance = 65,
+            WindResistance = 66,
+            PhysicalResistanceBase = 67,
+            FireResistanceBase = 68,
+            IceResistanceBase = 69,
+            ThunderResistanceBase = 70,
+            QuantumResistanceBase = 71,
+            ImaginaryResistanceBase = 72,
+            WindResistanceBase = 73,
+            PhysicalResistanceDelta = 74,
+            FireResistanceDelta = 75,
+            IceResistanceDelta = 76,
+            ThunderResistanceDelta = 77,
+            QuantumResistanceDelta = 78,
+            ImaginaryResistanceDelta = 79,
+            WindResistanceDelta = 80,
+            AllDamageTypeResistance = 81,
+            PhysicalPenetrate = 82,
+            FirePenetrate = 83,
+            IcePenetrate = 84,
+            ThunderPenetrate = 85,
+            QuantumPenetrate = 86,
+            ImaginaryPenetrate = 87,
+            WindPenetrate = 88,
+            AllDamageTypePenetrate = 89,
+            PhysicalTakenRatio = 90,
+            FireTakenRatio = 91,
+            IceTakenRatio = 92,
+            ThunderTakenRatio = 93,
+            QuantumTakenRatio = 94,
+            ImaginaryTakenRatio = 95,
+            WindTakenRatio = 96,
+            AllDamageTypeTakenRatio = 97,
+            Monster_DamageTakenRatio = 98,
+            PhysicalAbsorb = 99,
+            FireAbsorb = 100,
+            IceAbsorb = 101,
+            ThunderAbsorb = 102,
+            QuantumAbsorb = 103,
+            ImaginaryAbsorb = 104,
+            WindAbsorb = 105,
+            MinimumFatigueRatio = 106,
+            ForceStanceBreakRatio = 107,
+            StanceBreakAddedRatio = 108,
+            StanceBreakResistance = 109,
+            StanceBreakTakenRatio = 110,
+            PhysicalStanceBreakTakenRatio = 111,
+            FireStanceBreakTakenRatio = 112,
+            IceStanceBreakTakenRatio = 113,
+            ThunderStanceBreakTakenRatio = 114,
+            WindStanceBreakTakenRatio = 115,
+            QuantumStanceBreakTakenRatio = 116,
+            ImaginaryStanceBreakTakenRatio = 117,
+            StanceWeakAddedRatio = 118,
+            StanceDefaultAddedRatio = 119,
+            HealRatio = 120,
+            HealRatioBase = 121,
+            HealRatioConvert = 122,
+            HealTakenRatio = 123,
+            Shield = 124,
+            MaxShield = 125,
+            ShieldAddedRatio = 126,
+            ShieldTakenRatio = 127,
+            StatusProbability = 128,
+            StatusProbabilityBase = 129,
+            StatusProbabilityConvert = 130,
+            StatusResistance = 131,
+            StatusResistanceBase = 132,
+            StatusResistanceConvert = 133,
+            SPRatio = 134,
+            SPRatioBase = 135,
+            SPRatioConvert = 136,
+            SPRatioOverride = 137,
+            BreakDamageAddedRatio = 138,
+            BreakDamageAddedRatioBase = 139,
+            BreakDamageAddedRatioConvert = 140,
+            BreakDamageExtraAddedRatio = 141,
+            PhysicalStanceBreakResistance = 142,
+            FireStanceBreakResistance = 143,
+            IceStanceBreakResistance = 144,
+            ThunderStanceBreakResistance = 145,
+            WindStanceBreakResistance = 146,
+            QuantumStanceBreakResistance = 147,
+            ImaginaryStanceBreakResistance = 148,
+            AggroBase = 149,
+            AggroAddedRatio = 150,
+            AggroDelta = 151,
+            RelicValueExtraAdditionRatio = 152,
+            EquipValueExtraAdditionRatio = 153,
+            EquipExtraRank = 154,
+            AvatarExtraRank = 155,
+            Combo = 156,
+            NormalBattleCount = 157,
+            ExtraAttackAddedRatio1 = 158,
+            ExtraAttackAddedRatio2 = 159,
+            ExtraAttackAddedRatio3 = 160,
+            ExtraAttackAddedRatio4 = 161,
+            ExtraDefenceAddedRatio1 = 162,
+            ExtraDefenceAddedRatio2 = 163,
+            ExtraDefenceAddedRatio3 = 164,
+            ExtraDefenceAddedRatio4 = 165,
+            ExtraHPAddedRatio1 = 166,
+            ExtraHPAddedRatio2 = 167,
+            ExtraHPAddedRatio3 = 168,
+            ExtraHPAddedRatio4 = 169,
+            ExtraHealAddedRatio = 170,
+            ExtraAllDamageTypeAddedRatio1 = 171,
+            ExtraAllDamageTypeAddedRatio2 = 172,
+            ExtraAllDamageTypeAddedRatio3 = 173,
+            ExtraAllDamageTypeAddedRatio4 = 174,
+            ExtraAllDamageReduce = 175,
+            ExtraShieldAddedRatio = 176,
+            ExtraSpeedAddedRatio1 = 177,
+            ExtraSpeedAddedRatio2 = 178,
+            ExtraSpeedAddedRatio3 = 179,
+            ExtraSpeedAddedRatio4 = 180,
+            ExtraLuckChance = 181,
+            ExtraLuckDamage = 182,
+            ExtraFrontPowerBase = 183,
+            ExtraFrontPowerAddedRatio1 = 184,
+            ExtraFrontPowerAddedRatio2 = 185,
+            ExtraBackPowerBase = 186,
+            ExtraBackPowerAddedRatio1 = 187,
+            ExtraBackPowerAddedRatio2 = 188,
+            ExtraUltraDamageAddedRatio1 = 189,
+            ExtraSkillDamageAddedRatio1 = 190,
+            ExtraNormalDamageAddedRatio1 = 191,
+            ExtraInsertDamageAddedRatio1 = 192,
+            Count = 193,
+        }
+
         #[repr(C)]
         #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
         pub enum AttackType {
@@ -988,7 +1188,7 @@ pub mod rpg {
             pub SkillTreePointList: *const c_void, // 0x10
             pub BattleEquipmentList: *const NativeArray<BattleEquipmentData>, // 0x18
             pub BattleRelicItemModule: *const BattleRelicModule, // 0x20
-            pub BattleGridAvatarData: *const c_void, // 0x28
+            pub BattleGridAvatarData: *const FDPIKJAAKAH, // 0x28
             pub SpiritPassiveList: *const NativeArray<u32>, // 0x30 uint[]
             pub ChangedSkillTreePointList: *const c_void, // 0x38
             pub CharacterSP_Denominator: FixPoint,   // 0x40 max energy
@@ -1009,20 +1209,29 @@ pub mod rpg {
         }
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
+        pub struct FDPIKJAAKAH {
+            // Fields
+            pub obj: NativeObject,
+            pub BLIHJMNHCEA: *const c_void, // 0x10 type:NJBHADGDBFK
+            pub LCEKDADJBDE:  bool, // 0x18
+            pub FLJPKFJAJFP: u32 , // 0x1c
+        }
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy)]
         pub struct BattleRelicModule {
             pub native_object: NativeObject,
             pub AAEONBIGBBP: *const c_void, // 0x10, Dictionary<string,KENFHNBOEPP> TODO
-            pub BKCGOLIBNHC: *const c_void, // 0x18 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
-            pub BattleRelicInfos: *const NativeArray<BattleRelicInfo>, // 0x20
-            pub PMMGFOHHKPM: *const c_void, // 0x28 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
-            pub BIJMJNIMPOM: *const c_void, //0x30 Dictionary<uint,uint>
+            //below looks like relic+planar set buffs
+            pub BKCGOLIBNHC: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x18 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
+            pub BattleRelicInfos: *const NativeArray<BattleRelicInfo>, // 0x20 MLNCAMMKBAB[] TODO
+            pub PMMGFOHHKPM: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x28 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
+            pub BIJMJNIMPOM: *const NativeDictionary<u32,u32>, //0x30 Dictionary<uint,uint>
             pub SpecialRelicData: *const SpecialRelicData,
         }
 
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct BattleRelicInfo
-//MLNCAMMKBAB
+        pub struct BattleRelicInfo //MLNCAMMKBAB
         {
             pub native_object: NativeObject,
             pub IGIDDGDHAGI: u32,                             // 0x10
@@ -1117,7 +1326,6 @@ pub mod rpg {
             pub CurrentSkillTargetCharacterId: *const c_void, // 0xc8
             pub SkillPointEntity__BackingField: *const GameEntity, // 0xd0
             pub AutoUseUltraParams: *const c_void, // 0xd8
-            //todo: should there be some other serializer for value types? This array likely contains not refs to ints but values themselves
             pub _SkillTypeDisableCountArr: *const NativeArray<i32>, // 0xe0 int[]
             pub CurrentSkillKilledCount: i32,                       // 0xe8
             pub CharmAction: bool,                                  // 0xec
@@ -1141,7 +1349,7 @@ pub mod rpg {
         }
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct GameComponentBase {
+        pub struct GameComponentBase { //abstract class, would be nice to get specific implementations because those are interesting
             pub native_object: NativeObject,
             pub _OwnerRef: *const GameEntity, // 0x10
         }
@@ -1151,8 +1359,8 @@ pub mod rpg {
             pub native_object: NativeObject,
             pub ExtraTeam: *const NativeArray<LineUpCharacter>, // 0x10
             pub TeamBuffIDList: *const NativeArray<u32>,        // 0x18 uint[]
-            pub MazeBuffAdded: *const c_void,                   // 0x20
-            pub SpecialAvatarLevelAreaConfigs: *const c_void, // 0x28
+            pub MazeBuffAdded: *const NativeArray<MazeBuffData>,                   // 0x20
+            pub SpecialAvatarLevelAreaConfigs: *const NativeDictionary<u32, NativeString>, // 0x28 Dictionary<uint,string>
             pub _TemplateVariables: *const c_void, // 0x30
             pub LightTeam: *const NativeArray<LineUpCharacter>, // 0x38
             pub Context: *const c_void, // 0x40
@@ -1161,6 +1369,24 @@ pub mod rpg {
             pub DeferCreateTrialPlayerDic: *const c_void, // 0x58
             pub _LevelPath: *const NativeString,          // 0x60
             pub WorldLevel: u32,                          // 0x68
+            /*	serialize this somewhere?
+                public static int s_TeamBoostSkillNumber; // 0xb6a0
+                public static int s_TeamDefaultCharacterCount; // 0xb6a4
+                public static bool s_IsSkipBattlePerformance; // 0xb6a8
+                public static bool s_IsMonsterDontLoad; // 0xb6a9
+                public static bool s_IsPlayerDontLoad; // 0xb6aa
+            */
+        }
+        #[repr(C)]
+        #[derive(Debug, Clone)]
+        pub struct MazeBuffData {
+            pub native_object: NativeObject,
+            pub target_index_list: *const NativeArray<u32>, //  List<uint> 0x10
+            pub extra_param_map: *const NativeDictionary<NativeString, FixPoint>, // Dictionary<string, FixPoint> 0x18
+            pub active_wave_flags: u32, // uint 0x20
+            pub owner_character_index: u32, // uint 0x24
+            pub id: u32, // uint 0x28
+            pub level: u32, // uint 0x2c
         }
     }
 }

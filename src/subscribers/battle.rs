@@ -567,7 +567,7 @@ fn on_turn_end(instance: *const c_void, a1: i32) -> *const c_void {
     let args: HashMap<String, serde_json::value::Value> =
         vec![("occasion".to_string(), serde_json::to_value("on_turn_end arguments").unwrap()),
              ("instance".to_string(), serde_json::to_value(instance as u64).unwrap()),
-             ("a3".to_string(), serde_json::to_value(&a1).unwrap()),].into_iter().collect();
+             ("a1".to_string(), serde_json::to_value(&a1).unwrap()),].into_iter().collect();
 
     BattleContext::log_battle_event_context(args);
 
