@@ -2172,8 +2172,8 @@ where
         let mut state = serializer.serialize_struct("NativeDictionaryValueEntry", 4)?;
         // state.serialize_field("hash_code", &self.hash_code)?;
         // state.serialize_field("next", &self.next)?;
-        state.serialize_field("key", &self.key)?;
-        state.serialize_field("value", &self.value)?;
+        //state.serialize_field("key", &self.key)?;
+        //state.serialize_field("value", &self.value)?;
         state.end()
     }
 }
