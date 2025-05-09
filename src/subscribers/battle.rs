@@ -469,6 +469,8 @@ fn on_combo(instance: *const MMNDIEBMDNL) {
 fn on_set_lineup(instance: *const c_void, battle_lineup_data: *const BattleLineupData) {
     log::debug!(function_name!());
     unsafe {
+        //*(((battle_lineup_data as u64) + 0xb6a8) as *mut bool) = true;
+
         log::info!("on_set_lineup");
         let args: HashMap<String, serde_json::value::Value> =
             vec![("occasion".to_string(), serde_json::to_value("on_set_lineup arguments").unwrap()),

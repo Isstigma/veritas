@@ -768,10 +768,9 @@ impl Serialize for SkillCharacterComponent{
             // Directly serialize `_parent_object`
             state.serialize_field("_parent_object", &self._parent_object)?;
 
-
-            let get_all_allow_skill_idx_list = SkillCharacterComponent_GetAllAllowSkillIdxList(self);
-            if get_all_allow_skill_idx_list.is_null() { state.serialize_field("GetAllAllowSkillIdxList", "null")?; }
-            else { state.serialize_field("GetAllAllowSkillIdxList", &*get_all_allow_skill_idx_list)?; }
+            // let get_all_allow_skill_idx_list = SkillCharacterComponent_GetAllAllowSkillIdxList(self);
+            // if get_all_allow_skill_idx_list.is_null() { state.serialize_field("GetAllAllowSkillIdxList", "null")?; }
+            // else { state.serialize_field("GetAllAllowSkillIdxList", &*get_all_allow_skill_idx_list)?; }
 
             // Serialize custom fields with helpers for pointers and arrays
             if self._SkillDataList.is_null() { state.serialize_field("_SkillDataList", "null")?; }
@@ -1039,12 +1038,17 @@ where
         let ser_id = Uuid::new_v4();
         //veritas::kreide::native_types::NativeObject
         //log::info!("{}", std::any::type_name::<T>());
+
+        // log::info!("{} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}",
+        //             ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+        //             &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64);
+
         if "i32" == std::any::type_name::<T>() || "u32" == std::any::type_name::<T>() {
             if self.length > 0 &&
                 (self.bounds as u64) > 0  /*|| (self.vector as u32) > 0*/ {
-                // log::info!("{} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}",
-                //     ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
-                //     &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64);
+                log::info!("{} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}",
+                    ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+                    &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64);
             }
             unsafe {
                 if self.bounds as u64 > 0x70000000000 && //0x70000000000 = 7696581394432u64
@@ -1149,7 +1153,21 @@ where
                                 //log::info!("{} writing value from val vector i32 {}", ser_id, &i32item);
                                 state.serialize_field(Box::leak(field_name.into_boxed_str()), &i32item)?;
                             }
+                            else if std::any::type_name::<T>() == "veritas::kreide::native_types::NativeDictionaryEntry<u32, u32>" ||
+                                std::any::type_name::<T>()  == "veritas::kreide::native_types::NativeDictionaryValueEntry<u32, u32>" {
+
+                                let item_dict_entry = &*(*item as *const NativeDictionaryValueEntry<u32, u32>);
+
+                                log::info!("{} unusual value from vector {} {:X} {}", ser_id, *item as u128, size_of::<T>(),std::any::type_name::<T>()); //we expect ref here and got smth weird
+
+                                state.serialize_field(Box::leak(field_name.into_boxed_str()), item_dict_entry)?;
+                            }
                             else if (*item as u64) > 0 {
+
+                                log::info!("{} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}",
+                                    ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+                                    &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64);
+
                                 log::info!("{} unusual value from vector {}", ser_id, *item as u64); //we expect ref here and got smth weird
                                 state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u64))?;
                             }
@@ -1241,13 +1259,13 @@ where
 
         //log::info!("serialize::BattleRelicModule {:p}", self);
 
-        log::info!("serialize::NativeDictionary<{},{}> obj {} count {}, buckets: {}, entries {}, ptr {} sizes: dict {} k {} v {} entrysize {} val {} {:p} {}",
-            std::any::type_name::<K>(), std::any::type_name::<V>(), (&self.obj as *const NativeObject) as u64, &self.count,
-            self.buckets as u64, self.entries as u64,
-            (self as *const NativeDictionary<K, V>) as u64,
-            size_of::<NativeDictionary<K,V>>(), size_of::<K>(), size_of::<V>(), size_of::<NativeDictionaryEntry<K,V>>(), size_of::<NativeDictionaryValueEntry<K,V>>(),
-            self, ser_id
-        );
+        // log::info!("serialize::NativeDictionary<{},{}> obj {} count {}, buckets: {}, entries {}, ptr {} sizes: dict {} k {} v {} entrysize {} val {} {:p} {}",
+        //     std::any::type_name::<K>(), std::any::type_name::<V>(), (&self.obj as *const NativeObject) as u64, &self.count,
+        //     self.buckets as u64, self.entries as u64,
+        //     (self as *const NativeDictionary<K, V>) as u64,
+        //     size_of::<NativeDictionary<K,V>>(), size_of::<K>(), size_of::<V>(), size_of::<NativeDictionaryEntry<K,V>>(), size_of::<NativeDictionaryValueEntry<K,V>>(),
+        //     self, ser_id
+        // );
 
         unsafe {
             let self_ptr = ((self as *const NativeDictionary<K, V>) as u64);
@@ -1951,7 +1969,25 @@ impl Serialize for BattleLineupData {
                     &*self._LevelPath
                 )?;
             }
-            // Serialize simple u32 field directly
+
+            // state.serialize_field("s_TeamBoostSkillNumber",
+            //                       &*((((self as *const BattleLineupData) as u64) + 0xb6a0) as *const i32))?;
+            // state.serialize_field("s_TeamDefaultCharacterCount",
+            //                       &*((((self as *const BattleLineupData) as u64) + 0xb6a4) as *const i32))?;
+            // state.serialize_field("s_IsSkipBattlePerformance",
+            //                       &*((((self as *const BattleLineupData) as u64) + 0xb6a8) as *const bool))?;
+            // state.serialize_field("s_IsMonsterDontLoad",
+            //                       &*((((self as *const BattleLineupData) as u64) + 0xb6a9) as *const bool))?;
+            // state.serialize_field("s_IsPlayerDontLoad",
+            //                       &*((((self as *const BattleLineupData) as u64) + 0xb6aa) as *const bool))?;
+
+            /*public static int s_TeamBoostSkillNumber; // 0xb6a0
+            public static int s_TeamDefaultCharacterCount; // 0xb6a4
+            public static bool s_IsSkipBattlePerformance; // 0xb6a8
+            public static bool s_IsMonsterDontLoad; // 0xb6a9
+            public static bool s_IsPlayerDontLoad; // 0xb6aa
+            */
+
             state.serialize_field("WorldLevel", &self.WorldLevel)?;
         }
         state.end()
@@ -2134,8 +2170,8 @@ where
         S: Serializer,
     {
         let mut state = serializer.serialize_struct("NativeDictionaryValueEntry", 4)?;
-        state.serialize_field("hash_code", &self.hash_code)?;
-        state.serialize_field("next", &self.next)?;
+        // state.serialize_field("hash_code", &self.hash_code)?;
+        // state.serialize_field("next", &self.next)?;
         state.serialize_field("key", &self.key)?;
         state.serialize_field("value", &self.value)?;
         state.end()

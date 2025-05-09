@@ -86,7 +86,7 @@ impl<T> NativeArray<T> {
 }
 
 
-#[repr(C)]
+#[repr(C, align(8))]
 #[derive(Debug, Clone, Copy)]
 pub struct NativeDictionary<K, V> {
     pub obj: NativeObject,
@@ -109,7 +109,7 @@ pub struct NativeDictionary<K, V> {
 }
 
 //automatic memory alignment of structures sucks
-#[repr(C)]
+#[repr(C, align(8))]
 #[derive(Debug, Clone, Copy)]
 pub struct NativeDictionaryEntry<K, V> {
     //pub obj: NativeObject,
@@ -119,7 +119,7 @@ pub struct NativeDictionaryEntry<K, V> {
     pub value: *const V,
 }
 
-#[repr(C)]
+#[repr(C, align(8))]
 #[derive(Debug, Clone, Copy)]
 pub struct NativeDictionaryValueEntry<K, V> {
     //pub obj: NativeObject,
