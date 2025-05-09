@@ -5,4 +5,4 @@ pub static TEXTID_TYPE_PTR_OFFSET: LazyLock<usize> = lazy_initialize_address!(0x
 
 pub static MODULES_PTR_OFFSET: LazyLock<usize> = lazy_initialize_address!(0x40ee438);
 
-pub static MODULEMANAGER_FIELD_OFFSET: isize = 0xe78;
+pub static MODULEMANAGER_FIELD_OFFSET: isize = 0x36540;
