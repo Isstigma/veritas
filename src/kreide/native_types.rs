@@ -56,6 +56,18 @@ pub struct NativeArray<T> {
     pub(crate) vector: *const T, // 0x1c
 }
 
+///Array of value types, has slightly different layout????
+#[repr(C, align(8))]
+#[derive(Debug, Clone, Copy)]
+pub struct NativeValueArray<T> {
+    pub obj: *const c_void,
+    pub zero1: u64,
+    pub zero2: u64,
+    pub length: u64, // 0x18
+    // This is the first item of some pointer
+    pub vector: T, // 0x20
+}
+
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct NativeObject {
@@ -85,6 +97,14 @@ impl<T> NativeArray<T> {
     }
 }
 
+impl<T> NativeValueArray<T> {
+    pub fn to_slice(&self) -> &[T] { //works for underlying val[]
+        unsafe {
+            let ptr = &self.vector;
+            slice::from_raw_parts(ptr, self.length as usize)
+        }
+    }
+}
 
 #[repr(C, align(8))]
 #[derive(Debug, Clone, Copy)]
@@ -119,7 +139,7 @@ pub struct NativeDictionaryEntry<K, V> {
     pub value: *const V,
 }
 
-#[repr(C, align(8))]
+#[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct NativeDictionaryValueEntry<K, V> {
     //pub obj: NativeObject,

@@ -22,6 +22,7 @@ use anyhow::{anyhow, Error};
 use function_name::named;
 use retour::static_detour;
 use std::ffi::c_void;
+use std::mem;
 
 static_detour! {
     static ON_DAMAGE_Detour: fn(
@@ -76,9 +77,10 @@ fn on_damage(
         log::debug!(function_name!());
 
         let args: HashMap<String, serde_json::value::Value> =
-            vec![("occasion".to_string(), serde_json::to_value("on_damage arguments").unwrap()),
-                ("attacker".to_string(), serde_json::to_value(&*attacker).unwrap()),
-                ("attacker_ability".to_string(), serde_json::to_value(&*attacker_ability).unwrap()),
+            vec![("occasion".to_string(), serde_json::to_value("on_damage arguments").unwrap()), 
+                 ("attacker".to_string(), serde_json::to_value(&*attacker).unwrap()), 
+                 ("attacker_ability".to_string(), serde_json::to_value(&*attacker_ability).unwrap()),
+                 ("nopbaaaggla".to_string(), serde_json::to_value(&*nopbaaaggla).unwrap()),
                 ("attacker_task_single_target".to_string(), serde_json::to_value(&*attacker_task_single_target).unwrap()),
                 ("defender_ability".to_string(), serde_json::to_value(&*defender_ability).unwrap()),
                 ("defender".to_string(), serde_json::to_value(&*defender).unwrap()),
@@ -470,7 +472,6 @@ fn on_set_lineup(instance: *const c_void, battle_lineup_data: *const BattleLineu
     log::debug!(function_name!());
     unsafe {
         //*(((battle_lineup_data as u64) + 0xb6a8) as *mut bool) = true;
-
         log::info!("on_set_lineup");
         let args: HashMap<String, serde_json::value::Value> =
             vec![("occasion".to_string(), serde_json::to_value("on_set_lineup arguments").unwrap()),

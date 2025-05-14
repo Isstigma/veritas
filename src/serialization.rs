@@ -1,8 +1,8 @@
 use crate::kreide::helpers::{fixpoint_to_raw, get_avatar_data_from_id, round_to_places};
-use crate::kreide::native_types::{NativeArray, NativeDictionary, NativeDictionaryEntry, NativeDictionaryValueEntry, NativeObject, NativeString};
+use crate::kreide::native_types::{NativeArray, NativeDictionary, NativeDictionaryEntry, NativeDictionaryValueEntry, NativeObject, NativeString, NativeValueArray};
 use crate::kreide::types::rpg::client::*;
 use crate::kreide::types::rpg::gamecore::*;
-use crate::kreide::types::{MMNDIEBMDNL, OLHMAHMMBNN};
+use crate::kreide::types::{MMNDIEBMDNL, NOPBAAAGGLA, OLHMAHMMBNN};
 use serde::ser::SerializeStruct;
 use serde::{Serialize, Serializer};
 use std::backtrace::Backtrace;
@@ -1095,12 +1095,13 @@ where
         }
         let mut state = serializer.serialize_struct("NativeArray", (self.length + 10) as usize)?;
 
-        state.serialize_field("obj", &self.obj)?;
-        state.serialize_field("length", &&self.length)?;
+        //state.serialize_field("obj", &self.obj)?;
+        state.serialize_field("length", &self.length)?;
 
         state.serialize_field("bounds", &(self.bounds as usize))?;
         state.serialize_field("vector", &serialize_pointer(&(self.vector as *const c_void)))?;
 
+        //checking just in case
         if(self.vector as u64) > 0 && (self.bounds as u64) > 0 {
             //from my understanding such thins shouldn't happen but if it does then I'd like to know where
             log::warn!("{} serialize::NativeArray weird {} obj {} {}, bounds: {}, length {}, vector: {}, ptr {}",
@@ -1111,16 +1112,7 @@ where
         if self.length > 0 {
             if (self.vector as u64) > 0 {
                 unsafe {
-                    let _self2xcv: NativeArray<T> = NativeArray {
-                        length: self.length + 1,
-                        ..*self
-                    };
-
-                    let items = match std::any::type_name::<T>(){
-                        "i32"  => _self2xcv.to_slice(),
-                        "u32" => _self2xcv.to_slice(),
-                        _ => self.to_slice()
-                    };
+                    /*
                     //
                     // if "i32" == std::any::type_name::<T>() {
                     //     log::info!("{} {} v retrieved items {:?}", ser_id, std::any::type_name::<T>(),
@@ -1130,49 +1122,106 @@ where
                     //     log::info!("{} {} v retrieved items {:?}", ser_id, std::any::type_name::<T>(),
                     //         items.iter().map(|x| *x as u32).collect::<Vec<u32>>());
                     // }
-
+                    */
                     let mut index = 0;
 
-                    for item in items {
-                        let field_name = format!("i_{}", &index);
-                        //log::info!("item {}", *item as u64);
-                        if (*item as u64) > 0x70000000000 //0x70000000000 = 7696581394432u64
-                            && std::any::type_name::<T>() != "i32" //at the moment of writing it is the only 2 value types used in collections
-                            && std::any::type_name::<T>() != "u32"
-                            && (*item as u64) < 8700100315968u64 { //for some reason some NativeObjects have retarded addresses
-                            //like 3175009970383523287 (mb 2 collapsed 32bit values?) or 1900545 (latter was found in SkillCharacterComponent, looks like a real id btw)
-                            state.serialize_field(Box::leak(field_name.into_boxed_str()), &**item)?;
-                        }
-                        else {
-                            if std::any::type_name::<T>() == "u32" {
-                                //log::info!("{} unusual value from val vector u32 {}", ser_id, *item as u32);
-                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u32))?;
-                            }
-                            else if std::any::type_name::<T>() == "i32" {
-                                let i32item = *item as i32;
-                                //log::info!("{} writing value from val vector i32 {}", ser_id, &i32item);
-                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &i32item)?;
-                            }
-                            else if std::any::type_name::<T>() == "veritas::kreide::native_types::NativeDictionaryEntry<u32, u32>" ||
-                                std::any::type_name::<T>()  == "veritas::kreide::native_types::NativeDictionaryValueEntry<u32, u32>" {
+                    if std::any::type_name::<T>().starts_with("veritas::kreide::native_types::NativeDictionary")
+                        || std::any::type_name::<T>() == "veritas::kreide::types::rpg::gamecore::BattleRelicInfo" {
 
-                                let item_dict_entry = &*(*item as *const NativeDictionaryValueEntry<u32, u32>);
+                        let val_self: &NativeValueArray<T> = &*(self as *const NativeArray<T> as *const NativeValueArray<T>);
 
-                                log::info!("{} unusual value from vector {} {:X} {}", ser_id, *item as u128, size_of::<T>(),std::any::type_name::<T>()); //we expect ref here and got smth weird
+                        let items = val_self.to_slice();
+                        for item in items {
+                            let field_name = format!("i_{}", &index);
+
+                            /*
+                            // let self_ptr = ((self as *const NativeArray<T>) as u64);
+                            // let int_ptr = self_ptr as *const u32;
+                            // log::info!("int_ptr: {:p} {}", int_ptr, ser_id);
+                            // if !int_ptr.is_null(){
+                            //     // Safety: Ensure the pointer is valid for at least `n` bytes.
+                            //     let mem_slice =std::slice::from_raw_parts(int_ptr, 64);
+                            //     log::info!("Memory u32 slice content: {:?} {}", mem_slice, ser_id);
+                            // }
+                            */
+
+                            if std::any::type_name::<T>() == "veritas::kreide::native_types::NativeDictionaryEntry<u32, u32>" ||
+                                std::any::type_name::<T>() == "veritas::kreide::native_types::NativeDictionaryValueEntry<u32, u32>" ||
+                                std::any::type_name::<T>() == "veritas::kreide::types::rpg::gamecore::BattleRelicInfo_struct" {
+                                let item_dict_entry = &*(&item as *const _ as *const NativeDictionaryValueEntry<u32, u32>);
+
+                                //log::info!("{} val array route trying to deserialize value from vector {} {:X} {} {:p}", ser_id, item as *const _ as u128, size_of::<T>(),std::any::type_name::<T>(), item);
 
                                 state.serialize_field(Box::leak(field_name.into_boxed_str()), item_dict_entry)?;
                             }
-                            else if (*item as u64) > 0 {
-
-                                log::info!("{} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}",
-                                    ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
-                                    &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64);
-
-                                log::info!("{} unusual value from vector {}", ser_id, *item as u64); //we expect ref here and got smth weird
-                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u64))?;
+                            else {
+                                //log::info!("{} val array route trying to deserialize value from vector {} {}", ser_id, size_of::<T>(),std::any::type_name::<T>());
+                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &item)?;
                             }
+                            index += 1;
                         }
-                        index += 1;
+                    }
+                    else{
+                        let _self2xcv: NativeArray<T> = NativeArray {
+                            length: self.length + 1,
+                            ..*self
+                        };
+
+                        let items = match std::any::type_name::<T>(){
+                            "i32"  => _self2xcv.to_slice(),
+                            "u32" => _self2xcv.to_slice(),
+                            _ => self.to_slice()
+                        };
+
+                        for item in items {
+                            let field_name = format!("i_{}", &index);
+                            //log::info!("item {}", *item as u64);
+                            if (*item as u64) > 0x70000000000 //0x70000000000 = 7696581394432u64
+                                && std::any::type_name::<T>() != "i32" //at the moment of writing it is the only 2 value types used in collections
+                                && std::any::type_name::<T>() != "u32"
+                                && (*item as u64) < 8700100315968u64 { //for some reason some NativeObjects have retarded addresses
+                                //like 3175009970383523287 (mb 2 collapsed 32bit values?) or 1900545 (latter was found in SkillCharacterComponent, looks like a real id btw)
+                                state.serialize_field(Box::leak(field_name.into_boxed_str()), &**item)?;
+                            } else {
+                                if std::any::type_name::<T>() == "u32" {
+                                    log::info!("{} deserializing value from val vector u32 {}", ser_id, *item as u32);
+                                    state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u32))?;
+                                } else if std::any::type_name::<T>() == "i32" {
+                                    let i32item = *item as i32;
+                                    log::info!("{} writing value from val vector i32 {}", ser_id, &i32item);
+                                    state.serialize_field(Box::leak(field_name.into_boxed_str()), &i32item)?;
+                                } else if is_value_type_under65b(std::any::type_name::<T>()) {
+                                    state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u64))?;
+
+                                } else if (*item as u64) > 0 {
+                                    if std::any::type_name::<T>() == "veritas::kreide::types::rpg::gamecore::BattleRelicInfo" {
+                                        let self_ptr = ((*item) as u64);
+                                        let int_ptr = self_ptr as *const u32;
+                                        log::info!("int_ptr: {:p} {}", int_ptr, ser_id);
+                                        if !int_ptr.is_null(){
+                                            // Safety: Ensure the pointer is valid for at least `n` bytes.
+                                            let mem_slice =std::slice::from_raw_parts(int_ptr, 64);
+                                            log::info!("BattleRelicInfo Memory u32 slice content: {:?} {}", mem_slice, ser_id);
+                                        }
+                                    }
+
+                                    log::info!("{} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}",
+                                        ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+                                        &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64);
+
+                                    log::info!("{} unusual value from vector {}", ser_id, *item as u64); //we expect ref here and got smth weird
+                                    state.serialize_field(Box::leak(field_name.into_boxed_str()), &(*item as u64))?;
+                                }
+                                else {
+                                    // log::warn!("Dead end in finding the correct deser case {} serialize::NativeArray val {} obj {} {}, bounds: {}, length {}, vector: {} {}, ptr {}, item {}",
+                                    //     ser_id, std::any::type_name::<T>(), self.obj.klass as u64, self.obj.monitor as u64,
+                                    //     &(self.bounds as u64), &self.length, &(self.vector as u32), self.vector as u64, (self as *const NativeArray<T>) as u64, *item as u64);
+                                    state.serialize_field(Box::leak(field_name.into_boxed_str()), "null")?;
+                                }
+
+                            }
+                            index += 1;
+                        }
                     }
                 }
             }
@@ -1229,15 +1278,55 @@ where
     }
 }
 
+impl<T> Serialize for NativeValueArray<T>
+where
+    T: Serialize + Clone + std::fmt::Debug
+{
+    ///Naming is actually incorrect - vector at the moment of writing is supposed to contain only the first item
+    /// and 'bounds' contain something very questionable
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where S: Serializer,
+    {
+        if self.length == 0{
+            return serializer.serialize_str("[]");
+        }
+
+        let ser_id = Uuid::new_v4();
+
+        let mut state = serializer.serialize_struct("NativeArray", (self.length + 10) as usize)?;
+
+        if self.length > 0 {
+                let items =  self.to_slice();
+                let mut index = 0;
+
+                for item in items {
+                    let field_name = format!("i_{}", &index);
+                    //log::info!("item {}", *item as u64);
+
+                    //log::info!("{} unusual value from vector {:?} {:X} {}", ser_id, item, size_of::<T>(), std::any::type_name::<T>());
+
+                    log::info!("{} serialize::NativeArray val {:?} size {} obj {:?}, length {:?}, vector: {:?}, ptr {:?}",
+                                ser_id, std::any::type_name::<T>(), size_of::<T>(), self.obj,
+                        &self.length, &self.vector, self as *const NativeValueArray<T>);
+
+                    state.serialize_field(Box::leak(field_name.into_boxed_str()), &item)?;
+                    index += 1;
+            }
+        }
+
+        state.end()
+    }
+}
+
 pub fn get_dictionary_entry_size<K, V>(dictionary: &NativeDictionary<K, V>) -> usize
 {
     if (std::any::type_name::<V>() == "i32" || std::any::type_name::<V>() == "u32") &&
         (std::any::type_name::<K>() == "i32" || std::any::type_name::<K>() == "u32")
     {
-        0x20
+        0x10
     }
     else {
-        0x30 //what if its more
+        0x18 //what if its more, like big structs or smth
     }
 }
 
@@ -1259,48 +1348,53 @@ where
 
         //log::info!("serialize::BattleRelicModule {:p}", self);
 
-        // log::info!("serialize::NativeDictionary<{},{}> obj {} count {}, buckets: {}, entries {}, ptr {} sizes: dict {} k {} v {} entrysize {} val {} {:p} {}",
-        //     std::any::type_name::<K>(), std::any::type_name::<V>(), (&self.obj as *const NativeObject) as u64, &self.count,
-        //     self.buckets as u64, self.entries as u64,
-        //     (self as *const NativeDictionary<K, V>) as u64,
-        //     size_of::<NativeDictionary<K,V>>(), size_of::<K>(), size_of::<V>(), size_of::<NativeDictionaryEntry<K,V>>(), size_of::<NativeDictionaryValueEntry<K,V>>(),
-        //     self, ser_id
-        // );
+        log::info!("NativeDictionary<{},{}> obj {} count {}, buckets: {}, entries {}, ptr {} sizes: dict {:X} k {:X} v {:X} entrysize {:X} val {:X} {:p} {}",
+            std::any::type_name::<K>(), std::any::type_name::<V>(), (&self.obj as *const NativeObject) as u64, &self.count,
+            self.buckets as u64, self.entries as u64,
+            (self as *const NativeDictionary<K, V>) as u64,
+            size_of::<NativeDictionary<K,V>>(), size_of::<K>(), size_of::<V>(),
+            size_of::<NativeDictionaryEntry<K,V>>(),
+            size_of::<NativeDictionaryValueEntry<K,V>>(),
+            self, ser_id
+        );
 
         unsafe {
-            let self_ptr = ((self as *const NativeDictionary<K, V>) as u64);
-            let int_ptr = self_ptr as *const u32;
-            if !int_ptr.is_null(){
-                // Safety: Ensure the pointer is valid for at least `n` bytes.
-                let mem_slice =std::slice::from_raw_parts(int_ptr, 64);
-                log::info!("Memory u32 slice content: {:?} {}", mem_slice, ser_id);
-            }
-            let long_ptr = self_ptr as *const u64;
-            if !long_ptr.is_null(){
-                // Safety: Ensure the pointer is valid for at least `n` bytes.
-                let mem_slice =std::slice::from_raw_parts(long_ptr, 32);
-                log::info!("Memory u64 slice content: {:?} {}", mem_slice, ser_id);
-            }
+            /*
+            // let self_ptr = ((self as *const NativeDictionary<K, V>) as u64);
+            // let int_ptr = self_ptr as *const u32;
+            // if !int_ptr.is_null(){
+            //     // Safety: Ensure the pointer is valid for at least `n` bytes.
+            //     let mem_slice =std::slice::from_raw_parts(int_ptr, 64);
+            //     log::info!("Memory u32 slice content: {:?} {}", mem_slice, ser_id);
+            // }
+            // let long_ptr = self_ptr as *const u64;
+            // if !long_ptr.is_null(){
+            //     // Safety: Ensure the pointer is valid for at least `n` bytes.
+            //     let mem_slice =std::slice::from_raw_parts(long_ptr, 32);
+            //     log::info!("Memory u64 slice content: {:?} {}", mem_slice, ser_id);
+            // }
 
-            if self.buckets as u64 > 0x70000000000 && (self.buckets as u64) < 8700100315968u64 {
-            //trying to make sure buckets are at 0x10
-                let mem_slice32 = std::slice::from_raw_parts(self.buckets as *const u32, (self.count*8) as usize);
-                log::info!("Memory u32 at buckets ptr slice content: {:?} {}", mem_slice32, ser_id);;
-
-                let mem_slice64 = std::slice::from_raw_parts(self.buckets as *const u64, (self.count*4)as usize);
-                log::info!("Memory u64 at buckets ptr slice content: {:?} {}", mem_slice64, ser_id);
-            }
-            if self.entries as u64 > 0x70000000000 && (self.entries as u64) < 8700100315968u64 {
-                let mem_slice32 =std::slice::from_raw_parts(self.entries as *const u32, ((self.count*8)+4) as usize);
-                log::info!("Memory u32 at entries ptr slice content: {:?} {}", mem_slice32, ser_id);;
-
-                let mem_slice64 =std::slice::from_raw_parts(self.entries as *const u64, ((self.count*4)+4) as usize);
-                log::info!("Memory u64 at entries ptr slice content: {:?} {}", mem_slice64, ser_id);
-            }
+            // if self.buckets as u64 > 0x70000000000 && (self.buckets as u64) < 8700100315968u64 {
+            // //trying to make sure buckets are at 0x10
+            //     let mem_slice32 = std::slice::from_raw_parts(self.buckets as *const u32, (self.count*8) as usize);
+            //     log::info!("Memory u32 at buckets ptr slice content: {:?} {}", mem_slice32, ser_id);;
+            //
+            //     let mem_slice64 = std::slice::from_raw_parts(self.buckets as *const u64, (self.count*4)as usize);
+            //     log::info!("Memory u64 at buckets ptr slice content: {:?} {}", mem_slice64, ser_id);
+            // }
+             */
+            // if self.entries as u64 > 0x70000000000 && (self.entries as u64) < 8700100315968u64 {
+            //     let mem_slice32 =std::slice::from_raw_parts(self.entries as *const u32, ((self.count*8)+4) as usize);
+            //     log::info!("Memory u32 at entries ptr slice content: {:?} {}", mem_slice32, ser_id);;
+            //
+            //     let mem_slice64 =std::slice::from_raw_parts(self.entries as *const u64, ((self.count*4)+4) as usize);
+            //     log::info!("Memory u64 at entries ptr slice content: {:?} {}", mem_slice64, ser_id);
+            // }
         }
 
         if self.count > 1000
         {
+            log::warn!("huge dictionary count {} {}", &self.count, ser_id);
             return serializer.serialize_str("[]");
         }
 
@@ -1319,16 +1413,36 @@ where
                 state.serialize_field("entries", "[]")?;
             }
             else {
-                if size_of::<NativeDictionaryValueEntry<K,V>>() == 16
+                let entries_mut = self.entries as *mut NativeArray<NativeDictionaryEntry<K, V>>;
+                if self.count < (&*(self.entries)).length as i32
                 {
-                    state.serialize_field("entries", &*(self.entries as *const NativeArray<NativeDictionaryValueEntry<K, V>>))?;
+                    log::info!("dict size and underlying array size mismatch {} {}", self.count, (&*(self.entries)).length);
+                    (*entries_mut).length = self.count as u32;
                 }
-                state.serialize_field("entries", &*self.entries)?;
+
+                if size_of::<NativeDictionaryValueEntry<K,V>>() == 16 ||
+                    (is_value_type_under65b(std::any::type_name::<K>()) && is_value_type_under65b(std::any::type_name::<V>()))
+                {
+                    state.serialize_field("entries", &*(entries_mut as *const NativeArray<NativeDictionaryValueEntry<K, V>>))?;
+                }
+                else {
+                    state.serialize_field("entries", &*entries_mut)?;
+                }
             }
         }
 
         state.end()
     }
+}
+
+//checks if the type is the value one and no bigger than 64 bits
+pub fn is_value_type_under65b(t: &str) -> bool
+{
+    t == "i32" || t == "u32" || t == "f32" || t == "f64" || t == "bool"
+        || t == std::any::type_name::<FixPoint>()
+        || t == std::any::type_name::<AbilityProperty>()
+        || t == std::any::type_name::<NCGNFPLFBOJ_struct>()
+        || t == std::any::type_name::<BattleRelicInfo_struct>()
 }
 
 impl<K,V> Serialize for NativeDictionaryEntry<K,V>
@@ -1342,30 +1456,49 @@ where
     {
         use serde::ser::SerializeStruct;
 
+        log::info!("serializing NativeDictionaryEntry");
+
         let mut state = serializer.serialize_struct("NativeDictionaryEntry", 4)?;
 
         // Serialize hash_code
-        state.serialize_field("hash_code", &self.hash_code)?;
+        //state.serialize_field("hash_code", &self.hash_code)?;
 
         // Serialize key by dereferencing the pointer
-        if !self.key.is_null() {
-            let key = unsafe { &*self.key }; // Use unsafe block to access raw pointer
-            state.serialize_field("key", key)?;
-        } else {
-            state.serialize_field("key", &None::<K>)?;
+        if !is_value_type_under65b(std::any::type_name::<K>()) {
+            if !self.key.is_null() {
+                let key = unsafe { &*self.key }; // Use unsafe block to access raw pointer
+                state.serialize_field("key", key)?;
+            } else {
+                state.serialize_field("key", &None::<K>)?;
+            }
         }
+        else {
+            log::info!("NativeDictionaryEntry key {:?}", self.key);
 
+            state.serialize_field("key",
+                                      &format!("{:?}", self.key)
+                )?;
+        }
         // Serialize value by dereferencing the pointer
-        if !self.value.is_null() {
-            let value = unsafe { &*self.value };
-            state.serialize_field("value", value)?;
-        } else {
-            state.serialize_field("value", &None::<V>)?;
+
+        if !is_value_type_under65b(std::any::type_name::<V>()) {
+            if !self.value.is_null() {
+                let value = unsafe { &*self.value };
+                state.serialize_field("value", value)?;
+            } else {
+                state.serialize_field("value", &None::<V>)?;
+            }
+        }
+        else {
+            log::info!("NativeDictionaryEntry value {:?}", self.value);
+            state.serialize_field("value",
+                                  &format!("{:?}", self.value)
+            )?;
         }
 
         // Serialize next by treating it as a pointer (e.g., serialize as an address or None if null)
         // This avoids recursively serializing the entire list structure.
-        state.serialize_field("next", &self.next)?;
+        //state.serialize_field("next", &self.next)?;
 
         state.end()
     }
@@ -1885,6 +2018,16 @@ impl Serialize for BattleLineupData {
     {
         //log::info!("serialize::BattleLineupData");
 
+        let self_ptr = ((self as *const BattleLineupData) as u64);
+        let int_ptr = self_ptr as *const u32;
+        unsafe {
+            if !int_ptr.is_null() {
+                // Safety: Ensure the pointer is valid for at least `n` bytes.
+                let mem_slice = std::slice::from_raw_parts(int_ptr, 6);
+                log::info!("BattleLineupData Memory u32 slice content: {:?}", mem_slice);
+            }
+        }
+
         let mut state = serializer.serialize_struct("BattleLineupData", 13)?;
 
         unsafe {
@@ -2025,7 +2168,29 @@ impl Serialize for BattleRelicModule {
     {
         // Serialize 7 fields in the struct
         let mut state = serializer.serialize_struct("BattleRelicModule", 7)?;
-        log::info!("serialize::BattleRelicModule {:p}", self);
+
+        /* logging
+        let ser_id = Uuid::new_v4();
+        log::info!("serialize::BattleRelicModule {:p} {}", self, ser_id);
+
+        let self_ptr = ((self as *const BattleRelicModule) as u64);
+        let int_ptr = self_ptr as *const u32;
+        unsafe {
+            if !int_ptr.is_null() {
+                // Safety: Ensure the pointer is valid for at least `n` bytes.
+                let mem_slice = std::slice::from_raw_parts(int_ptr, 64);
+                log::info!("Memory u32 slice content: {:?} {}", mem_slice, ser_id);
+            }
+        }
+        let long_ptr = self_ptr as *const u64;
+        unsafe {
+            if !long_ptr.is_null() {
+                // Safety: Ensure the pointer is valid for at least `n` bytes.
+                let mem_slice = std::slice::from_raw_parts(long_ptr, 32);
+                log::info!("Memory u64 slice content: {:?} {}", mem_slice, ser_id);
+            }
+        }
+        */
 
         // Serialize native_object
         state.serialize_field("native_object", &self.native_object)?;
@@ -2067,7 +2232,7 @@ impl Serialize for BattleRelicModule {
     }
 }
 
-impl Serialize for BattleRelicInfo {
+impl Serialize for BattleRelicInfo_struct {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -2077,7 +2242,7 @@ impl Serialize for BattleRelicInfo {
         //log::info!("serialize::BattleRelicInfo");
 
         // Serialize the native object
-        state.serialize_field("native_object", &self.native_object)?;
+        //state.serialize_field("native_object", &self.native_object)?;
         state.serialize_field("IGIDDGDHAGI", &self.IGIDDGDHAGI)?;
         state.serialize_field("LightConeId", &self.LightConeId)?;
         state.serialize_field("FFPKKKEBDHL", &self.FFPKKKEBDHL)?;
@@ -2093,7 +2258,7 @@ impl Serialize for BattleRelicInfo {
     }
 }
 
-impl Serialize for NCGNFPLFBOJ {
+impl Serialize for NCGNFPLFBOJ_struct {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -2103,7 +2268,7 @@ impl Serialize for NCGNFPLFBOJ {
         //log::info!("serialize::NCGNFPLFBOJ");
 
         // Serialize each field individually
-        state.serialize_field("native_object", &self.native_object)?;
+        //state.serialize_field("native_object", &self.native_object)?;
         state.serialize_field("NIKFINDKDKO", &self.NIKFINDKDKO)?;
         state.serialize_field("KBMCHLGDKEF", &self.KBMCHLGDKEF)?;
         state.serialize_field("KHADHNNCFLH", &self.KHADHNNCFLH)?;
@@ -2162,18 +2327,73 @@ impl Serialize for MazeBuffData {
 
 impl<K, V> Serialize for NativeDictionaryValueEntry<K, V>
 where
-    K: Serialize,
-    V: Serialize,
+    K: Serialize + std::fmt::Debug,
+    V: Serialize + std::fmt::Debug,
 {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
+        //log::info!("{} {} {}", std::any::type_name::<K>(), std::any::type_name::<V>(), size_of::<NativeDictionaryValueEntry<K,V>>());
+        //log::info!("NativeDictionaryValueEntry pointer: {:p} {:?} {:?} {} {} {}", self, self.key, self.value, size_of::<NativeDictionaryValueEntry<K,V>>(), std::any::type_name::<K>(), size_of::<V>(),);
+
+        // let self_ptr = ((self as *const NativeDictionaryValueEntry<K, V>) as u64);
+        // let int_ptr = self_ptr as *const u32;
+        // unsafe {
+        //     if !int_ptr.is_null() {
+        //         // Safety: Ensure the pointer is valid for at least `n` bytes.
+        //         let mem_slice = std::slice::from_raw_parts(int_ptr, size_of::<NativeDictionaryValueEntry<K, V>>()/4);
+        //         log::info!("Memory u32 slice content: {:?}", mem_slice);
+        //     }
+        // }
+
         let mut state = serializer.serialize_struct("NativeDictionaryValueEntry", 4)?;
-        // state.serialize_field("hash_code", &self.hash_code)?;
-        // state.serialize_field("next", &self.next)?;
-        //state.serialize_field("key", &self.key)?;
-        //state.serialize_field("value", &self.value)?;
+        //state.serialize_field("hash_code", &self.hash_code)?; //state.serialize_field("next", &self.next)?;
+        state.serialize_field("key", &self.key)?;
+        state.serialize_field("value", &self.value)?;
+
+        state.end()
+    }
+}
+
+impl Serialize for NOPBAAAGGLA {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("NOPBAAAGGLA", 3)?;
+
+        //TODO serialize more
+
+        // Example of serializing a native object (assuming NativeObject implements Serialize)
+        state.serialize_field("native_object", &self.native_object)?;
+
+        // Example of converting pointers to numbers (addresses or null)
+        state.serialize_field("HKFGOHGKOGK", &serialize_pointer(&self.HKFGOHGKOGK))?;
+
+        if self.JKCOIOLCMEP.is_null() { state.serialize_field("JKCOIOLCMEP", "null")?; }
+        {
+            unsafe {
+                state.serialize_field("JKCOIOLCMEP", &*self.JKCOIOLCMEP)?;
+            }
+        }
+
+        // Example of serializing arrays (turn to Vec<u8>)
+        state.serialize_field("AAHMMHBHMFN", &self.AAHMMHBHMFN.to_vec())?;
+        state.serialize_field("FFFOLNDHIEH", &self.FFFOLNDHIEH.to_vec())?;
+
+        // Serialize FixPoint fields using Debug or other custom logic
+        state.serialize_field("NAGMKEABGEE", &self.NAGMKEABGEE)?;
+        state.serialize_field("KLMAGCLFBAO", &self.KLMAGCLFBAO)?;
+        state.serialize_field("JFKEEOMKMLI", &self.JFKEEOMKMLI)?;
+
+
+        // Serialize other fields as normal
+        state.serialize_field("COKMLMJPKLH", &self.COKMLMJPKLH)?;
+        state.serialize_field("BBDANLEJCIA", &self.BBDANLEJCIA)?;
+        state.serialize_field("HEMFDDDJOGK", &self.HEMFDDDJOGK)?;
+
+        // Finish serialization
         state.end()
     }
 }

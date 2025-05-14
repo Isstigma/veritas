@@ -12,7 +12,7 @@ pub struct NOPBAAAGGLA {
     pub FKKDFMPMJHG: *const c_void,                    // 0x20
     pub JODAJBNCCNP: *const c_void,                    // 0x28
     pub PBHCGDFPEED: *const c_void,                    // 0x30
-    pub MDEHKOOKJCK: *const *const c_void,             // 0x38
+    pub MDEHKOOKJCK: *const c_void,             // 0x38
     pub LGGEDDMACDF: *const NativeString,              // 0x40
     pub AAHMMHBHMFN: [u8; 0x90],                       // 0x48
     pub KNDJNKNHFFG: *const TurnBasedAbilityComponent, // 0xd8
@@ -1218,32 +1218,31 @@ pub mod rpg {
         }
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct BattleRelicModule {
+        pub struct BattleRelicModule { //OJIEBJJGPCP
             pub native_object: NativeObject,
             pub AAEONBIGBBP: *const c_void, // 0x10, Dictionary<string,KENFHNBOEPP> TODO
             //below looks like relic+planar set buffs
             pub BKCGOLIBNHC: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x18 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
-            pub BattleRelicInfos: *const NativeArray<BattleRelicInfo>, // 0x20 MLNCAMMKBAB[] TODO
-            pub PMMGFOHHKPM: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x28 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
-            pub BIJMJNIMPOM: *const NativeDictionary<u32,u32>, //0x30 Dictionary<uint,uint>
-            pub SpecialRelicData: *const SpecialRelicData,
+            pub SpecialRelicData: *const SpecialRelicData, //0x20 HBOCDMDPGGH
+            pub BattleRelicInfos: *const NativeArray<BattleRelicInfo_struct>, // 0x28 MLNCAMMKBAB[] TODO
+            pub PMMGFOHHKPM: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x30 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
+            pub BIJMJNIMPOM: *const NativeDictionary<u32,u32>, //0x38 Dictionary<uint,uint>
         }
 
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct BattleRelicInfo //MLNCAMMKBAB
+        pub struct BattleRelicInfo_struct //MLNCAMMKBAB native struct
         {
-            pub native_object: NativeObject,
+            //pub native_object: NativeObject,
             pub IGIDDGDHAGI: u32,                             // 0x10
             pub LightConeId: u32,                             // 0x14 BDJECMNLHON
             pub FFPKKKEBDHL: u32,                             // 0x18
-            pub BNDGBHLOJHN: *const NativeArray<NCGNFPLFBOJ>, // 0x20
+            pub BNDGBHLOJHN: *const/*TODO not pointer but value?*/ NativeArray<NCGNFPLFBOJ_struct>, // 0x20
         }
 
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct SpecialRelicData
-//HBOCDMDPGGH
+        pub struct SpecialRelicData //HBOCDMDPGGH
         {
             pub native_object: NativeObject,
             pub LGBJKGGCELB: *const NativeArray<u32>, // 0x10 uint[] is it serialized differently from List<uint>?
@@ -1253,8 +1252,8 @@ pub mod rpg {
 
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct NCGNFPLFBOJ {
-            pub native_object: NativeObject,
+        pub struct NCGNFPLFBOJ_struct { //native struct
+            //pub native_object: NativeObject,
             pub NIKFINDKDKO: u32, // 0x10
             pub KBMCHLGDKEF: u32, //0x14
             pub KHADHNNCFLH: u32, //0x18
