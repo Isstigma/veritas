@@ -1275,24 +1275,29 @@ pub mod rpg {
         #[derive(Debug, Clone, Copy)]
         pub struct BattleRelicModule { //OJIEBJJGPCP
             pub native_object: NativeObject,
-            pub AAEONBIGBBP: *const c_void, // 0x10, Dictionary<string,KENFHNBOEPP> TODO
+            pub AAEONBIGBBP: *const c_void, //NativeDictionary<NativeString, KENFHNBOEPP>, // 0x10, Dictionary<string,KENFHNBOEPP> TODO
             //below looks like relic+planar set buffs
-            pub BKCGOLIBNHC: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x18 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
+            pub set_bonuses: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x18 BKCGOLIBNHC Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint>
             pub SpecialRelicData: *const SpecialRelicData, //0x20 HBOCDMDPGGH
-            pub BattleRelicInfos: *const NativeArray<BattleRelicInfo_struct>, // 0x28 MLNCAMMKBAB[] TODO
-            pub PMMGFOHHKPM: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x30 Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
+            pub relics: *const NativeArray<BattleRelicInfo_struct>, // 0x28 MLNCAMMKBAB[] TODO
+            pub relic_stat_bonuses: *const NativeDictionary<AbilityProperty, FixPoint>, // 0x30 PMMGFOHHKPM Dictionary<RPG.GameCore.AbilityProperty,RPG.GameCore.FixPoint> TODO
             pub BIJMJNIMPOM: *const NativeDictionary<u32,u32>, //0x38 Dictionary<uint,uint>
         }
-
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy)]
+        pub struct KENFHNBOEPP { //KENFHNBOEPP native struct value
+            pub FKHHOBBFMEH: *const NativeString, // 0x0
+            pub DCGOGAENEIE: *const NativeArray<FixPoint>, // 0x8
+        }
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
         pub struct BattleRelicInfo_struct //MLNCAMMKBAB native struct
         {
             //pub native_object: NativeObject,
-            pub IGIDDGDHAGI: u32,                             // 0x10
-            pub LightConeId: u32,                             // 0x14 BDJECMNLHON
-            pub FFPKKKEBDHL: u32,                             // 0x18
-            pub BNDGBHLOJHN: *const/*TODO not pointer but value?*/ NativeArray<NCGNFPLFBOJ_struct>, // 0x20
+            pub relic_id: u32,                             // 0x10 IGIDDGDHAGI
+            pub level: u32,                             // 0x14 BDJECMNLHON
+            pub main_affix_id: u32,                             // 0x18 FFPKKKEBDHL
+            pub sub_affixes: *const NativeArray<sub_affix_struct>, // 0x20 BNDGBHLOJHN
         }
 
         #[repr(C)]
@@ -1307,17 +1312,16 @@ pub mod rpg {
 
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct NCGNFPLFBOJ_struct { //native struct
+        pub struct sub_affix_struct { //native struct NCGNFPLFBOJ
             //pub native_object: NativeObject,
-            pub NIKFINDKDKO: u32, // 0x10
-            pub KBMCHLGDKEF: u32, //0x14
-            pub KHADHNNCFLH: u32, //0x18
+            pub sub_affix_id: u32, // 0x10 NIKFINDKDKO
+            pub step: u32, //0x14 KBMCHLGDKEF
+            pub count: u32, //0x18 KHADHNNCFLH
         }
 
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]
-        pub struct BattleEquipmentData {
-            //IEDCICHOKGP
+        pub struct BattleEquipmentData { //IEDCICHOKGP
             pub native_object: NativeObject,
             pub CNIHAOIEFPI: u32, // 0x10 mb LcSuperImposition
             pub FIAKPENJJMN: u32, //0x14 mb CharLvl

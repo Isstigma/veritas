@@ -1000,7 +1000,7 @@ impl Serialize for FixPoint{
         // {
             serializer.serialize_str(
 //                round_to_places(
-                   format!("{:.2}", fixpoint_to_raw(&self) ).as_str(),
+                   format!("{:.4}", fixpoint_to_raw(&self) ).as_str(),
                 //3
             )
   //          )
@@ -1126,7 +1126,9 @@ where
                     let mut index = 0;
 
                     if std::any::type_name::<T>().starts_with("veritas::kreide::native_types::NativeDictionary")
-                        || std::any::type_name::<T>() == std::any::type_name::<BattleRelicInfo_struct>() {
+                        || std::any::type_name::<T>() == std::any::type_name::<BattleRelicInfo_struct>()
+                        || std::any::type_name::<T>() == std::any::type_name::<sub_affix_struct>()
+                        || std::any::type_name::<T>() == std::any::type_name::<KENFHNBOEPP>(){
 
                         let val_self: &NativeValueArray<T> = &*(self as *const NativeArray<T> as *const NativeValueArray<T>);
 
@@ -1415,6 +1417,7 @@ where
                 let entries_mut = self.entries as *mut NativeArray<NativeDictionaryEntry<K, V>>;
                 if self.count < (&*(self.entries)).length as i32
                 {
+                    log_memory_at_ptr(self.entries, Some(64));
                     log::info!("dict size and underlying array size mismatch {} {}", self.count, (&*(self.entries)).length);
                     (*entries_mut).length = self.count as u32;
                 }
@@ -1440,9 +1443,10 @@ pub fn is_value_type_under65b(t: &str) -> bool
     t == "i32" || t == "u32" || t == "f32" || t == "f64" || t == "bool"
         || t == std::any::type_name::<FixPoint>()
         || t == std::any::type_name::<AbilityProperty>()
-        || t == std::any::type_name::<NCGNFPLFBOJ_struct>()
+        || t == std::any::type_name::<sub_affix_struct>()
         || t == std::any::type_name::<BattleRelicInfo_struct>()
-}
+        //|| t == std::any::type_name::<KENFHNBOEPP>()
+}   
 
 impl<K,V> Serialize for NativeDictionaryEntry<K,V>
 where
@@ -1455,7 +1459,7 @@ where
     {
         use serde::ser::SerializeStruct;
 
-        log::info!("serializing NativeDictionaryEntry");
+        log::info!("serializing NativeDictionaryEntry {} {} {:?} {:?}", std::any::type_name::<K>(), std::any::type_name::<V>(), &self.key, &self.value);
 
         let mut state = serializer.serialize_struct("NativeDictionaryEntry", 4)?;
 
@@ -2163,19 +2167,19 @@ impl Serialize for SpecialRelicData {
 pub unsafe fn log_memory_at_ptr<T>(reference: *const T, len: Option<usize>)
 {
     let ser_id = Uuid::new_v4();
-
     let self_ptr = reference as u64;
     let int_ptr = self_ptr as *const u32;
+    //log::info!("log_memory_at_ptr::{:?} {} {:?} {}", reference, self_ptr, int_ptr, int_ptr.is_null());
     if !int_ptr.is_null(){
         // Safety: Ensure the pointer is valid for at least `n` bytes.
         let mem_slice =std::slice::from_raw_parts(int_ptr, len.unwrap_or(64));
-        log::info!("BattleRelicInfos Memory u32 slice content: {:?} {}", mem_slice, ser_id);
+        log::info!("Memory u32 slice content: {:?} {}", mem_slice, ser_id);
     }
     let long_ptr = self_ptr as *const u64;
     if !long_ptr.is_null(){
         // Safety: Ensure the pointer is valid for at least `n` bytes.
         let mem_slice =std::slice::from_raw_parts(long_ptr, len.unwrap_or(64)/2);
-        log::info!("BattleRelicInfos Memory u64 slice content: {:?} {}", mem_slice, ser_id);
+        log::info!("Memory u64 slice content: {:?} {}", mem_slice, ser_id);
     }
 }
 
@@ -2215,24 +2219,26 @@ impl Serialize for BattleRelicModule {
 
         unsafe {
         // Safely serialize each pointer field
-            state.serialize_field("AAEONBIGBBP", &serialize_pointer(&self.AAEONBIGBBP))?;
+            if self.AAEONBIGBBP.is_null(){ state.serialize_field("AAEONBIGBBP", "null") ?;}
+            else {
+                state.serialize_field("AAEONBIGBBP", &serialize_pointer(&self.AAEONBIGBBP))?;
+            }
 
-            if self.BKCGOLIBNHC.is_null(){ state.serialize_field("BKCGOLIBNH", "null") ?;}
+            if self.set_bonuses.is_null(){ state.serialize_field("BKCGOLIBNH", "null") ?;}
             unsafe {
-                log::info!("BattleRelicModule::BKCGOLIBNHC {:p}", self.BKCGOLIBNHC);
-                state.serialize_field("BKCGOLIBNHC", &*self.BKCGOLIBNHC)?;
+                log::info!("BattleRelicModule::set_bonuses {:p}", self.set_bonuses);
+                state.serialize_field("set_bonuses", &*self.set_bonuses)?;
             }
 
-            if self.BattleRelicInfos.is_null() { state.serialize_field("BattleRelicInfos", "null")?; }
+            if self.relics.is_null() { state.serialize_field("relics", "null")?; }
             else {
-
-                state.serialize_field("BattleRelicInfos", &*self.BattleRelicInfos)?;
+                state.serialize_field("relics", &*self.relics)?;
             }
 
-            if self.PMMGFOHHKPM.is_null() { state.serialize_field("PMMGFOHHKPM", "null")?; }
+            if self.relic_stat_bonuses.is_null() { state.serialize_field("relic_stat_bonuses", "null")?; }
             else {
-                //log::info!("BattleRelicModule::PMMGFOHHKPM {:p}", self.PMMGFOHHKPM);
-                state.serialize_field("PMMGFOHHKPM", &*self.PMMGFOHHKPM)?;
+                //log::info!("BattleRelicModule::relic_stat_bonuses {:p}", self.relic_stat_bonuses);
+                state.serialize_field("relic_stat_bonuses", &*self.relic_stat_bonuses)?;
             }
             if self.BIJMJNIMPOM.is_null() { state.serialize_field("BIJMJNIMPO", "null")?; }
             else { state.serialize_field("BIJMJNIMPOM", &*self.BIJMJNIMPOM)?; }
@@ -2262,22 +2268,24 @@ impl Serialize for BattleRelicInfo_struct {
 
         // Serialize the native object
         //state.serialize_field("native_object", &self.native_object)?;
-        state.serialize_field("IGIDDGDHAGI", &self.IGIDDGDHAGI)?;
-        state.serialize_field("LightConeId", &self.LightConeId)?;
-        state.serialize_field("FFPKKKEBDHL", &self.FFPKKKEBDHL)?;
+        state.serialize_field("relic_id", &self.relic_id)?;
+        state.serialize_field("level", &self.level)?;
+        state.serialize_field("main_affix_id", &self.main_affix_id)?;
 
         // Serialize the pointer to NativeArray<NCGNFPLFBOJ>
 
-        if self.BNDGBHLOJHN.is_null() { state.serialize_field("BNDGBHLOJHN", "null")?; }
+        if self.sub_affixes.is_null() { state.serialize_field("sub_affixes", "null")?; }
         else {
-            unsafe { state.serialize_field("BNDGBHLOJHN", &*self.BNDGBHLOJHN)?; }
+            //log::info!("BattleRelicInfo::sub_affixes {:p}", self.sub_affixes);
+            //unsafe { log_memory_at_ptr(self.sub_affixes, Some(64)); }
+            unsafe { state.serialize_field("sub_affixes", &*self.sub_affixes)?; }
         }
 
         state.end()
     }
 }
 
-impl Serialize for NCGNFPLFBOJ_struct {
+impl Serialize for sub_affix_struct {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -2288,9 +2296,9 @@ impl Serialize for NCGNFPLFBOJ_struct {
 
         // Serialize each field individually
         //state.serialize_field("native_object", &self.native_object)?;
-        state.serialize_field("NIKFINDKDKO", &self.NIKFINDKDKO)?;
-        state.serialize_field("KBMCHLGDKEF", &self.KBMCHLGDKEF)?;
-        state.serialize_field("KHADHNNCFLH", &self.KHADHNNCFLH)?;
+        state.serialize_field("sub_affix_id", &self.sub_affix_id)?;
+        state.serialize_field("step", &self.step)?;
+        state.serialize_field("count", &self.count)?;
 
         // End the serialization
         state.end()
@@ -2375,6 +2383,26 @@ where
     }
 }
 
+impl Serialize for KENFHNBOEPP {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("KENFHNBOEPP", 2)?;
+        unsafe {
+            if self.FKHHOBBFMEH.is_null() { state.serialize_field("FKHHOBBFMEH", "null")?; }
+            else {
+                state.serialize_field("FKHHOBBFMEH", &*self.FKHHOBBFMEH)?;
+            }
+            if self.DCGOGAENEIE.is_null() { state.serialize_field("DCGOGAENEIE", "null")?; }
+            else {
+                state.serialize_field("DCGOGAENEIE", &*self.DCGOGAENEIE)?;
+            }
+        }
+
+        state.end()
+    }
+}
 impl Serialize for NOPBAAAGGLA {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where

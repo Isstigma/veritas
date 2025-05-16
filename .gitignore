@@ -12,5 +12,6 @@ target/
 *.xml
 *.iml
 .idea/
+.vs/
 
 veritas.log
