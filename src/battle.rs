@@ -282,6 +282,8 @@ impl BattleContext {
         mut battle_context: MutexGuard<'static, BattleContext>,
     ) -> Result<Packet> {
         battle_context.state = BattleState::Ended;
+        battle_context.battle_log_file = None;
+        
         let packet_body = EventPacket::BattleEnd {
             avatars: battle_context.lineup.clone(),
             // TODO: add to packet av history

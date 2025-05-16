@@ -998,9 +998,9 @@ impl Serialize for FixPoint{
         //log::info!("serialize::FixPoint");
         // if self.m_rawValue != 0
         // {
-            serializer.serialize_f64(
+            serializer.serialize_str(
 //                round_to_places(
-                    fixpoint_to_raw(&self),
+                   format!("{:.2}", fixpoint_to_raw(&self) ).as_str(),
                 //3
             )
   //          )
@@ -1126,7 +1126,7 @@ where
                     let mut index = 0;
 
                     if std::any::type_name::<T>().starts_with("veritas::kreide::native_types::NativeDictionary")
-                        || std::any::type_name::<T>() == "veritas::kreide::types::rpg::gamecore::BattleRelicInfo" {
+                        || std::any::type_name::<T>() == std::any::type_name::<BattleRelicInfo_struct>() {
 
                         let val_self: &NativeValueArray<T> = &*(self as *const NativeArray<T> as *const NativeValueArray<T>);
 
@@ -1146,8 +1146,7 @@ where
                             */
 
                             if std::any::type_name::<T>() == "veritas::kreide::native_types::NativeDictionaryEntry<u32, u32>" ||
-                                std::any::type_name::<T>() == "veritas::kreide::native_types::NativeDictionaryValueEntry<u32, u32>" ||
-                                std::any::type_name::<T>() == "veritas::kreide::types::rpg::gamecore::BattleRelicInfo_struct" {
+                                std::any::type_name::<T>() == "veritas::kreide::native_types::NativeDictionaryValueEntry<u32, u32>"  {
                                 let item_dict_entry = &*(&item as *const _ as *const NativeDictionaryValueEntry<u32, u32>);
 
                                 //log::info!("{} val array route trying to deserialize value from vector {} {:X} {} {:p}", ser_id, item as *const _ as u128, size_of::<T>(),std::any::type_name::<T>(), item);
@@ -2161,6 +2160,25 @@ impl Serialize for SpecialRelicData {
     }
 }
 
+pub unsafe fn log_memory_at_ptr<T>(reference: *const T, len: Option<usize>)
+{
+    let ser_id = Uuid::new_v4();
+
+    let self_ptr = reference as u64;
+    let int_ptr = self_ptr as *const u32;
+    if !int_ptr.is_null(){
+        // Safety: Ensure the pointer is valid for at least `n` bytes.
+        let mem_slice =std::slice::from_raw_parts(int_ptr, len.unwrap_or(64));
+        log::info!("BattleRelicInfos Memory u32 slice content: {:?} {}", mem_slice, ser_id);
+    }
+    let long_ptr = self_ptr as *const u64;
+    if !long_ptr.is_null(){
+        // Safety: Ensure the pointer is valid for at least `n` bytes.
+        let mem_slice =std::slice::from_raw_parts(long_ptr, len.unwrap_or(64)/2);
+        log::info!("BattleRelicInfos Memory u64 slice content: {:?} {}", mem_slice, ser_id);
+    }
+}
+
 impl Serialize for BattleRelicModule {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -2207,12 +2225,13 @@ impl Serialize for BattleRelicModule {
 
             if self.BattleRelicInfos.is_null() { state.serialize_field("BattleRelicInfos", "null")?; }
             else {
+
                 state.serialize_field("BattleRelicInfos", &*self.BattleRelicInfos)?;
             }
 
             if self.PMMGFOHHKPM.is_null() { state.serialize_field("PMMGFOHHKPM", "null")?; }
             else {
-                log::info!("BattleRelicModule::PMMGFOHHKPM {:p}", self.PMMGFOHHKPM);
+                //log::info!("BattleRelicModule::PMMGFOHHKPM {:p}", self.PMMGFOHHKPM);
                 state.serialize_field("PMMGFOHHKPM", &*self.PMMGFOHHKPM)?;
             }
             if self.BIJMJNIMPOM.is_null() { state.serialize_field("BIJMJNIMPO", "null")?; }
@@ -2311,7 +2330,7 @@ impl Serialize for MazeBuffData {
         // Serialize extra_param_map
         if self.extra_param_map.is_null() { state.serialize_field("extra_param_map", "null")?; }
         else { unsafe {
-            log::info!("MazeBuffData::extra_param_map");
+            //log::info!("MazeBuffData::extra_param_map");
             state.serialize_field("extra_param_map", &*self.extra_param_map)?; }
         }
 
@@ -2361,15 +2380,14 @@ impl Serialize for NOPBAAAGGLA {
     where
         S: Serializer,
     {
-        let mut state = serializer.serialize_struct("NOPBAAAGGLA", 3)?;
-
+        let mut state = serializer.serialize_struct("NOPBAAAGGLA", 113)?;
         //TODO serialize more
 
         // Example of serializing a native object (assuming NativeObject implements Serialize)
         state.serialize_field("native_object", &self.native_object)?;
 
         // Example of converting pointers to numbers (addresses or null)
-        state.serialize_field("HKFGOHGKOGK", &serialize_pointer(&self.HKFGOHGKOGK))?;
+        //state.serialize_field("HKFGOHGKOGK", &serialize_pointer(&self.HKFGOHGKOGK))?;
 
         if self.JKCOIOLCMEP.is_null() { state.serialize_field("JKCOIOLCMEP", "null")?; }
         {
@@ -2379,19 +2397,145 @@ impl Serialize for NOPBAAAGGLA {
         }
 
         // Example of serializing arrays (turn to Vec<u8>)
-        state.serialize_field("AAHMMHBHMFN", &self.AAHMMHBHMFN.to_vec())?;
-        state.serialize_field("FFFOLNDHIEH", &self.FFFOLNDHIEH.to_vec())?;
+        //state.serialize_field("AAHMMHBHMFN", &self.AAHMMHBHMFN.to_vec())?;
+        //state.serialize_field("FFFOLNDHIEH", &self.FFFOLNDHIEH.to_vec())?;
 
-        // Serialize FixPoint fields using Debug or other custom logic
+        // Serialize FixPoint fields
         state.serialize_field("NAGMKEABGEE", &self.NAGMKEABGEE)?;
         state.serialize_field("KLMAGCLFBAO", &self.KLMAGCLFBAO)?;
-        state.serialize_field("JFKEEOMKMLI", &self.JFKEEOMKMLI)?;
+        state.serialize_field("PDCMJAMPJNL", &self.PDCMJAMPJNL)?;
+        state.serialize_field("FFCGIMAMDPP", &self.FFCGIMAMDPP)?;
+        state.serialize_field("EFAAJEAENFF", &self.EFAAJEAENFF)?;
+        state.serialize_field("JCPEINMPKAM", &self.JCPEINMPKAM)?;
+        state.serialize_field("GAALBDHLFOG", &self.GAALBDHLFOG)?;
+        state.serialize_field("PJNEJPNBNMP", &self.PJNEJPNBNMP)?;
+        state.serialize_field("GLPLDJKMOBE", &self.GLPLDJKMOBE)?;
+        state.serialize_field("CMNBOEIDAOD", &self.CMNBOEIDAOD)?;
+        state.serialize_field("MGFECPHDPHB", &self.MGFECPHDPHB)?;
+        state.serialize_field("damage", &self.damage)?;
+        state.serialize_field("PNGJIDMHIOE", &self.PNGJIDMHIOE)?;
+        state.serialize_field("PJPKDAKBEJI", &self.PJPKDAKBEJI)?;
+        state.serialize_field("PAIGBKBOKDI", &self.PAIGBKBOKDI)?;
+        state.serialize_field("COIDNPMCCFG", &self.COIDNPMCCFG)?;
+        state.serialize_field("OHBMMFAFMDP", &self.OHBMMFAFMDP)?;
+        state.serialize_field("JFMADBFKBDK", &self.JFMADBFKBDK)?;
+        state.serialize_field("MHEBPGAHFCB", &self.MHEBPGAHFCB)?;
+        state.serialize_field("EPJEDLOBFPG", &self.EPJEDLOBFPG)?;
+        state.serialize_field("DGFBMAPFPNH", &self.DGFBMAPFPNH)?;
+        state.serialize_field("KOEGLFLGADD", &self.KOEGLFLGADD)?;
+        state.serialize_field("JNFPCNAKNOP", &self.JNFPCNAKNOP)?;
+        state.serialize_field("PGOHAIPOCNK", &self.PGOHAIPOCNK)?;
+        state.serialize_field("MLKFKKACBCE", &self.MLKFKKACBCE)?;
+        state.serialize_field("CGMHNNNOKAI", &self.CGMHNNNOKAI)?;
+        state.serialize_field("NEPGNKOMAAA", &self.NEPGNKOMAAA)?;
+        state.serialize_field("EFFODBPOOCN", &self.EFFODBPOOCN)?;
+        state.serialize_field("ABIPIIBIIBE", &self.ABIPIIBIIBE)?;
+        state.serialize_field("KODEDHBLGGH", &self.KODEDHBLGGH)?;
+        state.serialize_field("GLGFEKEMMJJ", &self.GLGFEKEMMJJ)?;
+        state.serialize_field("CAILJEGIDKL", &self.CAILJEGIDKL)?;
+        state.serialize_field("NHHNLMOBEGH", &self.NHHNLMOBEGH)?;
+        state.serialize_field("GCNOMMHFPOG", &self.GCNOMMHFPOG)?;
+        state.serialize_field("EBDJIHNKAOC", &self.EBDJIHNKAOC)?;
+        state.serialize_field("AHOCGHANMCE", &self.AHOCGHANMCE)?;
+        state.serialize_field("KDJBABPDHEG", &self.KDJBABPDHEG)?;
+        state.serialize_field("HCGBHCPHDKJ", &self.HCGBHCPHDKJ)?;
+        state.serialize_field("DKOIGIHEBCD", &self.DKOIGIHEBCD)?;
+        state.serialize_field("FNDCNMHMCIC", &self.FNDCNMHMCIC)?;
+        state.serialize_field("CCLFKIPGJOG", &self.CCLFKIPGJOG)?;
+        state.serialize_field("OEPAPFDLMML", &self.OEPAPFDLMML)?;
+        state.serialize_field("JHOHCEFOJNB", &self.JHOHCEFOJNB)?;
+        state.serialize_field("MKNDMBOCCBO", &self.MKNDMBOCCBO)?;
+        state.serialize_field("DJHDAOOEJOF", &self.DJHDAOOEJOF)?;
+        state.serialize_field("MNGPDEOEHPE", &self.MNGPDEOEHPE)?;
+        state.serialize_field("GJNAGCJONAO", &self.GJNAGCJONAO)?;
+        state.serialize_field("GCFCCDPIACO", &self.GCFCCDPIACO)?;
+        state.serialize_field("DBNKBGKCMKH", &self.DBNKBGKCMKH)?;
+        state.serialize_field("DINCHAHPEAC", &self.DINCHAHPEAC)?;
+        state.serialize_field("FOLCDHNIMMI", &self.FOLCDHNIMMI)?;
+        state.serialize_field("JEHMOKDJDDE", &self.JEHMOKDJDDE)?;
+        state.serialize_field("GIHPOCDLJOA", &self.GIHPOCDLJOA)?;
+        state.serialize_field("FLMEBELNIKK", &self.FLMEBELNIKK)?;
+        state.serialize_field("EBDJHPNOALL", &self.EBDJHPNOALL)?;
+        state.serialize_field("HJAEPANAFLN", &self.HJAEPANAFLN)?;
+        state.serialize_field("CINNHMENLIJ", &self.CINNHMENLIJ)?;
+        state.serialize_field("NCOHIAPKAED", &self.NCOHIAPKAED)?;
+        state.serialize_field("PGGOANFBJON", &self.PGGOANFBJON)?;
+        state.serialize_field("GNMAKKBFOCH", &self.GNMAKKBFOCH)?;
+        state.serialize_field("DBBDIMCJIKE", &self.DBBDIMCJIKE)?;
+        state.serialize_field("BKIFAEKCIHN", &self.BKIFAEKCIHN)?;
+        state.serialize_field("BGBOFNMKDNJ", &self.BGBOFNMKDNJ)?;
+        state.serialize_field("DPPDEDGCLJJ", &self.DPPDEDGCLJJ)?;
+        state.serialize_field("GOHOJAIMDNM", &self.GOHOJAIMDNM)?;
+        state.serialize_field("DJCAFPFKOGP", &self.DJCAFPFKOGP)?;
+        state.serialize_field("GMBACFCLEGD", &self.GMBACFCLEGD)?;
+        state.serialize_field("LJGPDLDGCEO", &self.LJGPDLDGCEO)?;
+        state.serialize_field("DCEBGGFOFAO", &self.DCEBGGFOFAO)?;
+        state.serialize_field("GHBPOPKEGLE", &self.GHBPOPKEGLE)?;
+        state.serialize_field("DEOICHHPAIF", &self.DEOICHHPAIF)?;
+        state.serialize_field("BLFCEOMPDKK", &self.BLFCEOMPDKK)?;
+        state.serialize_field("HNJBAFCNNDD", &self.HNJBAFCNNDD)?;
+        state.serialize_field("BBNMJNPDOCP", &self.BBNMJNPDOCP)?;
+        state.serialize_field("JIINJMJGCOH", &self.JIINJMJGCOH)?;
+        state.serialize_field("ILNAKPIOOAK", &self.ILNAKPIOOAK)?;
+        state.serialize_field("POLANGDKOKH", &self.POLANGDKOKH)?;
+        state.serialize_field("AMAJNHHAJIM", &self.AMAJNHHAJIM)?;
+        state.serialize_field("FMMBMJKNAHI", &self.FMMBMJKNAHI)?;
+        state.serialize_field("MJMDGNPPILN", &self.MJMDGNPPILN)?;
+        state.serialize_field("ODBPMMGBKGA", &self.ODBPMMGBKGA)?;
+        state.serialize_field("ELGMFJLGCPH", &self.ELGMFJLGCPH)?;
+        state.serialize_field("MAKENPDPHDN", &self.MAKENPDPHDN)?;
+        state.serialize_field("MKIMEBNOEGI", &self.MKIMEBNOEGI)?;
+        state.serialize_field("IAAJMHADJDG", &self.IAAJMHADJDG)?;
+        state.serialize_field("GBENLNNEIJM", &self.GBENLNNEIJM)?;
+        state.serialize_field("PJLPGAGKIDE", &self.PJLPGAGKIDE)?;
+        state.serialize_field("ENFFBMJBEDP", &self.ENFFBMJBEDP)?;
+        state.serialize_field("FGIPOLJPICM", &self.FGIPOLJPICM)?;
+        state.serialize_field("KPELFJICFDH", &self.KPELFJICFDH)?;
+        state.serialize_field("BDGDFKGOLPJ", &self.BDGDFKGOLPJ)?;
+        state.serialize_field("BEGDMOGLLGM", &self.BEGDMOGLLGM)?;
+        state.serialize_field("BJAEJMLMJCL", &self.BJAEJMLMJCL)?;
+        state.serialize_field("APDLLHIMMEM", &self.APDLLHIMMEM)?;
+        state.serialize_field("HMMMDOHLFEP", &self.HMMMDOHLFEP)?;
+        state.serialize_field("ALOGNJIBIPG", &self.ALOGNJIBIPG)?;
 
+        //log::info!("serialize::NOPBAAAGGLA");
 
         // Serialize other fields as normal
         state.serialize_field("COKMLMJPKLH", &self.COKMLMJPKLH)?;
+        state.serialize_field("OJGNIBKADHK", &self.OJGNIBKADHK)?;
+
+        // Serialize booleans
         state.serialize_field("BBDANLEJCIA", &self.BBDANLEJCIA)?;
         state.serialize_field("HEMFDDDJOGK", &self.HEMFDDDJOGK)?;
+        state.serialize_field("DPEJKHJPLAC", &self.DPEJKHJPLAC)?;
+        state.serialize_field("JICCOEHBPJJ", &self.JICCOEHBPJJ)?;
+        state.serialize_field("CAANBNCPACE", &self.CAANBNCPACE)?;
+        state.serialize_field("FNBALMGFGDM", &self.FNBALMGFGDM)?;
+        state.serialize_field("HKNLHAMMIIM", &self.HKNLHAMMIIM)?;
+        state.serialize_field("GFFCEBJGABG", &self.GFFCEBJGABG)?;
+        state.serialize_field("EGINKGPDNPK", &self.EGINKGPDNPK)?;
+        state.serialize_field("AHPFPMEGEKG", &self.AHPFPMEGEKG)?;
+        state.serialize_field("EKBHFCODKFO", &self.EKBHFCODKFO)?;
+        state.serialize_field("MNAPDDFFHJF", &self.MNAPDDFFHJF)?;
+        state.serialize_field("IJJHMGEHMHB", &self.IJJHMGEHMHB)?;
+        state.serialize_field("KDCHAHHPPGD", &self.KDCHAHHPPGD)?;
+        state.serialize_field("EJJMIFKCFHP", &self.EJJMIFKCFHP)?;
+        state.serialize_field("KBKGNDFAKGD", &self.KBKGNDFAKGD)?;
+
+        //serialize enums
+        //log::info!("serialize::NOPBAAAGGLA 2 {}", size_of::<AttackDamageType>());
+        state.serialize_field("attack_damage_type1", &(self.attack_damage_type1 as u32))?;
+        //log::info!("serialize::NOPBAAAGGLA 3");
+        state.serialize_field("attack_damage_type2", &(self.attack_damage_type2 as u32))?;
+        //log::info!("serialize::NOPBAAAGGLA 4 {}", size_of::<AttackFormulaType>());
+        state.serialize_field("attack_formula_type1", &self.attack_formula_type1)?;
+        //log::info!("serialize::NOPBAAAGGLA 5");
+        state.serialize_field("attack_formula_type2", &self.attack_formula_type2)?;
+        //log::info!("serialize::NOPBAAAGGLA 6 {}", size_of::<SkillEffect>());
+        state.serialize_field("skill_effect", &self.skill_effect)?;
+        //log::info!("serialize::NOPBAAAGGLA 7 {}", size_of::<FinalDamageFormulaType>());
+        state.serialize_field("final_dmg_formula_type", &self.final_dmg_formula_type)?;
+        //log::info!("serialize::NOPBAAAGGLA 8");
 
         // Finish serialization
         state.end()

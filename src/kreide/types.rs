@@ -7,16 +7,16 @@ use std::ffi::c_void;
 #[derive(Debug, Clone, Copy)]
 pub struct NOPBAAAGGLA {
     pub native_object: NativeObject,
-    pub HKFGOHGKOGK: *const c_void,                    // 0x10
+    pub HKFGOHGKOGK: *const c_void,                    // 0x10 RPG.GameCore.TurnBasedModifierInstance
     pub JKCOIOLCMEP: *const TurnBasedAbilityComponent, // 0x18
-    pub FKKDFMPMJHG: *const c_void,                    // 0x20
-    pub JODAJBNCCNP: *const c_void,                    // 0x28
-    pub PBHCGDFPEED: *const c_void,                    // 0x30
-    pub MDEHKOOKJCK: *const c_void,             // 0x38
+    pub FKKDFMPMJHG: *const c_void,                    // 0x20 KHOBJNHEADA[]
+    pub JODAJBNCCNP: *const c_void,                    // 0x28 KHOBJNHEADA[]
+    pub PBHCGDFPEED: *const c_void,                    // 0x30 HCJIDLECLAG
+    pub MDEHKOOKJCK: *const c_void,                    // 0x38 List<RPG.GameCore.JsonEnum>
     pub LGGEDDMACDF: *const NativeString,              // 0x40
-    pub AAHMMHBHMFN: [u8; 0x90],                       // 0x48
+    pub AAHMMHBHMFN: [u8; 0x90],                       // 0x48 IFCEHGCBECM
     pub KNDJNKNHFFG: *const TurnBasedAbilityComponent, // 0xd8
-    pub BEAJGANIDLJ: *const c_void,                    // 0xe0
+    pub BEAJGANIDLJ: *const c_void,                    // 0xe0 DamageBehaviorTemplate
     pub NAGMKEABGEE: FixPoint,                         // 0xe8
     pub KLMAGCLFBAO: FixPoint,                         // 0xf0
     pub PDCMJAMPJNL: FixPoint,                         // 0xf8
@@ -26,11 +26,11 @@ pub struct NOPBAAAGGLA {
     pub GAALBDHLFOG: FixPoint,                         // 0x118
     pub PJNEJPNBNMP: FixPoint,                         // 0x120
     pub GLPLDJKMOBE: FixPoint,                         // 0x128
-    pub FFFOLNDHIEH: [u8; 0x48],                       // 0x130
+    pub FFFOLNDHIEH: [u8; 0x48],                       // 0x130 AbilityLinearPropertyWithOverride
     pub CMNBOEIDAOD: FixPoint,                         // 0x178
     pub MGFECPHDPHB: FixPoint,                         // 0x180
-    pub JFKEEOMKMLI: FixPoint,                         // 0x188
-    pub HHEIPBOKCOH: [u8; 0x40],                       // 0x190
+    pub damage: FixPoint,                         // 0x188
+    pub HHEIPBOKCOH: [u8; 0x40],                       // 0x190 AbilityLinearProperty
     pub PNGJIDMHIOE: FixPoint,                         // 0x1d0
     pub PJPKDAKBEJI: FixPoint,                         // 0x1d8
     pub PAIGBKBOKDI: FixPoint,                         // 0x1e0
@@ -87,20 +87,20 @@ pub struct NOPBAAAGGLA {
     pub JEHMOKDJDDE: FixPoint,                         // 0x320
     pub GIHPOCDLJOA: FixPoint,                         // 0x328
     pub FLMEBELNIKK: FixPoint,                         // 0x330
-    pub CFBOJBAJCEA: i32,                              // 0x338
-    pub IICNDPJGCFA: i32,                              // 0x33c
+    pub attack_damage_type1: AttackDamageType,         // 0x338
+    pub attack_damage_type2: AttackDamageType,         // 0x33c
     pub EBDJHPNOALL: FixPoint,                         // 0x340
     pub HJAEPANAFLN: FixPoint,                         // 0x348
     pub CINNHMENLIJ: FixPoint,                         // 0x350
     pub NCOHIAPKAED: FixPoint,                         // 0x358
     pub PGGOANFBJON: FixPoint,                         // 0x360
     pub GNMAKKBFOCH: FixPoint,                         // 0x368
-    pub BDLFBDLDEND: [u8; 0x48],                       // 0x370
+    pub BDLFBDLDEND: [u8; 0x48],                       // 0x370 AbilityLinearPropertyWithOverride
     pub DBBDIMCJIKE: FixPoint,                         // 0x3b8
-    pub ANHNDBECCJD: [u8; 0x40],                       // 0x3c0
+    pub ANHNDBECCJD: [u8; 0x40],                       // 0x3c0 AbilityLinearProperty
     pub BKIFAEKCIHN: FixPoint,                         // 0x400
-    pub KMIKODLPNGL: i32,                              // 0x408
-    pub JGHJIGOCPNP: i32,                              // 0x40c
+    pub final_dmg_formula_type: FinalDamageFormulaType,// 0x408 
+    pub attack_formula_type1: AttackFormulaType,       // 0x40c 
     pub BGBOFNMKDNJ: FixPoint,                         // 0x410
     pub DPPDEDGCLJJ: FixPoint,                         // 0x418
     pub GOHOJAIMDNM: FixPoint,                         // 0x420
@@ -120,17 +120,17 @@ pub struct NOPBAAAGGLA {
     pub FMMBMJKNAHI: FixPoint,                         // 0x490
     pub MJMDGNPPILN: FixPoint,                         // 0x498
     pub ODBPMMGBKGA: FixPoint,                         // 0x4a0
-    pub KOCOLHHLFLD: [u8; 0x40],                       // 0x4a8
+    pub KOCOLHHLFLD: [u8; 0x40],                       // 0x4a8 AbilityLinearProperty
     pub ELGMFJLGCPH: FixPoint,                         // 0x4e8
     pub MAKENPDPHDN: FixPoint,                         // 0x4f0
     pub OJGNIBKADHK: u32,                              // 0x4f8
-    pub AHHEDGLMDMG: i32,                              // 0x4fc
+    pub skill_effect: SkillEffect,                     // 0x4fc
     pub MKIMEBNOEGI: FixPoint,                         // 0x500
     pub IAAJMHADJDG: FixPoint,                         // 0x508
     pub GBENLNNEIJM: FixPoint,                         // 0x510
     pub PJLPGAGKIDE: FixPoint,                         // 0x518
-    pub ACDFHOGEMCC: [u8; 0x40],                       // 0x520
-    pub MKMILJKLJON: [u8; 0x58],                       // 0x560
+    pub ACDFHOGEMCC: [u8; 0x40],                       // 0x520 AbilityLinearProperty
+    pub MKMILJKLJON: [u8; 0x58],                       // 0x560 CILKHADIFAA
     pub ENFFBMJBEDP: FixPoint,                         // 0x5b8
     pub FGIPOLJPICM: FixPoint,                         // 0x5c0
     pub KPELFJICFDH: FixPoint,                         // 0x5c8
@@ -141,7 +141,7 @@ pub struct NOPBAAAGGLA {
     pub KDCHAHHPPGD: bool,                             // 0x5e9
     pub EJJMIFKCFHP: bool,                             // 0x5ea
     pub KBKGNDFAKGD: bool,                             // 0x5eb
-    pub GCGEEFLGCIG: i32,                              // 0x5ec
+    pub attack_formula_type2: AttackFormulaType,       // 0x5ec
     pub APDLLHIMMEM: FixPoint,                         // 0x5f0
     pub HMMMDOHLFEP: FixPoint,                         // 0x5f8
     pub ALOGNJIBIPG: FixPoint,                         // 0x600
@@ -489,10 +489,10 @@ pub mod rpg {
             pub StanceType: i32,                        // 0x244
             pub InheritSPRatio: FixPoint,               // 0x248
             pub InsertAbilityCount: i32,                // 0x250
-            pub SpeedVisualFlagValue__BackingField: i32, // 0x254
+            pub SpeedVisualFlagValue__BackingField: i32,// 0x254
             pub _CurrentAttackPhase: i32,               // 0x258
-            pub PropertyEnumBoundary__BackingField: i32, // 0x25c
-            pub ForbidVisualFlagValue__BackingField: i32, // 0x260
+            pub PropertyEnumBoundary__BackingField: i32,// 0x25c
+            pub ForbidVisualFlagValue__BackingField: i32,// 0x260
             pub StanceState__BackingField: i32,         // 0x264
             pub _BreakExtendEventUnsettled: bool,       // 0x268
             pub TriggerBreakExtendLogic: bool,          // 0x269
@@ -562,6 +562,61 @@ pub mod rpg {
             TeamNeutral = 3,
             TeamNPC = 4,
             Count = 5,
+        }
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        pub enum AttackFormulaType {
+            Unknown = 0,
+            ByAttack = 1,
+            ByDefence = 2,
+            ByMaxHP = 3,
+            ByBreakDamage = 4,
+            BySummonerMaxHP = 5,
+        }
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        pub enum FinalDamageFormulaType {
+            ByDefault = 0,
+            ByPureDamage = 1,
+            ByBaseDamage = 2,
+        }
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        pub enum SkillEffect {
+            Unknown = 0,
+            SingleAttack = 1,
+            AoEAttack = 2,
+            ShieldBreak = 3,
+            Bounce = 4,
+            Blast = 5,
+            Support = 6,
+            Weaken = 7,
+            Impair = 8,
+            Restore = 9,
+            Taunt = 10,
+            Defence = 11,
+            Damage = 12,
+            Enhance = 13,
+            Transform = 14,
+            Passive = 15,
+            MazeAttack = 16,
+            Summon = 17,
+            BattleCry = 18,
+            DeathRattle = 19,
+        }
+        #[repr(C)]
+        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        pub enum AttackDamageType {
+            Unknow = 0,
+            Physical = 1,
+            Fire = 2,
+            Ice = 3,
+            Thunder = 4,
+            Wind = 5,
+            Quantum = 6,
+            Imaginary = 7,
+            Heal = 8,
+            AllType = 9,
         }
         #[repr(C)]
         #[derive(Debug, Clone, Copy)]

@@ -92,7 +92,7 @@ fn on_damage(
         let mut event: Option<Result<Event>> = None;
         match (*attacker)._Team {
             TeamType::TeamLight => {
-                let damage = fixpoint_to_raw(&(*nopbaaaggla).JFKEEOMKMLI);
+                let damage = fixpoint_to_raw(&(*nopbaaaggla).damage);
                 let attack_owner = {
                     let attack_owner = AbilityStatic_GetActualOwner(attacker);
                     if attack_owner.is_null() {
